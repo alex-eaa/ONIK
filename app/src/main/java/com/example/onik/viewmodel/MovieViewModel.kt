@@ -15,17 +15,17 @@ class MovieViewModel : ViewModel() {
 
     fun getLiveData() = liveDataToObserve
 
-    fun getMovieFromLocalSource() = getDataFromLocalSource()
-    fun getMovieFromRemoteSource() = getDataFromLocalSource()
+    fun getMovieFromLocalSource(id: Int) = getDataFromLocalSource(id)
+    fun getMovieFromRemoteSource(id: Int) = getDataFromLocalSource(id)
 
 
-    private fun getDataFromLocalSource() {
+    private fun getDataFromLocalSource(id: Int) {
         liveDataToObserve.value = AppState.Loading
 
         Thread {
             Thread.sleep(1000)
             if (Random.nextBoolean()) {
-                liveDataToObserve.postValue(AppState.SuccessMovie(repositoryImpl.getMovieFromServer()))
+                liveDataToObserve.postValue(AppState.SuccessMovie(repositoryImpl.getMovieFromServer(id)))
             } else {
                 liveDataToObserve.postValue(AppState.Error(Exception("Нет связи")))
             }

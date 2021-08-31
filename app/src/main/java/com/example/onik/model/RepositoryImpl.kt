@@ -1,23 +1,33 @@
 package com.example.onik.model
 
-import com.example.onik.Temp
+import com.example.onik.Foo
 
 
 class RepositoryImpl : Repository {
-    override fun getMovieFromServer(): Movie {
-        return Temp.movie1
+    override fun getMovieFromServer(id: Int): Movie {
+        for (movie in Foo.movies) {
+            if (movie.id == id) {
+                return movie
+            }
+        }
+        return Movie()
     }
 
-    override fun getMovieFromLocalStorage(): Movie {
-        return Temp.movie1
+    override fun getMovieFromLocalStorage(id: Int): Movie {
+        for (movie in Foo.movies) {
+            if (movie.id == id) {
+                return movie
+            }
+        }
+        return Movie()
     }
 
     override fun getPopularMoviesFromServer(): Array<Movie> {
-        return arrayOf(Temp.movie1, Temp.movie2, Temp.movie3, Temp.movie4)
+        return Foo.movies
     }
 
     override fun getPopularMoviesFromLocalStorage(): Array<Movie> {
-        return arrayOf(Temp.movie1, Temp.movie2, Temp.movie3, Temp.movie4)
+        return Foo.movies
     }
 
 

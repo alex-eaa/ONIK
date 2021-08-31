@@ -7,20 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.example.onik.R
-import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.databinding.MovieFragmentBinding
-import com.example.onik.model.Movie
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.MainViewModel
 import com.example.onik.viewmodel.MovieViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class MovieFragment : Fragment() {
-
+class MovieFragment(private var idMovie: Int) : Fragment() {
 
     companion object {
-        fun newInstance() = MovieFragment()
+        fun newInstance(idMovie: Int) = MovieFragment(idMovie)
     }
 
     private lateinit var viewModel: MovieViewModel
@@ -43,7 +38,7 @@ class MovieFragment : Fragment() {
 
         val observer = Observer<AppState> { appState -> renderData(appState) }
         viewModel.getLiveData().observe(viewLifecycleOwner, observer)
-        viewModel.getMovieFromRemoteSource()
+        viewModel.getMovieFromRemoteSource(idMovie)
 
 
     }
@@ -64,10 +59,11 @@ class MovieFragment : Fragment() {
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar
                     .make(binding.main, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getMovieFromRemoteSource() }
+                    .setAction("Reload") { viewModel.getMovieFromRemoteSource(idMovie) }
                     .show()
             }
-            else -> {}
+            else -> {
+            }
         }
     }
 
