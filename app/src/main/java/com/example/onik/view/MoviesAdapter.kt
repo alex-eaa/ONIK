@@ -22,7 +22,8 @@ class MoviesAdapter(
 
         val release_date: TextView = itemView.findViewById(R.id.release_date)
         val title: TextView = itemView.findViewById(R.id.title)
-        val overview: TextView = itemView.findViewById(R.id.overview)
+        val vote_average: TextView = itemView.findViewById(R.id.vote_average)
+
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -51,10 +52,9 @@ class MoviesAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.release_date.text = dataSet[position].release_date
+        viewHolder.release_date.text = dataSet[position].release_date.substring(0, 4)
         viewHolder.title.text = dataSet[position].title
-        viewHolder.overview.text = dataSet[position].overview
-
+        viewHolder.vote_average.text = dataSet[position].vote_average.toString()
     }
 
     // Return the size of your dataset (invoked by the layout manager)

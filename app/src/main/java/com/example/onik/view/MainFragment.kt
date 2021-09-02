@@ -5,17 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.model.Movie
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.MainViewModel
+import com.example.onik.viewmodel.ViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -27,7 +26,9 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var movies: Array<Movie>
-    private lateinit var viewModel: MainViewModel
+
+    private lateinit var viewModel: ViewModel
+
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -43,10 +44,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
 
         val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getLiveData().observe(viewLifecycleOwner, observer)
+        viewModel.getPopularMoviesLiveData().observe(viewLifecycleOwner, observer)
 
         viewModel.getPopularMoviesFromRemoteSource()
     }
@@ -76,11 +77,9 @@ class MainFragment : Fragment() {
 
 
     private fun initRecyclerView(mainRecyclerView: RecyclerView, movies: Array<Movie>) {
-        val layoutManager = LinearLayoutManager(context)
-        mainRecyclerView.layoutManager = layoutManager
-
-        val moviesAdapter = MoviesAdapter(movies) { position -> onListItemClick(position) }
-        mainRecyclerView.adapter = moviesAdapter
+        mainRecyclerView.setHasFixedSize(true);
+        mainRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        mainRecyclerView.adapter = MoviesAdapter(movies) { position -> onListItemClick(position) }
     }
 
 

@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.MovieViewModel
+import com.example.onik.viewmodel.ViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class MovieFragment(private var idMovie: Int) : Fragment() {
@@ -18,7 +18,8 @@ class MovieFragment(private var idMovie: Int) : Fragment() {
         fun newInstance(idMovie: Int) = MovieFragment(idMovie)
     }
 
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var viewModel: ViewModel
+
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -34,13 +35,12 @@ class MovieFragment(private var idMovie: Int) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
 
         val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getLiveData().observe(viewLifecycleOwner, observer)
+        viewModel.getMovieLiveData().observe(viewLifecycleOwner, observer)
+
         viewModel.getMovieFromRemoteSource(idMovie)
-
-
     }
 
 
