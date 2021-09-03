@@ -62,9 +62,9 @@ class Foo {
                 "en",
                 "To All the Boys I've Loved Before",
                 "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
-                8.4,
+                31.76,
                 354,
-                31.76
+                8.4
             ),
 
             Movie(
@@ -75,11 +75,11 @@ class Foo {
                 466282,
                 "To All the Boys I've Loved Before",
                 "en",
-                "To All the Boys I've Loved Before",
+                "To All the Boys I've Loved Before Honmm Tennn sjisoiis",
                 "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
-                8.4,
+                31.76,
                 354,
-                31.76
+                8.4
             ),
         )
 
