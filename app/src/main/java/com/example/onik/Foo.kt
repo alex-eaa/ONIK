@@ -65,7 +65,22 @@ class Foo {
                 8.4,
                 354,
                 31.76
-            )
+            ),
+
+            Movie(
+                "/hKHZhUbIyUAjcSrqJThFGYIR6kI.jpg",
+                false,
+                "Lara Jean's love life goes from imaginary to out of control when her secret letters to every boy she's ever fallen for are mysteriously mailed out.",
+                "2018-08-17",
+                466282,
+                "To All the Boys I've Loved Before",
+                "en",
+                "To All the Boys I've Loved Before",
+                "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
+                8.4,
+                354,
+                31.76
+            ),
         )
 
     }

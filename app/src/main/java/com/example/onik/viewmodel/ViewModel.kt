@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.example.onik.model.Repository
 import com.example.onik.model.RepositoryImpl
 import java.lang.Exception
-import kotlin.random.Random
 
 class ViewModel : ViewModel() {
 
@@ -29,7 +28,7 @@ class ViewModel : ViewModel() {
 
         Thread {
             Thread.sleep(300)
-            if (Random.nextBoolean()) {
+            if (true) {
                 popularMoviesLiveData.postValue(AppState.SuccessMovies(repositoryImpl.getPopularMoviesFromServer()))
             } else {
                 popularMoviesLiveData.postValue(AppState.Error(Exception("Нет связи")))
@@ -44,8 +43,8 @@ class ViewModel : ViewModel() {
 
         Thread {
             Thread.sleep(300)
-            if (Random.nextBoolean()) {
-                movieLiveData.postValue(AppState.SuccessMovie(repositoryImpl.getMovieFromServer(id)))
+            if (true) {
+                movieLiveData.postValue(AppState.SuccessMovie(repositoryImpl.getMovieDetailsFromServer(id)))
             } else {
                 movieLiveData.postValue(AppState.Error(Exception("Нет связи")))
             }

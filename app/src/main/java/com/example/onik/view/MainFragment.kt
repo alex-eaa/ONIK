@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.onik.Foo.Companion.movies
 import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.model.Movie
@@ -20,17 +20,16 @@ import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
 
-
     companion object {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var movies: Array<Movie>
-
     private lateinit var viewModel: ViewModel
-
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var adapter: MoviesAdapter
+    private lateinit var mainRecyclerView: RecyclerView
 
 
     override fun onCreateView(
@@ -38,6 +37,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
+        initRecyclerView()
         return binding.root
     }
 
@@ -45,10 +45,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
-
         val observer = Observer<AppState> { appState -> renderData(appState) }
         viewModel.getPopularMoviesLiveData().observe(viewLifecycleOwner, observer)
-
         viewModel.getPopularMoviesFromRemoteSource()
     }
 
@@ -59,8 +57,7 @@ class MainFragment : Fragment() {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.visibility = View.GONE
-                movies = appState.movies
-                initRecyclerView(binding.mainRecyclerView, appState.movies)
+                adapter.setData(appState.movies)
             }
 
             is AppState.Error -> {
@@ -76,16 +73,21 @@ class MainFragment : Fragment() {
     }
 
 
-    private fun initRecyclerView(mainRecyclerView: RecyclerView, movies: Array<Movie>) {
-        mainRecyclerView.setHasFixedSize(true);
+    private fun initRecyclerView() {
+        mainRecyclerView = binding.mainRecyclerView
+        adapter = MoviesAdapter { position -> onListItemClick(position) }
+        mainRecyclerView.adapter = adapter
         mainRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        mainRecyclerView.adapter = MoviesAdapter(movies) { position -> onListItemClick(position) }
+        mainRecyclerView.setHasFixedSize(true);
     }
 
 
     private fun onListItemClick(position: Int) {
+        val bundle = Bundle()
+        bundle.putInt(MovieFragment.BUNDLE_EXTRA, movies[position].id)
+
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.container, MovieFragment.newInstance(movies[position].id))
+            .replace(R.id.container, MovieFragment.newInstance(bundle))
             .addToBackStack(null)
             .commit()
     }
