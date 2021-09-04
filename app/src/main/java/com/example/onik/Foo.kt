@@ -19,7 +19,10 @@ class Foo {
                 "/ndlQ2Cuc3cjTL7lTynw6I4boP4S.jpg",
                 48.261451,
                 1466,
-                5.91
+                5.91,
+                88,
+                100000,
+                500000
             ),
 
             Movie(
@@ -34,7 +37,10 @@ class Foo {
                 "/AoT2YrJUJlg5vKE3iMOLvHlTd3m.jpg",
                 30.690177,
                 649,
-                5.25
+                5.25,
+                110,
+                150000,
+                500000
             ),
 
             Movie(
@@ -47,9 +53,12 @@ class Foo {
                 "en",
                 "Deadpool 2",
                 "/22cUd4Yg5euCxIwWzXrL4m4otkU.jpg",
-                7.6,
+                223.25,
                 3938,
-                223.25
+                7.6,
+                112,
+                200000,
+                500000
             ),
 
             Movie(
@@ -64,7 +73,10 @@ class Foo {
                 "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
                 31.76,
                 354,
-                8.4
+                8.4,
+                98,
+                500000,
+                500000
             ),
 
             Movie(
@@ -79,7 +91,10 @@ class Foo {
                 "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
                 31.76,
                 354,
-                8.4
+                8.4,
+                130,
+                370000,
+                500000
             ),
         )
 

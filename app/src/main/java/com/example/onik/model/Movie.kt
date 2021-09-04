@@ -13,6 +13,9 @@ data class Movie(
     val popularity: Double = 0.0,
     val vote_count: Int = 0,
     val vote_average: Double = 0.0,
+    val runtime: Int = 0,
+    val budget: Int = 0,
+    val revenue: Int = 0,
     val genre_ids: Array<Genre> = getDefaultGenres(),
 )
 

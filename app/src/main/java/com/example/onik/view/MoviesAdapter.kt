@@ -23,7 +23,7 @@ class MoviesAdapter(
 
         val release_date: TextView = itemView.findViewById(R.id.release_date)
         val title: TextView = itemView.findViewById(R.id.title)
-        val vote_average: TextView = itemView.findViewById(R.id.vote_average)
+        val vote_average: TextView = itemView.findViewById(R.id.voteAverage)
 
 
         init {
