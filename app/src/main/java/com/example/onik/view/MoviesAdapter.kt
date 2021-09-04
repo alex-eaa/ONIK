@@ -9,6 +9,7 @@ import com.example.onik.R
 import com.example.onik.model.Movie
 
 class MoviesAdapter(
+    private val rLayoutForInflate: Int,
     private val onItemClicked: (position: Int) -> Unit
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
@@ -46,7 +47,7 @@ class MoviesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item, parent, false)
+            .inflate(rLayoutForInflate, parent, false)
 
         return ViewHolder(view, onItemClicked)
 

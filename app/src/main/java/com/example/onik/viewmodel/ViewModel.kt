@@ -10,28 +10,28 @@ class ViewModel : ViewModel() {
 
     private val repositoryImpl: Repository = RepositoryImpl()
 
-    private val popularMoviesLiveData: MutableLiveData<AppState> = MutableLiveData<AppState>()
-    fun getPopularMoviesLiveData() = popularMoviesLiveData
+    private val moviesListLiveData: MutableLiveData<AppState> = MutableLiveData<AppState>()
+    fun getPopularMoviesLiveData() = moviesListLiveData
 
     private val movieLiveData: MutableLiveData<AppState> = MutableLiveData<AppState>()
     fun getMovieLiveData() = movieLiveData
 
-    fun getPopularMoviesFromLocalSource() = getPopularMoviesData()
-    fun getPopularMoviesFromRemoteSource() = getPopularMoviesData()
+    fun getListMoviesFromLocalSource() = getPopularMoviesData()
+    fun getListMoviesFromRemoteSource() = getPopularMoviesData()
 
     fun getMovieFromLocalSource(id: Int) = getMovieData(id)
     fun getMovieFromRemoteSource(id: Int) = getMovieData(id)
 
 
     private fun getPopularMoviesData() {
-        popularMoviesLiveData.value = AppState.Loading
+        moviesListLiveData.value = AppState.Loading
 
         Thread {
             Thread.sleep(300)
             if (true) {
-                popularMoviesLiveData.postValue(AppState.SuccessMovies(repositoryImpl.getPopularMoviesFromServer()))
+                moviesListLiveData.postValue(AppState.SuccessMovies(repositoryImpl.getListMoviesFromRemoteSource()))
             } else {
-                popularMoviesLiveData.postValue(AppState.Error(Exception("Нет связи")))
+                moviesListLiveData.postValue(AppState.Error(Exception("Нет связи")))
             }
 
         }.start()
@@ -42,7 +42,7 @@ class ViewModel : ViewModel() {
         movieLiveData.value = AppState.Loading
 
         Thread {
-            Thread.sleep(300)
+            Thread.sleep(1000)
             if (true) {
                 movieLiveData.postValue(AppState.SuccessMovie(repositoryImpl.getMovieDetailsFromServer(id)))
             } else {
