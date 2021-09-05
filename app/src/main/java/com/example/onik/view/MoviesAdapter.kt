@@ -14,7 +14,7 @@ class MoviesAdapter(
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    private var dataSet: Array<Movie> = arrayOf()
+    private var dataSet: List<Movie> = listOf()
 
 
     inner class ViewHolder(
@@ -34,12 +34,10 @@ class MoviesAdapter(
         override fun onClick(v: View?) {
             onItemClicked(adapterPosition)
         }
-
-
     }
 
 
-    fun setData(data: Array<Movie>){
+    fun setData(data: List<Movie>){
         dataSet = data
         notifyDataSetChanged()
     }
@@ -47,7 +45,6 @@ class MoviesAdapter(
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(parent.context)
             .inflate(rLayoutForInflate, parent, false)
 

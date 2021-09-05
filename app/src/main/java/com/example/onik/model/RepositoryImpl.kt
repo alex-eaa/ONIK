@@ -27,11 +27,11 @@ class RepositoryImpl : Repository {
     // https://api.themoviedb.org/3/movie/popular?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RUS&page=1
     // https://api.themoviedb.org/3/movie/top_rated?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RU&page=1
     // https://api.themoviedb.org/3/movie/now_playing?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RU&page=1
-    override fun getListMoviesFromRemoteSource(): Array<Movie> {
+    override fun getListMoviesFromRemoteSource(): List<Movie> {
         return Foo.movies
     }
 
-    override fun getListMoviesFromLocalSource(): Array<Movie> {
+    override fun getListMoviesFromLocalSource(): List<Movie> {
         return Foo.movies
     }
 

@@ -6,7 +6,7 @@ class Foo {
 
     companion object {
 
-        val movies: Array<Movie> = arrayOf(
+        val movies: List<Movie> = listOf(
             Movie(
                 "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg",
                 false,

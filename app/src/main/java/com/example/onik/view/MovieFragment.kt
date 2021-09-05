@@ -43,7 +43,7 @@ class MovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        idMovie = arguments?.getInt(BUNDLE_EXTRA) ?: 0
+        idMovie = arguments?.getInt(BUNDLE_EXTRA)!!
 
         viewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
