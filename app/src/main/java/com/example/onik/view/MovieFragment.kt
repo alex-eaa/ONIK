@@ -1,18 +1,16 @@
 package com.example.onik.view
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.ViewModel
+import com.example.onik.viewmodel.MovieViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class MovieFragment : Fragment() {
@@ -27,7 +25,7 @@ class MovieFragment : Fragment() {
         }
     }
 
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MovieViewModel
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -47,10 +45,10 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         idMovie = arguments?.getInt(BUNDLE_EXTRA) ?: 0
 
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getMovieLiveData().observe(viewLifecycleOwner, observer)
-        viewModel.getMovieFromRemoteSource(idMovie)
+        viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner, observer)
+        viewModel.getDataFromRemoteSource(idMovie)
     }
 
 
@@ -79,7 +77,7 @@ class MovieFragment : Fragment() {
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar
                     .make(binding.main, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getMovieFromRemoteSource(idMovie) }
+                    .setAction("Reload") { viewModel.getDataFromRemoteSource(idMovie) }
                     .show()
             }
             else -> {

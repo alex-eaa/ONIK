@@ -13,7 +13,7 @@ import com.example.onik.Foo.Companion.movies
 import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.ViewModel
+import com.example.onik.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -23,7 +23,7 @@ class MainFragment : Fragment(), View.OnClickListener {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MainViewModel
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -52,14 +52,13 @@ class MainFragment : Fragment(), View.OnClickListener {
         binding.categoryTitleLayout2.setOnClickListener (this)
         binding.categoryTitleLayout3.setOnClickListener (this)
 
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
         viewModel.getMoviesListLiveData1().observe(viewLifecycleOwner, observer)
         viewModel.getMoviesListLiveData2().observe(viewLifecycleOwner, observer)
         viewModel.getMoviesListLiveData3().observe(viewLifecycleOwner, observer)
 
-        viewModel.getAllListMoviesFromRemoteSource()
-        val z = 45 + 55
+        viewModel.getDataFromRemoteSource()
     }
 
 
@@ -87,7 +86,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                 Snackbar
                     .make(binding.main, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Reload") {
-                        viewModel.getAllListMoviesFromRemoteSource()
+                        viewModel.getDataFromRemoteSource()
                     }
                     .show()
             }

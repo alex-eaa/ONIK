@@ -2,6 +2,7 @@ package com.example.onik.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.onik.R
 
 class MainActivity : AppCompatActivity() {
