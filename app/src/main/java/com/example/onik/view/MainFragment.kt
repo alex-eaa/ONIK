@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.onik.Foo.Companion.movies
 import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
@@ -20,6 +19,10 @@ import com.google.android.material.snackbar.Snackbar
 class MainFragment : Fragment(), View.OnClickListener {
 
     companion object {
+        const val KEY_RECYCLER_1 = "RECYCLER_1"
+        const val KEY_RECYCLER_2 = "RECYCLER_2"
+        const val KEY_RECYCLER_3 = "RECYCLER_3"
+
         fun newInstance() = MainFragment()
     }
 
@@ -27,30 +30,28 @@ class MainFragment : Fragment(), View.OnClickListener {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter1: MoviesAdapter
-    private lateinit var adapter2: MoviesAdapter
-    private lateinit var adapter3: MoviesAdapter
+    private lateinit var mapAdapters: Map<String, MoviesAdapter>
+    private lateinit var mapRecyclerView: Map<String, RecyclerView>
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-//        _binding = MainFragmentBinding.inflate(inflater, container, false)
         _binding =
             MainFragmentBinding.bind(inflater.inflate(R.layout.main_fragment, container, false))
-
-        initRecyclerView()
-
-        binding.categoryTitleLayout1.setOnClickListener(this)
-        binding.categoryTitleLayout2.setOnClickListener(this)
-        binding.categoryTitleLayout3.setOnClickListener(this)
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
+
+        binding.categoryTitleLayout1.setOnClickListener(this)
+        binding.categoryTitleLayout2.setOnClickListener(this)
+        binding.categoryTitleLayout3.setOnClickListener(this)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
@@ -72,17 +73,17 @@ class MainFragment : Fragment(), View.OnClickListener {
 
             is AppState.SuccessMovies1 -> {
                 binding.loadingLayout1.visibility = View.GONE
-                adapter1.moviesData = appState.movies
+                mapAdapters[KEY_RECYCLER_1]?.moviesData = appState.movies
             }
 
             is AppState.SuccessMovies2 -> {
                 binding.loadingLayout2.visibility = View.GONE
-                adapter2.moviesData = appState.movies
+                mapAdapters[KEY_RECYCLER_2]?.moviesData = appState.movies
             }
 
             is AppState.SuccessMovies3 -> {
                 binding.loadingLayout3.visibility = View.GONE
-                adapter3.moviesData = appState.movies
+                mapAdapters[KEY_RECYCLER_3]?.moviesData = appState.movies
             }
 
             is AppState.Error -> {
@@ -103,6 +104,17 @@ class MainFragment : Fragment(), View.OnClickListener {
 
 
     private fun initRecyclerView() {
+        mapRecyclerView = mapOf(
+            KEY_RECYCLER_1 to binding.recyclerViewHorizontal1,
+            KEY_RECYCLER_2 to binding.recyclerViewHorizontal2,
+            KEY_RECYCLER_3 to binding.recyclerViewHorizontal3,
+        )
+
+        mapAdapters = mapOf(
+            KEY_RECYCLER_1 to MoviesAdapter(R.layout.item_for_horizontal),
+            KEY_RECYCLER_2 to MoviesAdapter(R.layout.item_for_horizontal),
+            KEY_RECYCLER_3 to MoviesAdapter(R.layout.item_for_horizontal)
+        )
 
         val myListener = MoviesAdapter.OnItemViewClickListener { idMovie ->
             val bundle = Bundle()
@@ -113,26 +125,13 @@ class MainFragment : Fragment(), View.OnClickListener {
                 .commit()
         }
 
-        adapter1 = MoviesAdapter(R.layout.item_for_horizontal)
-        adapter1.listener = myListener
-        binding.recyclerViewHorizontal1.adapter = adapter1
-        binding.recyclerViewHorizontal1.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewHorizontal1.setHasFixedSize(true);
-
-        adapter2 = MoviesAdapter(R.layout.item_for_horizontal)
-        adapter2.listener = myListener
-        binding.recyclerViewHorizontal2.adapter = adapter2
-        binding.recyclerViewHorizontal2.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewHorizontal2.setHasFixedSize(true);
-
-        adapter3 = MoviesAdapter(R.layout.item_for_horizontal)
-        adapter3.listener = myListener
-        binding.recyclerViewHorizontal3.adapter = adapter3
-        binding.recyclerViewHorizontal3.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewHorizontal3.setHasFixedSize(true);
+        for (key in mapRecyclerView.keys) {
+            mapAdapters[key]?.listener = myListener
+            mapRecyclerView[key]?.adapter = mapAdapters[key]
+            mapRecyclerView[key]?.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            mapRecyclerView[key]?.setHasFixedSize(true);
+        }
     }
 
 
