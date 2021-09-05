@@ -43,13 +43,14 @@ class MoviesListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = MoviesListFragmentBinding.inflate(inflater, container, false)
-        initRecyclerView()
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+
         idList = arguments?.getInt(MovieFragment.BUNDLE_EXTRA)!!
 
         viewModel = ViewModelProvider(this).get(MoviesListViewModel::class.java)
@@ -82,7 +83,17 @@ class MoviesListFragment : Fragment() {
 
 
     private fun initRecyclerView() {
-        adapter = MoviesAdapter(R.layout.item) { position -> onListItemClick(position) }
+        adapter = MoviesAdapter(R.layout.item)
+        adapter.listener = MoviesAdapter.OnItemViewClickListener { idMovie ->
+            val bundle = Bundle()
+            bundle.putInt(MovieFragment.BUNDLE_EXTRA, idMovie)
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, MovieFragment.newInstance(bundle))
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.mainRecyclerView.adapter = adapter
         binding.mainRecyclerView.layoutManager = GridLayoutManager(context, 2)
         binding.mainRecyclerView.setHasFixedSize(true);

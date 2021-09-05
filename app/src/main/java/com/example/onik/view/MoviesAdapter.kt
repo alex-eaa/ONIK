@@ -11,7 +11,6 @@ import com.example.onik.model.Movie
 
 class MoviesAdapter(
     private val itemLayoutForInflate: Int,
-    private val onItemClicked: (position: Int) -> Unit,
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
@@ -21,22 +20,18 @@ class MoviesAdapter(
             notifyDataSetChanged()
         }
 
-    inner class ViewHolder(
-        itemView: View,
-        private val onItemClicked: (position: Int) -> Unit,
-    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    var listener: OnItemViewClickListener? = null
 
-        val release_date: TextView = itemView.findViewById(R.id.release_date)
-        val title: TextView = itemView.findViewById(R.id.title)
-        val vote_average: TextView = itemView.findViewById(R.id.voteAverage)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        fun bind(movie: Movie){
+            itemView.findViewById<TextView>(R.id.release_date).text = movie.release_date.substring(0, 4)
+            itemView.findViewById<TextView>(R.id.title).text = movie.title
+            itemView.findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
 
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            onItemClicked(adapterPosition)
+            itemView.setOnClickListener {
+                listener?.onItemClick(movie.id)
+            }
         }
     }
 
@@ -48,17 +43,20 @@ class MoviesAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(itemLayoutForInflate, parent, false)
 
-        return ViewHolder(view, onItemClicked)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Получить элемент из вашего набора данных в этой позиции и заменить
         // содержимое представления в этой позици этим элементом
-        viewHolder.release_date.text = moviesData[position].release_date.substring(0, 4)
-        viewHolder.title.text = moviesData[position].title
-        viewHolder.vote_average.text = moviesData[position].vote_average.toString()
+        viewHolder.bind(moviesData[position])
     }
 
     override fun getItemCount() = moviesData.size
+
+
+    fun interface OnItemViewClickListener {
+        fun onItemClick(idMovie: Int)
+    }
 
 }

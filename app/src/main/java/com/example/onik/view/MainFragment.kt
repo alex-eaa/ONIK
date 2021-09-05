@@ -37,7 +37,8 @@ class MainFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?,
     ): View {
 //        _binding = MainFragmentBinding.inflate(inflater, container, false)
-        _binding = MainFragmentBinding.bind(inflater.inflate(R.layout.main_fragment, container, false))
+        _binding =
+            MainFragmentBinding.bind(inflater.inflate(R.layout.main_fragment, container, false))
 
         initRecyclerView()
 
@@ -103,22 +104,31 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     private fun initRecyclerView() {
 
-        adapter1 =
-            MoviesAdapter(R.layout.item_for_horizontal) { position -> onListItemClick(position) }
+        val myListener = MoviesAdapter.OnItemViewClickListener { idMovie ->
+            val bundle = Bundle()
+            bundle.putInt(MovieFragment.BUNDLE_EXTRA, idMovie)
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, MovieFragment.newInstance(bundle))
+                .addToBackStack(null)
+                .commit()
+        }
+
+        adapter1 = MoviesAdapter(R.layout.item_for_horizontal)
+        adapter1.listener = myListener
         binding.recyclerViewHorizontal1.adapter = adapter1
         binding.recyclerViewHorizontal1.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewHorizontal1.setHasFixedSize(true);
 
-        adapter2 =
-            MoviesAdapter(R.layout.item_for_horizontal) { position -> onListItemClick(position) }
+        adapter2 = MoviesAdapter(R.layout.item_for_horizontal)
+        adapter2.listener = myListener
         binding.recyclerViewHorizontal2.adapter = adapter2
         binding.recyclerViewHorizontal2.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewHorizontal2.setHasFixedSize(true);
 
-        adapter3 =
-            MoviesAdapter(R.layout.item_for_horizontal) { position -> onListItemClick(position) }
+        adapter3 = MoviesAdapter(R.layout.item_for_horizontal)
+        adapter3.listener = myListener
         binding.recyclerViewHorizontal3.adapter = adapter3
         binding.recyclerViewHorizontal3.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -126,21 +136,11 @@ class MainFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun onListItemClick(position: Int) {
-        val bundle = Bundle()
-        bundle.putInt(MovieFragment.BUNDLE_EXTRA, movies[position].id)
-
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.container, MovieFragment.newInstance(bundle))
-            .addToBackStack(null)
-            .commit()
-    }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
     override fun onClick(v: View?) {
         val bundle = Bundle()
