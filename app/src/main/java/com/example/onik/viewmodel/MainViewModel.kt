@@ -25,15 +25,35 @@ class MainViewModel : ViewModel() {
 
     private fun getData() {
         moviesListLiveData1.value = AppState.Loading
+        moviesListLiveData2.value = AppState.Loading
+        moviesListLiveData3.value = AppState.Loading
 
         Thread {
             Thread.sleep(1000)
             if (true) {
                 moviesListLiveData1.postValue(AppState.SuccessMovies1(repositoryImpl.getListMoviesFromRemoteSource()))
-                moviesListLiveData2.postValue(AppState.SuccessMovies2(repositoryImpl.getListMoviesFromRemoteSource()))
-                moviesListLiveData3.postValue(AppState.SuccessMovies3(repositoryImpl.getListMoviesFromRemoteSource()))
             } else {
                 moviesListLiveData1.postValue(AppState.Error(Exception("Нет связи")))
+            }
+
+        }.start()
+
+        Thread {
+            Thread.sleep(1500)
+            if (true) {
+                moviesListLiveData2.postValue(AppState.SuccessMovies2(repositoryImpl.getListMoviesFromRemoteSource()))
+            } else {
+                moviesListLiveData2.postValue(AppState.Error(Exception("Нет связи")))
+            }
+
+        }.start()
+
+        Thread {
+            Thread.sleep(2000)
+            if (true) {
+                moviesListLiveData3.postValue(AppState.SuccessMovies3(repositoryImpl.getListMoviesFromRemoteSource()))
+            } else {
+                moviesListLiveData3.postValue(AppState.Error(Exception("Нет связи")))
             }
 
         }.start()

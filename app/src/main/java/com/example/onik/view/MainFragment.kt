@@ -41,16 +41,15 @@ class MainFragment : Fragment(), View.OnClickListener {
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
         initRecyclerView()
+        binding.categoryTitleLayout1.setOnClickListener (this)
+        binding.categoryTitleLayout2.setOnClickListener (this)
+        binding.categoryTitleLayout3.setOnClickListener (this)
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.categoryTitleLayout1.setOnClickListener (this)
-        binding.categoryTitleLayout2.setOnClickListener (this)
-        binding.categoryTitleLayout3.setOnClickListener (this)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
@@ -64,25 +63,31 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     private fun renderData(appState: AppState?) {
         when (appState) {
-            is AppState.Loading -> binding.loadingLayout.visibility = View.VISIBLE
+            is AppState.Loading -> {
+                binding.loadingLayout1.visibility = View.VISIBLE
+                binding.loadingLayout2.visibility = View.VISIBLE
+                binding.loadingLayout3.visibility = View.VISIBLE
+            }
 
             is AppState.SuccessMovies1 -> {
-                binding.loadingLayout.visibility = View.GONE
+                binding.loadingLayout1.visibility = View.GONE
                 adapter1.setData(appState.movies)
             }
 
             is AppState.SuccessMovies2 -> {
-                binding.loadingLayout.visibility = View.GONE
+                binding.loadingLayout2.visibility = View.GONE
                 adapter2.setData(appState.movies)
             }
 
             is AppState.SuccessMovies3 -> {
-                binding.loadingLayout.visibility = View.GONE
+                binding.loadingLayout3.visibility = View.GONE
                 adapter3.setData(appState.movies)
             }
 
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
+                binding.loadingLayout1.visibility = View.GONE
+                binding.loadingLayout2.visibility = View.GONE
+                binding.loadingLayout3.visibility = View.GONE
                 Snackbar
                     .make(binding.main, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Reload") {

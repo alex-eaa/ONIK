@@ -67,7 +67,7 @@ class MovieFragment : Fragment() {
                 binding.budget.text = appState.movie.budget.toString()
                 binding.revenue.text = appState.movie.revenue.toString()
 
-                var genres: String = ""
+                var genres = ""
                 appState.movie.genre_ids.forEach { genres += "${it.name}, " }
                 binding.genre.text = genres.dropLast(2)
 

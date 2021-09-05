@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:id="@+id/categoryTitleLayout1"
             android:layout_width="fill_parent"
@@ -36,16 +35,37 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="Все >" />
+
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_horizontal_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_for_horizontal"
-            tools:orientation="horizontal" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_horizontal_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_for_horizontal"
+                tools:orientation="horizontal" />
+
+            <FrameLayout
+                android:id="@+id/loadingLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="#6D6D6D"
+                android:visibility="gone"
+                tools:visibility="invisible">
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+        </FrameLayout>
+
 
         <LinearLayout
             android:id="@+id/categoryTitleLayout2"
@@ -72,14 +92,33 @@
                 android:text="Все >" />
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_horizontal_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_for_horizontal"
-            tools:orientation="horizontal" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_horizontal_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_for_horizontal"
+                tools:orientation="horizontal" />
+
+            <FrameLayout
+                android:id="@+id/loadingLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="#6D6D6D"
+                android:visibility="gone"
+                tools:visibility="invisible">
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/categoryTitleLayout3"
@@ -106,29 +145,34 @@
                 android:text="Все >" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_horizontal_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_for_horizontal"
-            tools:orientation="horizontal" />
-
-
         <FrameLayout
-            android:id="@+id/loadingLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#6D6D6D"
-            android:visibility="gone"
-            tools:visibility="invisible">
+            android:layout_height="wrap_content">
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_horizontal_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_for_horizontal"
+                tools:orientation="horizontal" />
+
+            <FrameLayout
+                android:id="@+id/loadingLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:background="#6D6D6D"
+                android:visibility="gone"
+                tools:visibility="invisible">
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
         </FrameLayout>
+
 
     </LinearLayout>
 </ScrollView>

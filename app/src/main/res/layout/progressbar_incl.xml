@@ -2,7 +2,7 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loadingLayout"
+    android:id="@+id/loa"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#6D6D6D"
