@@ -22,7 +22,7 @@ class MoviesListFragment : Fragment() {
     companion object {
         const val BUNDLE_EXTRA: String = "BUNDLE_EXTRA"
 
-        fun newInstance(bundle: Bundle): MoviesListFragment{
+        fun newInstance(bundle: Bundle): MoviesListFragment {
             val fragment = MoviesListFragment()
             fragment.arguments = bundle
             return fragment
@@ -49,11 +49,13 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val idList: Int = arguments?.getInt(MovieFragment.BUNDLE_EXTRA) ?: 0
+
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getPopularMoviesLiveData().observe(viewLifecycleOwner, observer)
-
-        viewModel.getListMoviesFromRemoteSource()
+        viewModel.getMoviesListLiveData().observe(viewLifecycleOwner, observer)
+        viewModel.getListMoviesFromRemoteSource(idList)
+        val zzz = 3 + 3
     }
 
 
@@ -70,7 +72,7 @@ class MoviesListFragment : Fragment() {
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar
                     .make(binding.container, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getListMoviesFromRemoteSource() }
+                    .setAction("Reload") { viewModel.getAllListMoviesFromRemoteSource() }
                     .show()
             }
             else -> {

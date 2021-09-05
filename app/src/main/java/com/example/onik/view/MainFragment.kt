@@ -17,7 +17,7 @@ import com.example.onik.viewmodel.ViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), View.OnClickListener {
 
     companion object {
         fun newInstance() = MainFragment()
@@ -40,7 +40,6 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
-        initSelectCategory()
         initRecyclerView()
         return binding.root
     }
@@ -48,11 +47,19 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.categoryTitleLayout1.setOnClickListener (this)
+        binding.categoryTitleLayout2.setOnClickListener (this)
+        binding.categoryTitleLayout3.setOnClickListener (this)
+
         viewModel = ViewModelProvider(this).get(ViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getPopularMoviesLiveData().observe(viewLifecycleOwner, observer)
+        viewModel.getMoviesListLiveData1().observe(viewLifecycleOwner, observer)
+        viewModel.getMoviesListLiveData2().observe(viewLifecycleOwner, observer)
+        viewModel.getMoviesListLiveData3().observe(viewLifecycleOwner, observer)
 
-        viewModel.getListMoviesFromRemoteSource()
+        viewModel.getAllListMoviesFromRemoteSource()
+        val z = 45 + 55
     }
 
 
@@ -60,10 +67,18 @@ class MainFragment : Fragment() {
         when (appState) {
             is AppState.Loading -> binding.loadingLayout.visibility = View.VISIBLE
 
-            is AppState.SuccessMovies -> {
+            is AppState.SuccessMovies1 -> {
                 binding.loadingLayout.visibility = View.GONE
                 adapter1.setData(appState.movies)
+            }
+
+            is AppState.SuccessMovies2 -> {
+                binding.loadingLayout.visibility = View.GONE
                 adapter2.setData(appState.movies)
+            }
+
+            is AppState.SuccessMovies3 -> {
+                binding.loadingLayout.visibility = View.GONE
                 adapter3.setData(appState.movies)
             }
 
@@ -72,7 +87,7 @@ class MainFragment : Fragment() {
                 Snackbar
                     .make(binding.main, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Reload") {
-                        viewModel.getListMoviesFromRemoteSource()
+                        viewModel.getAllListMoviesFromRemoteSource()
                     }
                     .show()
             }
@@ -119,35 +134,25 @@ class MainFragment : Fragment() {
             .commit()
     }
 
-    private fun initSelectCategory() {
-        val bundle = Bundle()
-
-        binding.categoryTitleLayout1.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MoviesListFragment.newInstance(bundle))
-                .addToBackStack(null)
-                .commit()
-        }
-
-        binding.categoryTitleLayout2.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MoviesListFragment.newInstance(bundle))
-                .addToBackStack(null)
-                .commit()
-        }
-
-        binding.categoryTitleLayout3.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MoviesListFragment.newInstance(bundle))
-                .addToBackStack(null)
-                .commit()
-        }
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(v: View?) {
+        val bundle = Bundle()
+
+        when (v!!.id) {
+            R.id.categoryTitleLayout1 -> bundle.putInt(MoviesListFragment.BUNDLE_EXTRA, 1)
+            R.id.categoryTitleLayout2 -> bundle.putInt(MoviesListFragment.BUNDLE_EXTRA, 2)
+            R.id.categoryTitleLayout3 -> bundle.putInt(MoviesListFragment.BUNDLE_EXTRA, 3)
+        }
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.container, MoviesListFragment.newInstance(bundle))
+            .addToBackStack(null)
+            .commit()
     }
 
 }

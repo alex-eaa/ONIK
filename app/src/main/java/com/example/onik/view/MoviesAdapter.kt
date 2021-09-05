@@ -38,10 +38,12 @@ class MoviesAdapter(
 
     }
 
+
     fun setData(data: Array<Movie>){
         dataSet = data
         notifyDataSetChanged()
     }
+
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
