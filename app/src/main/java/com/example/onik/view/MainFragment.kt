@@ -30,20 +30,20 @@ class MainFragment : Fragment(), View.OnClickListener {
     private lateinit var adapter1: MoviesAdapter
     private lateinit var adapter2: MoviesAdapter
     private lateinit var adapter3: MoviesAdapter
-    private lateinit var mainRecyclerView1: RecyclerView
-    private lateinit var mainRecyclerView2: RecyclerView
-    private lateinit var mainRecyclerView3: RecyclerView
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = MainFragmentBinding.inflate(inflater, container, false)
+//        _binding = MainFragmentBinding.inflate(inflater, container, false)
+        _binding = MainFragmentBinding.bind(inflater.inflate(R.layout.main_fragment, container, false))
+
         initRecyclerView()
-        binding.categoryTitleLayout1.setOnClickListener (this)
-        binding.categoryTitleLayout2.setOnClickListener (this)
-        binding.categoryTitleLayout3.setOnClickListener (this)
+
+        binding.categoryTitleLayout1.setOnClickListener(this)
+        binding.categoryTitleLayout2.setOnClickListener(this)
+        binding.categoryTitleLayout3.setOnClickListener(this)
         return binding.root
     }
 
@@ -71,17 +71,17 @@ class MainFragment : Fragment(), View.OnClickListener {
 
             is AppState.SuccessMovies1 -> {
                 binding.loadingLayout1.visibility = View.GONE
-                adapter1.setData(appState.movies)
+                adapter1.moviesData = appState.movies
             }
 
             is AppState.SuccessMovies2 -> {
                 binding.loadingLayout2.visibility = View.GONE
-                adapter2.setData(appState.movies)
+                adapter2.moviesData = appState.movies
             }
 
             is AppState.SuccessMovies3 -> {
                 binding.loadingLayout3.visibility = View.GONE
-                adapter3.setData(appState.movies)
+                adapter3.moviesData = appState.movies
             }
 
             is AppState.Error -> {
@@ -102,29 +102,27 @@ class MainFragment : Fragment(), View.OnClickListener {
 
 
     private fun initRecyclerView() {
-        mainRecyclerView1 = binding.recyclerViewHorizontal1
+
         adapter1 =
             MoviesAdapter(R.layout.item_for_horizontal) { position -> onListItemClick(position) }
-        mainRecyclerView1.adapter = adapter1
-        mainRecyclerView1.layoutManager =
+        binding.recyclerViewHorizontal1.adapter = adapter1
+        binding.recyclerViewHorizontal1.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        mainRecyclerView1.setHasFixedSize(true);
+        binding.recyclerViewHorizontal1.setHasFixedSize(true);
 
-        mainRecyclerView2 = binding.recyclerViewHorizontal2
         adapter2 =
             MoviesAdapter(R.layout.item_for_horizontal) { position -> onListItemClick(position) }
-        mainRecyclerView2.adapter = adapter2
-        mainRecyclerView2.layoutManager =
+        binding.recyclerViewHorizontal2.adapter = adapter2
+        binding.recyclerViewHorizontal2.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        mainRecyclerView2.setHasFixedSize(true);
+        binding.recyclerViewHorizontal2.setHasFixedSize(true);
 
-        mainRecyclerView3 = binding.recyclerViewHorizontal3
         adapter3 =
             MoviesAdapter(R.layout.item_for_horizontal) { position -> onListItemClick(position) }
-        mainRecyclerView3.adapter = adapter3
-        mainRecyclerView3.layoutManager =
+        binding.recyclerViewHorizontal3.adapter = adapter3
+        binding.recyclerViewHorizontal3.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        mainRecyclerView3.setHasFixedSize(true);
+        binding.recyclerViewHorizontal3.setHasFixedSize(true);
     }
 
 

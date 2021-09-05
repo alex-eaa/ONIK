@@ -1,5 +1,6 @@
 package com.example.onik.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +10,16 @@ import com.example.onik.R
 import com.example.onik.model.Movie
 
 class MoviesAdapter(
-    private val rLayoutForInflate: Int,
-    private val onItemClicked: (position: Int) -> Unit
+    private val itemLayoutForInflate: Int,
+    private val onItemClicked: (position: Int) -> Unit,
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    private var dataSet: List<Movie> = listOf()
-
+    var moviesData: List<Movie> = listOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     inner class ViewHolder(
         itemView: View,
@@ -37,31 +41,24 @@ class MoviesAdapter(
     }
 
 
-    fun setData(data: List<Movie>){
-        dataSet = data
-        notifyDataSetChanged()
-    }
-
-
-    // Create new views (invoked by the layout manager)
+    // RecyclerView вызывает этот метод всякий раз, когда ему нужно создать новый ViewHolder.
+    // Метод создает и инициализирует ViewHolder и связанный с ним View,
+    // но не заполняет содержимое представления - ViewHolder еще не привязан к конкретным данным.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(rLayoutForInflate, parent, false)
+            .inflate(itemLayoutForInflate, parent, false)
 
         return ViewHolder(view, onItemClicked)
-
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.release_date.text = dataSet[position].release_date.substring(0, 4)
-        viewHolder.title.text = dataSet[position].title
-        viewHolder.vote_average.text = dataSet[position].vote_average.toString()
+        // Получить элемент из вашего набора данных в этой позиции и заменить
+        // содержимое представления в этой позици этим элементом
+        viewHolder.release_date.text = moviesData[position].release_date.substring(0, 4)
+        viewHolder.title.text = moviesData[position].title
+        viewHolder.vote_average.text = moviesData[position].vote_average.toString()
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    override fun getItemCount() = moviesData.size
 
 }

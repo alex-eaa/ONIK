@@ -36,7 +36,6 @@ class MoviesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: MoviesAdapter
-    private lateinit var mainRecyclerView: RecyclerView
 
 
     override fun onCreateView(
@@ -51,7 +50,7 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        idList = arguments?.getInt(MovieFragment.BUNDLE_EXTRA) ?: 0
+        idList = arguments?.getInt(MovieFragment.BUNDLE_EXTRA)!!
 
         viewModel = ViewModelProvider(this).get(MoviesListViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
@@ -66,7 +65,7 @@ class MoviesListFragment : Fragment() {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.visibility = View.GONE
-                adapter.setData(appState.movies)
+                adapter.moviesData = appState.movies
             }
 
             is AppState.Error -> {
@@ -83,11 +82,10 @@ class MoviesListFragment : Fragment() {
 
 
     private fun initRecyclerView() {
-        mainRecyclerView = binding.mainRecyclerView
         adapter = MoviesAdapter(R.layout.item) { position -> onListItemClick(position) }
-        mainRecyclerView.adapter = adapter
-        mainRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        mainRecyclerView.setHasFixedSize(true);
+        binding.mainRecyclerView.adapter = adapter
+        binding.mainRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        binding.mainRecyclerView.setHasFixedSize(true);
     }
 
 
