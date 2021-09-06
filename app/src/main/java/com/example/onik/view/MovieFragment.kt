@@ -25,11 +25,11 @@ class MovieFragment : Fragment() {
         }
     }
 
+    private var idMovie: Int = 0
+
     private lateinit var viewModel: MovieViewModel
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
-
-    private var idMovie: Int = 0
 
 
     override fun onCreateView(
@@ -46,11 +46,17 @@ class MovieFragment : Fragment() {
         idMovie = arguments?.getInt(BUNDLE_EXTRA)!!
 
         viewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
-        val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner, observer)
+
+        //В две строки
+//        val observer = Observer<AppState> { appState -> renderData(appState) }
+//        viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner, observer)
+
+        //Можно записать в одну строку
+        viewModel.movieDetailsLiveData
+            .observe(viewLifecycleOwner, { appState -> renderData(appState) })
+
         viewModel.getDataFromRemoteSource(idMovie)
     }
-
 
 
     private fun renderData(appState: AppState?) {
@@ -60,7 +66,8 @@ class MovieFragment : Fragment() {
             is AppState.SuccessMovie -> {
                 binding.loadingLayout.visibility = View.GONE
                 binding.title.text = appState.movie.title
-                binding.voteAverage.text = "${appState.movie.vote_average} (${appState.movie.vote_count})"
+                binding.voteAverage.text =
+                    "${appState.movie.vote_average} (${appState.movie.vote_count})"
                 binding.overview.text = appState.movie.overview
                 binding.runtime.text = "${appState.movie.runtime} ${getString(R.string.min)}"
                 binding.releaseDate.text = appState.movie.release_date
