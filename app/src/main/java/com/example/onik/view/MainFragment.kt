@@ -12,21 +12,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.MainViewModel
+import com.example.onik.viewmodel.MoviesCollectionViewModel
+import com.example.onik.viewmodel.Constants
+import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_1
+import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_2
+import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_3
 import com.google.android.material.snackbar.Snackbar
 
 
-class MainFragment : Fragment(), View.OnClickListener {
+class MainFragment : Fragment(), View.OnClickListener, Constants {
 
     companion object {
-        const val KEY_RECYCLER_1 = "RECYCLER_1"
-        const val KEY_RECYCLER_2 = "RECYCLER_2"
-        const val KEY_RECYCLER_3 = "RECYCLER_3"
-
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MoviesCollectionViewModel
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -53,49 +53,80 @@ class MainFragment : Fragment(), View.OnClickListener {
         binding.categoryTitleLayout2.setOnClickListener(this)
         binding.categoryTitleLayout3.setOnClickListener(this)
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getMoviesListLiveData1().observe(viewLifecycleOwner, observer)
-        viewModel.getMoviesListLiveData2().observe(viewLifecycleOwner, observer)
-        viewModel.getMoviesListLiveData3().observe(viewLifecycleOwner, observer)
 
-        viewModel.getDataFromRemoteSource()
+        viewModel.getMoviesListLiveData(MOVIES_COLLECTION_1)?.observe(viewLifecycleOwner, observer)
+        viewModel.getMoviesListLiveData(MOVIES_COLLECTION_2)?.observe(viewLifecycleOwner, observer)
+        viewModel.getMoviesListLiveData(MOVIES_COLLECTION_3)?.observe(viewLifecycleOwner, observer)
+
+        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_1)
+        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_2)
+        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_3)
     }
 
 
     private fun renderData(appState: AppState?) {
         when (appState) {
-            is AppState.Loading -> {
-                binding.loadingLayout1.visibility = View.VISIBLE
-                binding.loadingLayout2.visibility = View.VISIBLE
-                binding.loadingLayout3.visibility = View.VISIBLE
+            is AppState.LoadingMovies -> {
+                when (appState.key) {
+                    MOVIES_COLLECTION_1 -> binding.loadingLayout1.visibility = View.VISIBLE
+                    MOVIES_COLLECTION_2 -> binding.loadingLayout2.visibility = View.VISIBLE
+                    MOVIES_COLLECTION_3 -> binding.loadingLayout3.visibility = View.VISIBLE
+                }
             }
 
-            is AppState.SuccessMovies1 -> {
-                binding.loadingLayout1.visibility = View.GONE
-                mapAdapters[KEY_RECYCLER_1]?.moviesData = appState.movies
-            }
-
-            is AppState.SuccessMovies2 -> {
-                binding.loadingLayout2.visibility = View.GONE
-                mapAdapters[KEY_RECYCLER_2]?.moviesData = appState.movies
-            }
-
-            is AppState.SuccessMovies3 -> {
-                binding.loadingLayout3.visibility = View.GONE
-                mapAdapters[KEY_RECYCLER_3]?.moviesData = appState.movies
-            }
-
-            is AppState.Error -> {
-                binding.loadingLayout1.visibility = View.GONE
-                binding.loadingLayout2.visibility = View.GONE
-                binding.loadingLayout3.visibility = View.GONE
-                Snackbar
-                    .make(binding.main, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") {
-                        viewModel.getDataFromRemoteSource()
+            is AppState.SuccessMovies -> {
+                when (appState.key) {
+                    MOVIES_COLLECTION_1 -> {
+                        binding.loadingLayout1.visibility = View.GONE
+                        mapAdapters[MOVIES_COLLECTION_1]?.moviesData = appState.movies
                     }
-                    .show()
+                    MOVIES_COLLECTION_2 -> {
+                        binding.loadingLayout2.visibility = View.GONE
+                        mapAdapters[MOVIES_COLLECTION_2]?.moviesData = appState.movies
+                    }
+                    MOVIES_COLLECTION_3 -> {
+                        binding.loadingLayout3.visibility = View.GONE
+                        mapAdapters[MOVIES_COLLECTION_3]?.moviesData = appState.movies
+                    }
+                }
+            }
+
+            is AppState.ErrorMovies -> {
+                when (appState.key) {
+                    MOVIES_COLLECTION_1 -> {
+                        Snackbar
+                            .make(binding.main,
+                                "Error: ${appState.error}",
+                                Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Reload") {
+                                viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_1)
+                            }
+                            .show()
+                    }
+                    MOVIES_COLLECTION_2 -> {
+                        Snackbar
+                            .make(binding.main,
+                                "Error: ${appState.error}",
+                                Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Reload") {
+                                viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_2)
+                            }
+                            .show()
+                    }
+                    MOVIES_COLLECTION_3 -> {
+                        Snackbar
+                            .make(binding.main,
+                                "Error: ${appState.error}",
+                                Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Reload") {
+                                viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_3)
+                            }
+                            .show()
+                    }
+                }
+
             }
             else -> {
             }
@@ -105,15 +136,15 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     private fun initRecyclerView() {
         mapRecyclerView = mapOf(
-            KEY_RECYCLER_1 to binding.recyclerViewHorizontal1,
-            KEY_RECYCLER_2 to binding.recyclerViewHorizontal2,
-            KEY_RECYCLER_3 to binding.recyclerViewHorizontal3,
+            MOVIES_COLLECTION_1 to binding.recyclerViewHorizontal1,
+            MOVIES_COLLECTION_2 to binding.recyclerViewHorizontal2,
+            MOVIES_COLLECTION_3 to binding.recyclerViewHorizontal3,
         )
 
         mapAdapters = mapOf(
-            KEY_RECYCLER_1 to MoviesAdapter(R.layout.item_for_horizontal),
-            KEY_RECYCLER_2 to MoviesAdapter(R.layout.item_for_horizontal),
-            KEY_RECYCLER_3 to MoviesAdapter(R.layout.item_for_horizontal)
+            MOVIES_COLLECTION_1 to MoviesAdapter(R.layout.item_for_horizontal),
+            MOVIES_COLLECTION_2 to MoviesAdapter(R.layout.item_for_horizontal),
+            MOVIES_COLLECTION_3 to MoviesAdapter(R.layout.item_for_horizontal)
         )
 
         val myListener = MoviesAdapter.OnItemViewClickListener { idMovie ->
@@ -145,9 +176,12 @@ class MainFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
 
         when (v!!.id) {
-            R.id.categoryTitleLayout1 -> bundle.putInt(MoviesListFragment.BUNDLE_EXTRA, 1)
-            R.id.categoryTitleLayout2 -> bundle.putInt(MoviesListFragment.BUNDLE_EXTRA, 2)
-            R.id.categoryTitleLayout3 -> bundle.putInt(MoviesListFragment.BUNDLE_EXTRA, 3)
+            R.id.categoryTitleLayout1 -> bundle.putString(MoviesListFragment.BUNDLE_EXTRA,
+                MOVIES_COLLECTION_1)
+            R.id.categoryTitleLayout2 -> bundle.putString(MoviesListFragment.BUNDLE_EXTRA,
+                MOVIES_COLLECTION_2)
+            R.id.categoryTitleLayout3 -> bundle.putString(MoviesListFragment.BUNDLE_EXTRA,
+                MOVIES_COLLECTION_3)
         }
 
         requireActivity().supportFragmentManager.beginTransaction()

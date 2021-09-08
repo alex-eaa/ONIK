@@ -14,7 +14,6 @@ class MovieViewModel : ViewModel() {
     private val movieDetailsLiveDataObserver: MutableLiveData<AppState> = MutableLiveData<AppState>()
 
     val movieDetailsLiveData: LiveData<AppState> = movieDetailsLiveDataObserver
-//    fun getMovieDetailsLiveData()  = movieDetailsLiveDataObserver
 
 
     fun getDataFromLocalSource(id: Int) = getData(id)
@@ -25,7 +24,7 @@ class MovieViewModel : ViewModel() {
         movieDetailsLiveDataObserver.value = AppState.Loading
 
         Thread {
-            Thread.sleep(500)
+            Thread.sleep((500..1500).random().toLong())
             if (true) {
                 movieDetailsLiveDataObserver.postValue(AppState.SuccessMovie(repositoryImpl.getMovieDetailsFromServer(id)))
             } else {
