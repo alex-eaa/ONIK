@@ -27,7 +27,9 @@ class MovieFragment : Fragment() {
 
     private var idMovie: Int = 0
 
-    private lateinit var viewModel: MovieViewModel
+    private val viewModel: MovieViewModel by lazy{
+        ViewModelProvider(this).get(MovieViewModel::class.java)
+    }
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -45,13 +47,6 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         idMovie = arguments?.getInt(BUNDLE_EXTRA)!!
 
-        viewModel = ViewModelProvider(this).get(MovieViewModel::class.java)
-
-        //В две строки
-//        val observer = Observer<AppState> { appState -> renderData(appState) }
-//        viewModel.getMovieDetailsLiveData().observe(viewLifecycleOwner, observer)
-
-        //Можно записать в одну строку
         viewModel.movieDetailsLiveData
             .observe(viewLifecycleOwner, { appState -> renderData(appState) })
 

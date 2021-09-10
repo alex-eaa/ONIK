@@ -31,7 +31,9 @@ class MoviesListFragment : Fragment(), Constants {
 
     private var movieListType: String = ""
 
-    private lateinit var viewModel: MoviesCollectionViewModel
+    private val viewModel: MoviesCollectionViewModel by lazy{
+        ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
+    }
     private var _binding: MoviesListFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -53,7 +55,6 @@ class MoviesListFragment : Fragment(), Constants {
 
         movieListType = arguments?.getString(MovieFragment.BUNDLE_EXTRA)!!
 
-        viewModel = ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
         viewModel.getMoviesListLiveData(movieListType)?.observe(viewLifecycleOwner, observer)
         viewModel.getDataFromRemoteSource(movieListType)

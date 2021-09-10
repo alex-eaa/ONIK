@@ -26,7 +26,9 @@ class MainFragment : Fragment(), View.OnClickListener, Constants {
         fun newInstance() = MainFragment()
     }
 
-    private lateinit var viewModel: MoviesCollectionViewModel
+    private val viewModel: MoviesCollectionViewModel by lazy {
+        ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
+    }
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -53,7 +55,6 @@ class MainFragment : Fragment(), View.OnClickListener, Constants {
         binding.categoryTitleLayout2.setOnClickListener(this)
         binding.categoryTitleLayout3.setOnClickListener(this)
 
-        viewModel = ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
         val observer = Observer<AppState> { appState -> renderData(appState) }
 
         viewModel.getMoviesListLiveData(MOVIES_COLLECTION_1)?.observe(viewLifecycleOwner, observer)
