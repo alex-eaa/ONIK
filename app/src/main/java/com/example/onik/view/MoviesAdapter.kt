@@ -23,14 +23,14 @@ class MoviesAdapter(
     var listener: OnItemViewClickListener? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(movie: Movie){
-            itemView.findViewById<TextView>(R.id.release_date).text = movie.release_date.substring(0, 4)
-            itemView.findViewById<TextView>(R.id.title).text = movie.title
-            itemView.findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
-
-            itemView.setOnClickListener {
-                listener?.onItemClick(movie.id)
+        fun bind(movie: Movie) {
+            itemView.apply {
+                findViewById<TextView>(R.id.release_date).text = movie.release_date.substring(0, 4)
+                findViewById<TextView>(R.id.title).text = movie.title
+                findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
+                setOnClickListener {
+                    listener?.onItemClick(movie)
+                }
             }
         }
     }
@@ -56,7 +56,7 @@ class MoviesAdapter(
 
 
     fun interface OnItemViewClickListener {
-        fun onItemClick(idMovie: Int)
+        fun onItemClick(movie: Movie)
     }
 
 }
