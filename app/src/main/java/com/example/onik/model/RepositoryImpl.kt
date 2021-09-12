@@ -9,6 +9,7 @@ import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.Constants
 import com.example.onik.viewmodel.Constants.Companion.API_KEY
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
@@ -26,7 +27,7 @@ class RepositoryImpl : Repository, Constants {
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun getMovieDetailsFromServer(id: Int) : AppState {
+    override fun getMovieDetailsFromServer(id: Int): AppState {
         val uriBuilder: Uri.Builder = Uri.Builder().apply {
             scheme("https")
             authority("api.themoviedb.org")
@@ -41,7 +42,7 @@ class RepositoryImpl : Repository, Constants {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun getListMoviesFromServer(collectionId: String): AppState{
+    override fun getListMoviesFromServer(collectionId: String): AppState {
         val uriBuilder: Uri.Builder = Uri.Builder().apply {
             scheme("https")
             authority("api.themoviedb.org")
@@ -63,7 +64,7 @@ class RepositoryImpl : Repository, Constants {
 
         var urlConnection: HttpsURLConnection? = null
 
-        try {
+        return try {
             urlConnection = uri.openConnection() as HttpsURLConnection
             urlConnection.apply {
                 requestMethod = "GET"
@@ -72,12 +73,15 @@ class RepositoryImpl : Repository, Constants {
 
             val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
             val result = reader.lines().collect(Collectors.joining("\n"))
-            val data: ListMoviesDTO? = Gson().fromJson(result, ListMoviesDTO::class.java)
-            return AppState.SuccessMovies(data)
+            AppState.SuccessMovies(Gson().fromJson(result, ListMoviesDTO::class.java))
+
+        } catch (e: JsonSyntaxException ) {
+            Log.e(TAG, "FAILED parsing", e)
+            AppState.Error(e)
 
         } catch (e: Exception) {
-            Log.e(TAG, "FAILED", e)
-            return AppState.Error(e)
+            Log.e(TAG, "FAILED connect", e)
+            AppState.Error(e)
 
         } finally {
             urlConnection?.disconnect()
@@ -91,7 +95,7 @@ class RepositoryImpl : Repository, Constants {
 
         var urlConnection: HttpsURLConnection? = null
 
-        try {
+        return try {
             urlConnection = uri.openConnection() as HttpsURLConnection
             urlConnection.apply {
                 requestMethod = "GET"
@@ -100,12 +104,15 @@ class RepositoryImpl : Repository, Constants {
 
             val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
             val result = reader.lines().collect(Collectors.joining("\n"))
-            val data: MovieDTO? = Gson().fromJson(result, MovieDTO::class.java)
-            return AppState.SuccessMovie(data)
+            AppState.SuccessMovie(Gson().fromJson(result, MovieDTO::class.java))
+
+        } catch (e: JsonSyntaxException) {
+            Log.e(TAG, "FAILED parsing", e)
+            AppState.Error(e)
 
         } catch (e: Exception) {
-            Log.e(TAG, "FAILED", e)
-            return AppState.Error(e)
+            Log.e(TAG, "FAILED connect", e)
+            AppState.Error(e)
 
         } finally {
             urlConnection?.disconnect()

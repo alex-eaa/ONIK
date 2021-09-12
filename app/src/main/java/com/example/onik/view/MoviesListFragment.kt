@@ -68,9 +68,9 @@ class MoviesListFragment : Fragment(), Constants {
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
-                binding.container.showSnackbar("Коллекцию не удалось загрузить.",
-                    "Повторить",
-                    action = { viewModel.getDataFromRemoteSource(moviesCollectionName) })
+                Snackbar.make(binding.container, appState.error.toString(), Snackbar.LENGTH_LONG)
+                    .setDefaultActionText { viewModel.getDataFromRemoteSource(moviesCollectionName) }
+                    .show()
             }
         }
     }

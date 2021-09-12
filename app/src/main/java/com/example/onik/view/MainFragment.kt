@@ -1,6 +1,7 @@
 package com.example.onik.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_1
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_2
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_3
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_4
+import com.google.android.material.snackbar.Snackbar
 
 
 class MainFragment : Fragment(), View.OnClickListener {
@@ -125,14 +127,15 @@ class MainFragment : Fragment(), View.OnClickListener {
                     MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
                     MOVIES_COLLECTION_4 -> binding.loadingLayout4.show()
                 }
-                binding.container.showSnackbar("Коллекции не удалось загрузить.",
-                    "Повторить",
-                    action = {
+
+                Snackbar.make(binding.main, appState.error.toString(), Snackbar.LENGTH_LONG)
+                    .setDefaultActionText {
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_1)
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_2)
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_3)
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_4)
-                    })
+                    }
+                    .show()
             }
         }
     }

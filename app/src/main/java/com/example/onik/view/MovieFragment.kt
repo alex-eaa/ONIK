@@ -2,6 +2,7 @@ package com.example.onik.view
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.JsonSyntaxException
 
 class MovieFragment : Fragment() {
 
