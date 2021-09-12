@@ -12,14 +12,12 @@ import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MoviesCollectionViewModel
-import com.example.onik.viewmodel.Constants
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_1
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_2
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_3
-import com.google.android.material.snackbar.Snackbar
 
 
-class MainFragment : Fragment(), View.OnClickListener, Constants {
+class MainFragment : Fragment(), View.OnClickListener {
 
     companion object {
         fun newInstance() = MainFragment()

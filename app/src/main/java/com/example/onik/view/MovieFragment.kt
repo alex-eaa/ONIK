@@ -69,15 +69,14 @@ class MovieFragment : Fragment() {
                 }
 
                 var genres = ""
-                appState.movie.genre_ids.forEach { genres += "${it.name}, " }
+                appState.movie.genres?.forEach { genres += "${it.name}, " }
                 binding.genre.text = genres.dropLast(2)
 
             }
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
-                Snackbar.make(binding.main, "", Snackbar.LENGTH_LONG)
-                    .setDefaultText()
+                Snackbar.make(binding.main, appState.error.toString(), Snackbar.LENGTH_LONG)
                     .setDefaultActionText { viewModel.getDataFromRemoteSource(idMovie) }
                     .show()
             }

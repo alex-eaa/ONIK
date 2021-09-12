@@ -1,19 +1,72 @@
 package com.example.onik.model
 
+import android.net.Uri
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.onik.Foo
+import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.Constants
+import com.example.onik.viewmodel.Constants.Companion.API_KEY
+import com.google.gson.Gson
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.Exception
+import java.net.URL
+import java.util.stream.Collectors
+import javax.net.ssl.HttpsURLConnection
 
 
-class RepositoryImpl : Repository {
-
-    // https://api.themoviedb.org/3/movie/436969?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RUS
-    override fun getMovieDetailsFromServer(id: Int): Movie = Foo.movies.first { it.id == id }
+class RepositoryImpl : Repository, Constants {
+    private val TAG = "RepositoryImpl"
 
     override fun getMovieDetailsFromLocalStorage(id: Int): Movie = Foo.movies.first { it.id == id }
 
-    // https://api.themoviedb.org/3/movie/popular?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RUS&page=1
-    // https://api.themoviedb.org/3/movie/top_rated?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RU&page=1
-    // https://api.themoviedb.org/3/movie/now_playing?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RU&page=1
+    override fun getListMoviesFromLocalSource(): List<Movie> = Foo.movies
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getMovieDetailsFromServer(id: Int) : AppState {
+        val uriBuilder: Uri.Builder = Uri.Builder().apply {
+            scheme("https")
+            authority("api.themoviedb.org")
+            appendPath("3")
+            appendPath("movie")
+            appendPath(id.toString())
+            appendQueryParameter("api_key", API_KEY)
+            appendQueryParameter("language", "ru-RU")
+        }
+
+        return getFromInternet(URL(uriBuilder.build().toString()))
+    }
+
     override fun getListMoviesFromRemoteSource(): List<Movie> = Foo.movies
 
-    override fun getListMoviesFromLocalSource(): List<Movie> = Foo.movies
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getFromInternet(uri: URL): AppState {
+        Log.d(TAG, uri.toString())
+
+        var urlConnection: HttpsURLConnection? = null
+
+        try {
+            urlConnection = uri.openConnection() as HttpsURLConnection
+            urlConnection.apply {
+                requestMethod = "GET"
+                readTimeout = 10000
+            }
+
+            val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+            val result = reader.lines().collect(Collectors.joining("\n"))
+            val data: MovieDTO = Gson().fromJson(result, MovieDTO::class.java)
+            return AppState.SuccessMovie(data)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "FAILED", e)
+            return AppState.Error(e)
+
+        } finally {
+            urlConnection?.disconnect()
+        }
+    }
 }
