@@ -19,7 +19,11 @@ import javax.net.ssl.HttpsURLConnection
 
 
 class RepositoryImpl : Repository, Constants {
-    private val TAG = "RepositoryImpl"
+    companion object {
+        const val TAG = "RepositoryImpl"
+        const val TYPE_DATA_MOVIE = "MOVIE"
+        const val TYPE_DATA_COLLECTION = "COLLECTION"
+    }
 
     override fun getMovieDetailsFromLocalStorage(id: Int): Movie = Foo.movies.first { it.id == id }
 
@@ -28,38 +32,17 @@ class RepositoryImpl : Repository, Constants {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun getMovieDetailsFromServer(id: Int): AppState {
-        val uriBuilder: Uri.Builder = Uri.Builder().apply {
-            scheme("https")
-            authority("api.themoviedb.org")
-            appendPath("3")
-            appendPath("movie")
-            appendPath(id.toString())
-            appendQueryParameter("api_key", API_KEY)
-            appendQueryParameter("language", "ru-RU")
-        }
-
-        return getDetailsMovieFromInternet(URL(uriBuilder.build().toString()))
+        return getFromInternet(createUri(movieId = id), TYPE_DATA_MOVIE)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun getListMoviesFromServer(collectionId: String): AppState {
-        val uriBuilder: Uri.Builder = Uri.Builder().apply {
-            scheme("https")
-            authority("api.themoviedb.org")
-            appendPath("3")
-            appendPath("movie")
-            appendPath(collectionId)
-            appendQueryParameter("api_key", API_KEY)
-            appendQueryParameter("language", "ru-RU")
-            appendQueryParameter("page", "1")
-        }
-
-        return getListMoviesFromInternet(URL(uriBuilder.build().toString()))
+        return getFromInternet(createUri(collectionId = collectionId), TYPE_DATA_COLLECTION)
     }
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getListMoviesFromInternet(uri: URL): AppState {
+    fun getFromInternet(uri: URL, typeData: String): AppState {
         Log.d(TAG, uri.toString())
 
         var urlConnection: HttpsURLConnection? = null
@@ -73,38 +56,16 @@ class RepositoryImpl : Repository, Constants {
 
             val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
             val result = reader.lines().collect(Collectors.joining("\n"))
-            AppState.SuccessMovies(Gson().fromJson(result, ListMoviesDTO::class.java))
 
-        } catch (e: JsonSyntaxException ) {
-            Log.e(TAG, "FAILED parsing", e)
-            AppState.Error(e)
-
-        } catch (e: Exception) {
-            Log.e(TAG, "FAILED connect", e)
-            AppState.Error(e)
-
-        } finally {
-            urlConnection?.disconnect()
-        }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun getDetailsMovieFromInternet(uri: URL): AppState {
-        Log.d(TAG, uri.toString())
-
-        var urlConnection: HttpsURLConnection? = null
-
-        return try {
-            urlConnection = uri.openConnection() as HttpsURLConnection
-            urlConnection.apply {
-                requestMethod = "GET"
-                readTimeout = 10000
+            when (typeData) {
+                TYPE_DATA_COLLECTION -> AppState.SuccessMovies(Gson().fromJson(result,
+                    ListMoviesDTO::class.java))
+                TYPE_DATA_MOVIE -> AppState.SuccessMovie(Gson().fromJson(result,
+                    MovieDTO::class.java))
+                else -> {
+                    throw JsonSyntaxException("FAILED parsing")
+                }
             }
-
-            val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-            val result = reader.lines().collect(Collectors.joining("\n"))
-            AppState.SuccessMovie(Gson().fromJson(result, MovieDTO::class.java))
 
         } catch (e: JsonSyntaxException) {
             Log.e(TAG, "FAILED parsing", e)
@@ -118,4 +79,25 @@ class RepositoryImpl : Repository, Constants {
             urlConnection?.disconnect()
         }
     }
+
+
+    private fun createUri(
+        movieId: Int? = null,
+        collectionId: String? = null,
+    ): URL {
+        return URL(
+            Uri.Builder().apply {
+                scheme("https")
+                authority("api.themoviedb.org")
+                appendPath("3")
+                appendPath("movie")
+                movieId?.let { appendPath(movieId.toString()) }
+                collectionId?.let { appendPath(collectionId) }
+                appendQueryParameter("api_key", API_KEY)
+                appendQueryParameter("language", "ru-RU")
+                movieId?.let { appendQueryParameter("page", "1") }
+            }.build().toString()
+        )
+    }
+
 }
