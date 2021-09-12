@@ -37,7 +37,7 @@ class RepositoryImpl : Repository, Constants {
             appendQueryParameter("language", "ru-RU")
         }
 
-        return getFromInternet(URL(uriBuilder.build().toString()))
+        return getDetailsMovieFromInternet(URL(uriBuilder.build().toString()))
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -53,12 +53,12 @@ class RepositoryImpl : Repository, Constants {
             appendQueryParameter("page", "1")
         }
 
-        return getListMoviesFromInternet(URL(uriBuilder.build().toString()), collectionId)
+        return getListMoviesFromInternet(URL(uriBuilder.build().toString()))
     }
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getListMoviesFromInternet(uri: URL, collectionId: String): AppState {
+    fun getListMoviesFromInternet(uri: URL): AppState {
         Log.d(TAG, uri.toString())
 
         var urlConnection: HttpsURLConnection? = null
@@ -72,8 +72,8 @@ class RepositoryImpl : Repository, Constants {
 
             val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
             val result = reader.lines().collect(Collectors.joining("\n"))
-            val data: ListMoviesDTO = Gson().fromJson(result, ListMoviesDTO::class.java)
-            return AppState.SuccessMovies(data, collectionId)
+            val data: ListMoviesDTO? = Gson().fromJson(result, ListMoviesDTO::class.java)
+            return AppState.SuccessMovies(data)
 
         } catch (e: Exception) {
             Log.e(TAG, "FAILED", e)
@@ -86,7 +86,7 @@ class RepositoryImpl : Repository, Constants {
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getFromInternet(uri: URL): AppState {
+    fun getDetailsMovieFromInternet(uri: URL): AppState {
         Log.d(TAG, uri.toString())
 
         var urlConnection: HttpsURLConnection? = null
@@ -100,7 +100,7 @@ class RepositoryImpl : Repository, Constants {
 
             val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
             val result = reader.lines().collect(Collectors.joining("\n"))
-            val data: MovieDTO = Gson().fromJson(result, MovieDTO::class.java)
+            val data: MovieDTO? = Gson().fromJson(result, MovieDTO::class.java)
             return AppState.SuccessMovie(data)
 
         } catch (e: Exception) {

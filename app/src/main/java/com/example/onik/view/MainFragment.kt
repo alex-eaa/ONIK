@@ -63,16 +63,16 @@ class MainFragment : Fragment(), View.OnClickListener {
 
         with(viewModel) {
             getMoviesListLiveData(MOVIES_COLLECTION_1)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState) })
+                { appState -> renderData(appState, MOVIES_COLLECTION_1) })
 
             getMoviesListLiveData(MOVIES_COLLECTION_2)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState) })
+                { appState -> renderData(appState, MOVIES_COLLECTION_2) })
 
             getMoviesListLiveData(MOVIES_COLLECTION_3)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState) })
+                { appState -> renderData(appState, MOVIES_COLLECTION_3) })
 
             getMoviesListLiveData(MOVIES_COLLECTION_4)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState) })
+                { appState -> renderData(appState, MOVIES_COLLECTION_4) })
 
             getDataFromRemoteSource(MOVIES_COLLECTION_1)
             getDataFromRemoteSource(MOVIES_COLLECTION_2)
@@ -82,40 +82,49 @@ class MainFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun renderData(appState: AppState?) {
+    private fun renderData(appState: AppState?, collectionName: String) {
         when (appState) {
-            is AppState.LoadingMovies -> when (appState.key) {
+            is AppState.LoadingMovies -> when (collectionName) {
                 MOVIES_COLLECTION_1 -> binding.loadingLayout1.show()
                 MOVIES_COLLECTION_2 -> binding.loadingLayout2.show()
                 MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
                 MOVIES_COLLECTION_4 -> binding.loadingLayout4.show()
             }
 
-            is AppState.SuccessMovies -> when (appState.key) {
+            is AppState.SuccessMovies -> when (collectionName) {
                 MOVIES_COLLECTION_1 -> {
                     binding.loadingLayout1.hide()
-                    mapAdapters[MOVIES_COLLECTION_1]?.moviesData = appState.movies.results!!
+                    appState.movies?.results?.let {
+                        mapAdapters[MOVIES_COLLECTION_1]?.moviesData = it
+                    }
                 }
                 MOVIES_COLLECTION_2 -> {
                     binding.loadingLayout2.hide()
-                    mapAdapters[MOVIES_COLLECTION_2]?.moviesData = appState.movies.results!!
+                    appState.movies?.results?.let {
+                        mapAdapters[MOVIES_COLLECTION_2]?.moviesData = it
+                    }
                 }
                 MOVIES_COLLECTION_3 -> {
                     binding.loadingLayout3.hide()
-                    mapAdapters[MOVIES_COLLECTION_3]?.moviesData = appState.movies.results!!
+                    appState.movies?.results?.let {
+                        mapAdapters[MOVIES_COLLECTION_3]?.moviesData = it
+                    }
                 }
                 MOVIES_COLLECTION_4 -> {
                     binding.loadingLayout4.hide()
-                    mapAdapters[MOVIES_COLLECTION_4]?.moviesData = appState.movies.results!!
+                    appState.movies?.results?.let {
+                        mapAdapters[MOVIES_COLLECTION_4]?.moviesData = it
+                    }
                 }
             }
 
             is AppState.Error -> {
-                binding.loadingLayout1.hide()
-                binding.loadingLayout2.hide()
-                binding.loadingLayout3.hide()
-                binding.loadingLayout4.hide()
-
+                when (collectionName) {
+                    MOVIES_COLLECTION_1 -> binding.loadingLayout1.show()
+                    MOVIES_COLLECTION_2 -> binding.loadingLayout2.show()
+                    MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
+                    MOVIES_COLLECTION_4 -> binding.loadingLayout4.show()
+                }
                 binding.container.showSnackbar("Коллекции не удалось загрузить.",
                     "Повторить",
                     action = {

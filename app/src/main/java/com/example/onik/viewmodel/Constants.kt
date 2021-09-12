@@ -3,7 +3,7 @@ package com.example.onik.viewmodel
 interface Constants {
 
     companion object {
-        const val MOVIES_COLLECTION_1 = "popularяя"
+        const val MOVIES_COLLECTION_1 = "popular"
         const val MOVIES_COLLECTION_2 = "top_rated"
         const val MOVIES_COLLECTION_3 = "now_playing"
         const val MOVIES_COLLECTION_4 = "upcoming"

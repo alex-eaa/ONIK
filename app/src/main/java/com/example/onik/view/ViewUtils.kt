@@ -20,7 +20,7 @@ fun View.showSnackbar(
     text: String,
     actionText: String,
     action: (View) -> Unit,
-    length: Int = Snackbar.LENGTH_LONG,
+    length: Int = Snackbar.LENGTH_INDEFINITE,
 ) {
 
     Snackbar.make(this, text, length)

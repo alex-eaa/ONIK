@@ -63,7 +63,7 @@ class MoviesListFragment : Fragment(), Constants {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                myAdapter.moviesData = appState.movies.results!!
+                appState.movies?.results?.let { myAdapter.moviesData = it}
             }
 
             is AppState.Error -> {

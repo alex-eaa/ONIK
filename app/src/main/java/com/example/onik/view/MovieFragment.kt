@@ -58,18 +58,18 @@ class MovieFragment : Fragment() {
             is AppState.SuccessMovie -> {
                 binding.apply {
                     loadingLayout.hide()
-                    title.text = appState.movie.title
+                    title.text = appState.movie?.title
                     voteAverage.text =
-                        "${appState.movie.vote_average} (${appState.movie.vote_count})"
-                    overview.text = appState.movie.overview
-                    runtime.text = "${appState.movie.runtime} ${getString(R.string.min)}"
-                    releaseDate.text = appState.movie.release_date
-                    budget.text = appState.movie.budget.toString()
-                    revenue.text = appState.movie.revenue.toString()
+                        "${appState.movie?.vote_average} (${appState.movie?.vote_count})"
+                    overview.text = appState.movie?.overview
+                    runtime.text = "${appState.movie?.runtime} ${getString(R.string.min)}"
+                    releaseDate.text = appState.movie?.release_date
+                    budget.text = appState.movie?.budget.toString()
+                    revenue.text = appState.movie?.revenue.toString()
                 }
 
                 var genres = ""
-                appState.movie.genres?.forEach { genres += "${it.name}, " }
+                appState.movie?.genres?.forEach { genres += "${it.name}, " }
                 binding.genre.text = genres.dropLast(2)
 
             }
