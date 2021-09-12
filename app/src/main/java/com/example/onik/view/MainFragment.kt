@@ -15,6 +15,7 @@ import com.example.onik.viewmodel.MoviesCollectionViewModel
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_1
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_2
 import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_3
+import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_4
 
 
 class MainFragment : Fragment(), View.OnClickListener {
@@ -34,7 +35,8 @@ class MainFragment : Fragment(), View.OnClickListener {
         mapOf(
             MOVIES_COLLECTION_1 to MoviesAdapter(R.layout.item_for_horizontal),
             MOVIES_COLLECTION_2 to MoviesAdapter(R.layout.item_for_horizontal),
-            MOVIES_COLLECTION_3 to MoviesAdapter(R.layout.item_for_horizontal)
+            MOVIES_COLLECTION_3 to MoviesAdapter(R.layout.item_for_horizontal),
+            MOVIES_COLLECTION_4 to MoviesAdapter(R.layout.item_for_horizontal),
         )
     }
 
@@ -57,6 +59,7 @@ class MainFragment : Fragment(), View.OnClickListener {
         binding.categoryTitleLayout1.setOnClickListener(this)
         binding.categoryTitleLayout2.setOnClickListener(this)
         binding.categoryTitleLayout3.setOnClickListener(this)
+        binding.categoryTitleLayout4.setOnClickListener(this)
 
         with(viewModel) {
             getMoviesListLiveData(MOVIES_COLLECTION_1)?.observe(viewLifecycleOwner,
@@ -68,9 +71,13 @@ class MainFragment : Fragment(), View.OnClickListener {
             getMoviesListLiveData(MOVIES_COLLECTION_3)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState) })
 
+            getMoviesListLiveData(MOVIES_COLLECTION_4)?.observe(viewLifecycleOwner,
+                { appState -> renderData(appState) })
+
             getDataFromRemoteSource(MOVIES_COLLECTION_1)
             getDataFromRemoteSource(MOVIES_COLLECTION_2)
             getDataFromRemoteSource(MOVIES_COLLECTION_3)
+            getDataFromRemoteSource(MOVIES_COLLECTION_4)
         }
     }
 
@@ -81,6 +88,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                 MOVIES_COLLECTION_1 -> binding.loadingLayout1.show()
                 MOVIES_COLLECTION_2 -> binding.loadingLayout2.show()
                 MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
+                MOVIES_COLLECTION_4 -> binding.loadingLayout4.show()
             }
 
             is AppState.SuccessMovies -> when (appState.key) {
@@ -96,12 +104,17 @@ class MainFragment : Fragment(), View.OnClickListener {
                     binding.loadingLayout3.hide()
                     mapAdapters[MOVIES_COLLECTION_3]?.moviesData = appState.movies.results!!
                 }
+                MOVIES_COLLECTION_4 -> {
+                    binding.loadingLayout4.hide()
+                    mapAdapters[MOVIES_COLLECTION_4]?.moviesData = appState.movies.results!!
+                }
             }
 
             is AppState.Error -> {
                 binding.loadingLayout1.hide()
                 binding.loadingLayout2.hide()
                 binding.loadingLayout3.hide()
+                binding.loadingLayout4.hide()
 
                 binding.container.showSnackbar("Коллекции не удалось загрузить.",
                     "Повторить",
@@ -109,6 +122,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_1)
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_2)
                         viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_3)
+                        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_4)
                     })
             }
         }
@@ -120,6 +134,7 @@ class MainFragment : Fragment(), View.OnClickListener {
             MOVIES_COLLECTION_1 to binding.recyclerViewHorizontal1,
             MOVIES_COLLECTION_2 to binding.recyclerViewHorizontal2,
             MOVIES_COLLECTION_3 to binding.recyclerViewHorizontal3,
+            MOVIES_COLLECTION_4 to binding.recyclerViewHorizontal4,
         )
 
         for (key in mapRecyclerView.keys) {
@@ -151,7 +166,11 @@ class MainFragment : Fragment(), View.OnClickListener {
 
 
     override fun onClick(v: View) {
-        if (v.id == R.id.categoryTitleLayout1 || v.id == R.id.categoryTitleLayout2 || v.id == R.id.categoryTitleLayout3) {
+        if (v.id == R.id.categoryTitleLayout1
+            || v.id == R.id.categoryTitleLayout2
+            || v.id == R.id.categoryTitleLayout3
+            || v.id == R.id.categoryTitleLayout4
+        ) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MoviesListFragment.newInstance(Bundle().apply {
                     when (v.id) {
@@ -161,6 +180,8 @@ class MainFragment : Fragment(), View.OnClickListener {
                             MOVIES_COLLECTION_2)
                         R.id.categoryTitleLayout3 -> putString(MoviesListFragment.BUNDLE_EXTRA,
                             MOVIES_COLLECTION_3)
+                        R.id.categoryTitleLayout4 -> putString(MoviesListFragment.BUNDLE_EXTRA,
+                            MOVIES_COLLECTION_4)
                     }
                 }))
                 .addToBackStack(null)
