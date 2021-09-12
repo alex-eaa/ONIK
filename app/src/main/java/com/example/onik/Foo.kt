@@ -6,7 +6,7 @@ class Foo {
 
     companion object {
 
-        val movies: Array<Movie> = arrayOf(
+        val movies: List<Movie> = listOf(
             Movie(
                 "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg",
                 false,
@@ -19,7 +19,10 @@ class Foo {
                 "/ndlQ2Cuc3cjTL7lTynw6I4boP4S.jpg",
                 48.261451,
                 1466,
-                5.91
+                5.91,
+                88,
+                100000,
+                500000
             ),
 
             Movie(
@@ -34,7 +37,10 @@ class Foo {
                 "/AoT2YrJUJlg5vKE3iMOLvHlTd3m.jpg",
                 30.690177,
                 649,
-                5.25
+                5.25,
+                110,
+                150000,
+                500000
             ),
 
             Movie(
@@ -47,9 +53,12 @@ class Foo {
                 "en",
                 "Deadpool 2",
                 "/22cUd4Yg5euCxIwWzXrL4m4otkU.jpg",
-                7.6,
+                223.25,
                 3938,
-                223.25
+                7.6,
+                112,
+                200000,
+                500000
             ),
 
             Movie(
@@ -62,9 +71,12 @@ class Foo {
                 "en",
                 "To All the Boys I've Loved Before",
                 "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
-                8.4,
+                31.76,
                 354,
-                31.76
+                8.4,
+                98,
+                500000,
+                500000
             ),
 
             Movie(
@@ -75,11 +87,14 @@ class Foo {
                 466282,
                 "To All the Boys I've Loved Before",
                 "en",
-                "To All the Boys I've Loved Before",
+                "To All the Boys I've Loved Before Honmm Tennn sjisoiis",
                 "/yRXzrwLfB5tDTIA3lSU9S3N9RUK.jpg",
-                8.4,
+                31.76,
                 354,
-                31.76
+                8.4,
+                130,
+                370000,
+                500000
             ),
         )
 

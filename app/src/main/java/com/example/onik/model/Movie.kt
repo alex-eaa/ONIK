@@ -13,10 +13,13 @@ data class Movie(
     val popularity: Double = 0.0,
     val vote_count: Int = 0,
     val vote_average: Double = 0.0,
-    val genre_ids: Array<Genre> = getDefaultGenres(),
+    val runtime: Int = 0,
+    val budget: Int = 0,
+    val revenue: Int = 0,
+    val genre_ids: List<Genre> = getDefaultGenres(),
 )
 
-fun getDefaultGenres() = arrayOf(
+fun getDefaultGenres() = listOf(
     Genre(18, "Drama"),
     Genre(28, "Action"),
     Genre(44, "Fantasy")
