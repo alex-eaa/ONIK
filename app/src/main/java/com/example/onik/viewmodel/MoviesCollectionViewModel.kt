@@ -1,14 +1,10 @@
 package com.example.onik.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.model.Repository
 import com.example.onik.model.RepositoryImpl
-import java.lang.Exception
-import java.lang.Math.random
-import kotlin.random.Random
 
 class MoviesCollectionViewModel : ViewModel() {
 
@@ -33,14 +29,7 @@ class MoviesCollectionViewModel : ViewModel() {
         moviesListLiveDataObserver[key]?.value = AppState.LoadingMovies(key)
 
         Thread {
-            Thread.sleep((500..1000).random().toLong())
-//            if (Random.nextBoolean()) {
-            if (true) {
-                moviesListLiveDataObserver[key]?.postValue(AppState.SuccessMovies(
-                    repositoryImpl.getListMoviesFromRemoteSource(), key))
-            } else {
-                moviesListLiveDataObserver[key]?.postValue(AppState.Error(Exception("Нет связи")))
-            }
+            moviesListLiveDataObserver[key]?.postValue(repositoryImpl.getListMoviesFromServer(key))
         }.start()
     }
 }

@@ -63,7 +63,7 @@ class MoviesListFragment : Fragment(), Constants {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                myAdapter.moviesData = appState.movies
+                myAdapter.moviesData = appState.movies.results!!
             }
 
             is AppState.Error -> {
@@ -81,7 +81,7 @@ class MoviesListFragment : Fragment(), Constants {
             activity?.supportFragmentManager?.let { fragmentManager ->
                 fragmentManager.beginTransaction()
                     .replace(R.id.container, MovieFragment.newInstance(Bundle().apply {
-                        putInt(MovieFragment.BUNDLE_EXTRA, movie.id)
+                        putInt(MovieFragment.BUNDLE_EXTRA, movie.id!!)
                     }))
                     .addToBackStack(null)
                     .commit()

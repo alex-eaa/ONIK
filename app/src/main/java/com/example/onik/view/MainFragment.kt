@@ -86,15 +86,15 @@ class MainFragment : Fragment(), View.OnClickListener {
             is AppState.SuccessMovies -> when (appState.key) {
                 MOVIES_COLLECTION_1 -> {
                     binding.loadingLayout1.hide()
-                    mapAdapters[MOVIES_COLLECTION_1]?.moviesData = appState.movies
+                    mapAdapters[MOVIES_COLLECTION_1]?.moviesData = appState.movies.results!!
                 }
                 MOVIES_COLLECTION_2 -> {
                     binding.loadingLayout2.hide()
-                    mapAdapters[MOVIES_COLLECTION_2]?.moviesData = appState.movies
+                    mapAdapters[MOVIES_COLLECTION_2]?.moviesData = appState.movies.results!!
                 }
                 MOVIES_COLLECTION_3 -> {
                     binding.loadingLayout3.hide()
-                    mapAdapters[MOVIES_COLLECTION_3]?.moviesData = appState.movies
+                    mapAdapters[MOVIES_COLLECTION_3]?.moviesData = appState.movies.results!!
                 }
             }
 
@@ -126,7 +126,7 @@ class MainFragment : Fragment(), View.OnClickListener {
             mapAdapters[key]?.listener = MoviesAdapter.OnItemViewClickListener { movie ->
                 activity?.supportFragmentManager?.let { fragmentManager ->
                     val bundle = Bundle()
-                    bundle.putInt(MovieFragment.BUNDLE_EXTRA, movie.id)
+                    bundle.putInt(MovieFragment.BUNDLE_EXTRA, movie.id!!)
                     fragmentManager.beginTransaction()
                         .replace(R.id.container, MovieFragment.newInstance(bundle))
                         .addToBackStack(null)

@@ -40,7 +40,49 @@ class RepositoryImpl : Repository, Constants {
         return getFromInternet(URL(uriBuilder.build().toString()))
     }
 
-    override fun getListMoviesFromRemoteSource(): List<Movie> = Foo.movies
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getListMoviesFromServer(collectionId: String): AppState{
+        val uriBuilder: Uri.Builder = Uri.Builder().apply {
+            scheme("https")
+            authority("api.themoviedb.org")
+            appendPath("3")
+            appendPath("movie")
+            appendPath(collectionId)
+            appendQueryParameter("api_key", API_KEY)
+            appendQueryParameter("language", "ru-RU")
+            appendQueryParameter("page", "1")
+        }
+
+        return getListMoviesFromInternet(URL(uriBuilder.build().toString()), collectionId)
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun getListMoviesFromInternet(uri: URL, collectionId: String): AppState {
+        Log.d(TAG, uri.toString())
+
+        var urlConnection: HttpsURLConnection? = null
+
+        try {
+            urlConnection = uri.openConnection() as HttpsURLConnection
+            urlConnection.apply {
+                requestMethod = "GET"
+                readTimeout = 10000
+            }
+
+            val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+            val result = reader.lines().collect(Collectors.joining("\n"))
+            val data: ListMoviesDTO = Gson().fromJson(result, ListMoviesDTO::class.java)
+            return AppState.SuccessMovies(data, collectionId)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "FAILED", e)
+            return AppState.Error(e)
+
+        } finally {
+            urlConnection?.disconnect()
+        }
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.N)

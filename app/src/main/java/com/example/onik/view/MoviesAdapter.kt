@@ -8,13 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.model.Movie
+import com.example.onik.model.MovieDTO
 
 class MoviesAdapter(
     private val itemLayoutForInflate: Int,
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    var moviesData: List<Movie> = listOf()
+    var moviesData: List<MovieDTO> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -23,9 +24,9 @@ class MoviesAdapter(
     var listener: OnItemViewClickListener? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: Movie) {
+        fun bind(movie: MovieDTO) {
             itemView.apply {
-                findViewById<TextView>(R.id.release_date).text = movie.release_date.substring(0, 4)
+                findViewById<TextView>(R.id.release_date).text = movie.release_date?.substring(0, 4)
                 findViewById<TextView>(R.id.title).text = movie.title
                 findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
                 setOnClickListener {
@@ -56,7 +57,7 @@ class MoviesAdapter(
 
 
     fun interface OnItemViewClickListener {
-        fun onItemClick(movie: Movie)
+        fun onItemClick(movie: MovieDTO)
     }
 
 }
