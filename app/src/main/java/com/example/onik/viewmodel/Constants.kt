@@ -7,8 +7,6 @@ interface Constants {
         const val MOVIES_COLLECTION_2 = "top_rated"
         const val MOVIES_COLLECTION_3 = "now_playing"
         const val MOVIES_COLLECTION_4 = "upcoming"
-
-        const val API_KEY = "be47b00f04df8db4b32e99ad4fdbe004"
     }
 }
 

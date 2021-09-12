@@ -4,10 +4,10 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.onik.BuildConfig
 import com.example.onik.Foo
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.Constants
-import com.example.onik.viewmodel.Constants.Companion.API_KEY
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import java.io.BufferedReader
@@ -93,7 +93,7 @@ class RepositoryImpl : Repository, Constants {
                 appendPath("movie")
                 movieId?.let { appendPath(movieId.toString()) }
                 collectionId?.let { appendPath(collectionId) }
-                appendQueryParameter("api_key", API_KEY)
+                appendQueryParameter("api_key", BuildConfig.THEMOVIEDB_API_KEY)
                 appendQueryParameter("language", "ru-RU")
                 movieId?.let { appendQueryParameter("page", "1") }
             }.build().toString()
