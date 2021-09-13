@@ -6,7 +6,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.onik.BuildConfig
-import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.CollectionId
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import java.io.BufferedReader
@@ -19,7 +19,7 @@ import javax.net.ssl.HttpsURLConnection
 @RequiresApi(Build.VERSION_CODES.N)
 class ListMoviesLoader(
     private val listener: ListMoviesLoaderListener,
-    private val collectionId: String,
+    private val collectionId: CollectionId,
 ) {
     private val TAG = "ListMovieLoader"
     private val api_key = BuildConfig.THEMOVIEDB_API_KEY
@@ -31,7 +31,7 @@ class ListMoviesLoader(
 
         try {
             uri =
-                URL("https://api.themoviedb.org/3/movie/${collectionId}?api_key=${api_key}&language=ru-RU")
+                URL("https://api.themoviedb.org/3/movie/${collectionId.id}?api_key=${api_key}&language=ru-RU")
             Log.d(TAG, uri.toString())
 
         } catch (e: MalformedURLException) {

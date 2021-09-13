@@ -1,22 +1,11 @@
 package com.example.onik.model
 
-import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
-import com.example.onik.BuildConfig
 import com.example.onik.Foo
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.Constants
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.Exception
-import java.net.URL
-import java.util.stream.Collectors
-import javax.net.ssl.HttpsURLConnection
+import com.example.onik.viewmodel.CollectionId
 
 
 class RepositoryImpl : Repository {
@@ -27,7 +16,7 @@ class RepositoryImpl : Repository {
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun getMovieDetailsFromServer(movieId: Int, liveData: MutableLiveData<AppState>) {
+    override fun getMovieDetailsFromServer(id: Int, liveData: MutableLiveData<AppState>) {
         liveData.postValue(AppState.Loading)
 
         val onLoadListener: MovieLoader.MovieLoaderListener =
@@ -42,11 +31,11 @@ class RepositoryImpl : Repository {
                 }
             }
 
-        MovieLoader(onLoadListener, movieId).loadData()
+        MovieLoader(onLoadListener, id).loadData()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun getListMoviesFromServer(collectionId: String, liveData: MutableLiveData<AppState>) {
+    override fun getListMoviesFromServer(id: CollectionId, liveData: MutableLiveData<AppState>) {
         liveData.postValue(AppState.Loading)
 
         val onLoadListener: ListMoviesLoader.ListMoviesLoaderListener =
@@ -61,7 +50,7 @@ class RepositoryImpl : Repository {
                 }
             }
 
-        ListMoviesLoader(onLoadListener, collectionId).loadData()
+        ListMoviesLoader(onLoadListener, id).loadData()
     }
 
 }

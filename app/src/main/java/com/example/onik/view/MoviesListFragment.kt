@@ -10,12 +10,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
 import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
-import com.example.onik.viewmodel.Constants
-import com.google.android.material.snackbar.Snackbar
 
 
-class MoviesListFragment : Fragment(), Constants {
+class MoviesListFragment : Fragment() {
 
     companion object {
         const val BUNDLE_EXTRA: String = "BUNDLE_EXTRA"
@@ -24,7 +23,7 @@ class MoviesListFragment : Fragment(), Constants {
             MoviesListFragment().apply { arguments = bundle }
     }
 
-    private var moviesCollectionName: String = ""
+    private var collectionId: CollectionId = CollectionId.EMPTY
     private var _binding: MoviesListFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -47,12 +46,12 @@ class MoviesListFragment : Fragment(), Constants {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.getString(MovieFragment.BUNDLE_EXTRA)?.let { it ->
+        arguments?.getSerializable(MovieFragment.BUNDLE_EXTRA)?.let { it ->
             initRecyclerView()
-            moviesCollectionName = it
-            viewModel.getMoviesListLiveData(moviesCollectionName)
+            collectionId = it as CollectionId
+            viewModel.getMoviesListLiveData(collectionId)
                 ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
-            viewModel.getDataFromRemoteSource(moviesCollectionName)
+            viewModel.getDataFromRemoteSource(collectionId)
         }
     }
 
@@ -69,7 +68,7 @@ class MoviesListFragment : Fragment(), Constants {
             is AppState.Error -> {
                 binding.loadingLayout.hide()
                 binding.container.showSnackbar(action = {
-                    viewModel.getDataFromRemoteSource(moviesCollectionName)
+                    viewModel.getDataFromRemoteSource(collectionId)
                 })
             }
         }

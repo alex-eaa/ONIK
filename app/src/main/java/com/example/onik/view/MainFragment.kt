@@ -1,7 +1,6 @@
 package com.example.onik.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
-import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_1
-import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_2
-import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_3
-import com.example.onik.viewmodel.Constants.Companion.MOVIES_COLLECTION_4
-import com.google.android.material.snackbar.Snackbar
 
 
 class MainFragment : Fragment(), View.OnClickListener {
@@ -33,12 +28,12 @@ class MainFragment : Fragment(), View.OnClickListener {
         ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
     }
 
-    private val mapAdapters: Map<String, MoviesAdapter> by lazy {
+    private val mapAdapters: Map<CollectionId, MoviesAdapter> by lazy {
         mapOf(
-            MOVIES_COLLECTION_1 to MoviesAdapter(R.layout.item_for_horizontal),
-            MOVIES_COLLECTION_2 to MoviesAdapter(R.layout.item_for_horizontal),
-            MOVIES_COLLECTION_3 to MoviesAdapter(R.layout.item_for_horizontal),
-            MOVIES_COLLECTION_4 to MoviesAdapter(R.layout.item_for_horizontal),
+            CollectionId.POPULAR to MoviesAdapter(R.layout.item_for_horizontal),
+            CollectionId.TOP_RATED to MoviesAdapter(R.layout.item_for_horizontal),
+            CollectionId.NOW_PLAYING to MoviesAdapter(R.layout.item_for_horizontal),
+            CollectionId.UPCOMING to MoviesAdapter(R.layout.item_for_horizontal),
         )
     }
 
@@ -64,77 +59,77 @@ class MainFragment : Fragment(), View.OnClickListener {
         binding.categoryTitleLayout4.setOnClickListener(this)
 
         with(viewModel) {
-            getMoviesListLiveData(MOVIES_COLLECTION_1)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState, MOVIES_COLLECTION_1) })
+            getMoviesListLiveData(CollectionId.POPULAR)?.observe(viewLifecycleOwner,
+                { appState -> renderData(appState, CollectionId.POPULAR) })
 
-            getMoviesListLiveData(MOVIES_COLLECTION_2)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState, MOVIES_COLLECTION_2) })
+            getMoviesListLiveData(CollectionId.TOP_RATED)?.observe(viewLifecycleOwner,
+                { appState -> renderData(appState, CollectionId.TOP_RATED) })
 
-            getMoviesListLiveData(MOVIES_COLLECTION_3)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState, MOVIES_COLLECTION_3) })
+            getMoviesListLiveData(CollectionId.NOW_PLAYING)?.observe(viewLifecycleOwner,
+                { appState -> renderData(appState, CollectionId.NOW_PLAYING) })
 
-            getMoviesListLiveData(MOVIES_COLLECTION_4)?.observe(viewLifecycleOwner,
-                { appState -> renderData(appState, MOVIES_COLLECTION_4) })
+            getMoviesListLiveData(CollectionId.UPCOMING)?.observe(viewLifecycleOwner,
+                { appState -> renderData(appState, CollectionId.UPCOMING) })
 
-            getDataFromRemoteSource(MOVIES_COLLECTION_1)
-            getDataFromRemoteSource(MOVIES_COLLECTION_2)
-            getDataFromRemoteSource(MOVIES_COLLECTION_3)
-            getDataFromRemoteSource(MOVIES_COLLECTION_4)
+            getDataFromRemoteSource(CollectionId.POPULAR)
+            getDataFromRemoteSource(CollectionId.TOP_RATED)
+            getDataFromRemoteSource(CollectionId.NOW_PLAYING)
+            getDataFromRemoteSource(CollectionId.UPCOMING)
         }
     }
 
 
-    private fun renderData(appState: AppState, collectionName: String) {
+    private fun renderData(appState: AppState, collectionName: CollectionId) {
         when (appState) {
             is AppState.Loading -> when (collectionName) {
-                MOVIES_COLLECTION_1 -> binding.loadingLayout1.show()
-                MOVIES_COLLECTION_2 -> binding.loadingLayout2.show()
-                MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
-                MOVIES_COLLECTION_4 -> binding.loadingLayout4.show()
+                CollectionId.POPULAR -> binding.loadingLayout1.show()
+                CollectionId.TOP_RATED -> binding.loadingLayout2.show()
+                CollectionId.NOW_PLAYING -> binding.loadingLayout3.show()
+                CollectionId.UPCOMING -> binding.loadingLayout4.show()
             }
 
             is AppState.SuccessMovies -> when (collectionName) {
-                MOVIES_COLLECTION_1 -> {
+                CollectionId.POPULAR  -> {
                     binding.loadingLayout1.hide()
                     appState.movies?.results?.let {
-                        mapAdapters[MOVIES_COLLECTION_1]?.moviesData = it
+                        mapAdapters[CollectionId.POPULAR]?.moviesData = it
                     }
                 }
-                MOVIES_COLLECTION_2 -> {
+                CollectionId.TOP_RATED  -> {
                     binding.loadingLayout2.hide()
                     appState.movies?.results?.let {
-                        mapAdapters[MOVIES_COLLECTION_2]?.moviesData = it
+                        mapAdapters[CollectionId.TOP_RATED]?.moviesData = it
                     }
                 }
-                MOVIES_COLLECTION_3 -> {
+                CollectionId.NOW_PLAYING  -> {
                     binding.loadingLayout3.hide()
                     appState.movies?.results?.let {
-                        mapAdapters[MOVIES_COLLECTION_3]?.moviesData = it
+                        mapAdapters[CollectionId.NOW_PLAYING]?.moviesData = it
                     }
                 }
-                MOVIES_COLLECTION_4 -> {
+                CollectionId.UPCOMING -> {
                     binding.loadingLayout4.hide()
                     appState.movies?.results?.let {
-                        mapAdapters[MOVIES_COLLECTION_4]?.moviesData = it
+                        mapAdapters[CollectionId.UPCOMING]?.moviesData = it
                     }
                 }
             }
 
             is AppState.Error -> {
                 when (collectionName) {
-                    MOVIES_COLLECTION_1 -> binding.loadingLayout1.hide()
-                    MOVIES_COLLECTION_2 -> binding.loadingLayout2.hide()
-                    MOVIES_COLLECTION_3 -> binding.loadingLayout3.hide()
-                    MOVIES_COLLECTION_4 -> binding.loadingLayout4.hide()
+                    CollectionId.POPULAR -> binding.loadingLayout1.hide()
+                    CollectionId.TOP_RATED -> binding.loadingLayout2.hide()
+                    CollectionId.NOW_PLAYING -> binding.loadingLayout3.hide()
+                    CollectionId.UPCOMING -> binding.loadingLayout4.hide()
                 }
 
                 binding.container.showSnackbar(
                     action = {
                         viewModel.apply {
-                            getDataFromRemoteSource(MOVIES_COLLECTION_1)
-                            getDataFromRemoteSource(MOVIES_COLLECTION_2)
-                            getDataFromRemoteSource(MOVIES_COLLECTION_3)
-                            getDataFromRemoteSource(MOVIES_COLLECTION_4)
+                            getDataFromRemoteSource(CollectionId.POPULAR)
+                            getDataFromRemoteSource(CollectionId.TOP_RATED)
+                            getDataFromRemoteSource(CollectionId.NOW_PLAYING)
+                            getDataFromRemoteSource(CollectionId.UPCOMING)
                         }
                     })
             }
@@ -145,11 +140,11 @@ class MainFragment : Fragment(), View.OnClickListener {
 
 
     private fun initRecyclerView() {
-        val mapRecyclerView: Map<String, RecyclerView> = mapOf(
-            MOVIES_COLLECTION_1 to binding.recyclerViewHorizontal1,
-            MOVIES_COLLECTION_2 to binding.recyclerViewHorizontal2,
-            MOVIES_COLLECTION_3 to binding.recyclerViewHorizontal3,
-            MOVIES_COLLECTION_4 to binding.recyclerViewHorizontal4,
+        val mapRecyclerView: Map<CollectionId, RecyclerView> = mapOf(
+            CollectionId.POPULAR to binding.recyclerViewHorizontal1,
+            CollectionId.TOP_RATED to binding.recyclerViewHorizontal2,
+            CollectionId.NOW_PLAYING to binding.recyclerViewHorizontal3,
+            CollectionId.UPCOMING to binding.recyclerViewHorizontal4,
         )
 
         for (key in mapRecyclerView.keys) {
@@ -189,14 +184,14 @@ class MainFragment : Fragment(), View.OnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MoviesListFragment.newInstance(Bundle().apply {
                     when (v.id) {
-                        R.id.categoryTitleLayout1 -> putString(MoviesListFragment.BUNDLE_EXTRA,
-                            MOVIES_COLLECTION_1)
-                        R.id.categoryTitleLayout2 -> putString(MoviesListFragment.BUNDLE_EXTRA,
-                            MOVIES_COLLECTION_2)
-                        R.id.categoryTitleLayout3 -> putString(MoviesListFragment.BUNDLE_EXTRA,
-                            MOVIES_COLLECTION_3)
-                        R.id.categoryTitleLayout4 -> putString(MoviesListFragment.BUNDLE_EXTRA,
-                            MOVIES_COLLECTION_4)
+                        R.id.categoryTitleLayout1 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.POPULAR)
+                        R.id.categoryTitleLayout2 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.TOP_RATED)
+                        R.id.categoryTitleLayout3 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.NOW_PLAYING)
+                        R.id.categoryTitleLayout4 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.UPCOMING)
                     }
                 }))
                 .addToBackStack(null)

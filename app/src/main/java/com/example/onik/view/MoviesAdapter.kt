@@ -1,13 +1,11 @@
 package com.example.onik.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
-import com.example.onik.model.Movie
 import com.example.onik.model.MovieDTO
 
 class MoviesAdapter(

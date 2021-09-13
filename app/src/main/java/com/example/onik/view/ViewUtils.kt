@@ -3,10 +3,8 @@ package com.example.onik.view
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.NonNull
 import com.example.onik.R
 import com.google.android.material.snackbar.Snackbar
-import java.lang.RuntimeException
 
 fun View.show() {
     this.visibility = View.VISIBLE

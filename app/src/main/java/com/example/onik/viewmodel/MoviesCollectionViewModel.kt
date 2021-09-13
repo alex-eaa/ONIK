@@ -10,20 +10,20 @@ class MoviesCollectionViewModel : ViewModel() {
 
     private val repositoryImpl: Repository = RepositoryImpl()
 
-    private var moviesListLiveDataObserver: MutableMap<String, MutableLiveData<AppState>> =
-        mutableMapOf("0" to MutableLiveData<AppState>())
+    private var moviesListLiveDataObserver: MutableMap<CollectionId, MutableLiveData<AppState>> =
+        mutableMapOf(CollectionId.EMPTY to MutableLiveData<AppState>())
 
-    fun getMoviesListLiveData(key: String): LiveData<AppState>? = moviesListLiveDataObserver.run {
-        remove("0")
-        put(key, MutableLiveData<AppState>())
-        get(key)
+    fun getMoviesListLiveData(id: CollectionId): LiveData<AppState>? = moviesListLiveDataObserver.run {
+        remove(CollectionId.EMPTY)
+        put(id, MutableLiveData<AppState>())
+        get(id)
     }
 
     fun getDataFromLocalSource(collectionId: String) {}
 
-    fun getDataFromRemoteSource(collectionId: String) {
-        moviesListLiveDataObserver[collectionId]?.let {
-            repositoryImpl.getListMoviesFromServer(collectionId, it)
+    fun getDataFromRemoteSource(id: CollectionId) {
+        moviesListLiveDataObserver[id]?.let {
+            repositoryImpl.getListMoviesFromServer(id, it)
         }
 
     }
