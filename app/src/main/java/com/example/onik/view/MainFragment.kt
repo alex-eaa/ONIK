@@ -84,9 +84,9 @@ class MainFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun renderData(appState: AppState?, collectionName: String) {
+    private fun renderData(appState: AppState, collectionName: String) {
         when (appState) {
-            is AppState.LoadingMovies -> when (collectionName) {
+            is AppState.Loading -> when (collectionName) {
                 MOVIES_COLLECTION_1 -> binding.loadingLayout1.show()
                 MOVIES_COLLECTION_2 -> binding.loadingLayout2.show()
                 MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
@@ -122,21 +122,24 @@ class MainFragment : Fragment(), View.OnClickListener {
 
             is AppState.Error -> {
                 when (collectionName) {
-                    MOVIES_COLLECTION_1 -> binding.loadingLayout1.show()
-                    MOVIES_COLLECTION_2 -> binding.loadingLayout2.show()
-                    MOVIES_COLLECTION_3 -> binding.loadingLayout3.show()
-                    MOVIES_COLLECTION_4 -> binding.loadingLayout4.show()
+                    MOVIES_COLLECTION_1 -> binding.loadingLayout1.hide()
+                    MOVIES_COLLECTION_2 -> binding.loadingLayout2.hide()
+                    MOVIES_COLLECTION_3 -> binding.loadingLayout3.hide()
+                    MOVIES_COLLECTION_4 -> binding.loadingLayout4.hide()
                 }
 
-                Snackbar.make(binding.main, appState.error.toString(), Snackbar.LENGTH_LONG)
-                    .setDefaultActionText {
-                        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_1)
-                        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_2)
-                        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_3)
-                        viewModel.getDataFromRemoteSource(MOVIES_COLLECTION_4)
-                    }
-                    .show()
+                binding.container.showSnackbar(
+                    action = {
+                        viewModel.apply {
+                            getDataFromRemoteSource(MOVIES_COLLECTION_1)
+                            getDataFromRemoteSource(MOVIES_COLLECTION_2)
+                            getDataFromRemoteSource(MOVIES_COLLECTION_3)
+                            getDataFromRemoteSource(MOVIES_COLLECTION_4)
+                        }
+                    })
             }
+
+            else -> {}
         }
     }
 

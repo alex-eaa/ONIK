@@ -17,8 +17,8 @@ fun View.hide() {
 }
 
 fun View.showSnackbar(
-    text: String,
-    actionText: String,
+    text: String = resources.getString(R.string.msgNotDownloaded),
+    actionText: String = resources.getString(R.string.buttonReloadText),
     action: (View) -> Unit,
     length: Int = Snackbar.LENGTH_INDEFINITE,
 ) {

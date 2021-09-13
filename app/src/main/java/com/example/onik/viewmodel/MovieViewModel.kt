@@ -20,16 +20,10 @@ class MovieViewModel : ViewModel() {
     val movieDetailsLiveData: LiveData<AppState> = movieDetailsLiveDataObserver
 
 
-    fun getDataFromLocalSource(id: Int) = getData(id)
-    fun getDataFromRemoteSource(id: Int) = getData(id)
+    fun getDataFromLocalSource(id: Int) {}
 
-
-    private fun getData(id: Int) {
-        movieDetailsLiveDataObserver.value = AppState.Loading
-
-        Thread {
-            movieDetailsLiveDataObserver.postValue(repositoryImpl.getMovieDetailsFromServer(id))
-        }.start()
+    fun getDataFromRemoteSource(id: Int) {
+        repositoryImpl.getMovieDetailsFromServer(id, movieDetailsLiveDataObserver)
     }
 
 }

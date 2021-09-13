@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import com.example.onik.BuildConfig
 import com.example.onik.Foo
 import com.example.onik.viewmodel.AppState
@@ -18,12 +19,7 @@ import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
 
-class RepositoryImpl : Repository, Constants {
-    companion object {
-        const val TAG = "RepositoryImpl"
-        const val TYPE_DATA_MOVIE = "MOVIE"
-        const val TYPE_DATA_COLLECTION = "COLLECTION"
-    }
+class RepositoryImpl : Repository {
 
     override fun getMovieDetailsFromLocalStorage(id: Int): Movie = Foo.movies.first { it.id == id }
 
@@ -31,73 +27,41 @@ class RepositoryImpl : Repository, Constants {
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun getMovieDetailsFromServer(id: Int): AppState {
-        return getFromInternet(createUri(movieId = id), TYPE_DATA_MOVIE)
-    }
+    override fun getMovieDetailsFromServer(movieId: Int, liveData: MutableLiveData<AppState>) {
+        liveData.postValue(AppState.Loading)
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun getListMoviesFromServer(collectionId: String): AppState {
-        return getFromInternet(createUri(collectionId = collectionId), TYPE_DATA_COLLECTION)
-    }
+        val onLoadListener: MovieLoader.MovieLoaderListener =
+            object : MovieLoader.MovieLoaderListener {
 
+                override fun onLoaded(movieDTO: MovieDTO) {
+                    liveData.postValue(AppState.SuccessMovie(movieDTO))
+                }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    fun getFromInternet(uri: URL, typeData: String): AppState {
-        Log.d(TAG, uri.toString())
-
-        var urlConnection: HttpsURLConnection? = null
-
-        return try {
-            urlConnection = uri.openConnection() as HttpsURLConnection
-            urlConnection.apply {
-                requestMethod = "GET"
-                readTimeout = 10000
-            }
-
-            val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-            val result = reader.lines().collect(Collectors.joining("\n"))
-
-            when (typeData) {
-                TYPE_DATA_COLLECTION -> AppState.SuccessMovies(Gson().fromJson(result,
-                    ListMoviesDTO::class.java))
-                TYPE_DATA_MOVIE -> AppState.SuccessMovie(Gson().fromJson(result,
-                    MovieDTO::class.java))
-                else -> {
-                    throw JsonSyntaxException("FAILED parsing")
+                override fun onFailed(throwable: Throwable) {
+                    liveData.postValue(AppState.Error(throwable))
                 }
             }
 
-        } catch (e: JsonSyntaxException) {
-            Log.e(TAG, "FAILED parsing", e)
-            AppState.Error(e)
-
-        } catch (e: Exception) {
-            Log.e(TAG, "FAILED connect", e)
-            AppState.Error(e)
-
-        } finally {
-            urlConnection?.disconnect()
-        }
+        MovieLoader(onLoadListener, movieId).loadData()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getListMoviesFromServer(collectionId: String, liveData: MutableLiveData<AppState>) {
+        liveData.postValue(AppState.Loading)
 
-    private fun createUri(
-        movieId: Int? = null,
-        collectionId: String? = null,
-    ): URL {
-        return URL(
-            Uri.Builder().apply {
-                scheme("https")
-                authority("api.themoviedb.org")
-                appendPath("3")
-                appendPath("movie")
-                movieId?.let { appendPath(movieId.toString()) }
-                collectionId?.let { appendPath(collectionId) }
-                appendQueryParameter("api_key", BuildConfig.THEMOVIEDB_API_KEY)
-                appendQueryParameter("language", "ru-RU")
-                movieId?.let { appendQueryParameter("page", "1") }
-            }.build().toString()
-        )
+        val onLoadListener: ListMoviesLoader.ListMoviesLoaderListener =
+            object : ListMoviesLoader.ListMoviesLoaderListener {
+
+                override fun onLoaded(listMoviesDTO: ListMoviesDTO) {
+                    liveData.postValue(AppState.SuccessMovies(listMoviesDTO))
+                }
+
+                override fun onFailed(throwable: Throwable) {
+                    liveData.postValue(AppState.Error(throwable))
+                }
+            }
+
+        ListMoviesLoader(onLoadListener, collectionId).loadData()
     }
 
 }

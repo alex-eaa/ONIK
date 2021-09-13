@@ -8,6 +8,5 @@ sealed class AppState{
     data class SuccessMovies(val movies: ListMoviesDTO?) : AppState()
     data class Error(val error: Throwable) : AppState()
 
-    data class LoadingMovies(val key: String = "") : AppState()
     object Loading : AppState()
 }

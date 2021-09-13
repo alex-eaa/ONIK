@@ -17,19 +17,15 @@ class MoviesCollectionViewModel : ViewModel() {
         remove("0")
         put(key, MutableLiveData<AppState>())
         get(key)
+    }
+
+    fun getDataFromLocalSource(collectionId: String) {}
+
+    fun getDataFromRemoteSource(collectionId: String) {
+        moviesListLiveDataObserver[collectionId]?.let {
+            repositoryImpl.getListMoviesFromServer(collectionId, it)
+        }
 
     }
 
-
-    fun getDataFromLocalSource(key: String) = getData(key)
-    fun getDataFromRemoteSource(key: String) = getData(key)
-
-
-    private fun getData(key: String) {
-        moviesListLiveDataObserver[key]?.value = AppState.LoadingMovies(key)
-
-        Thread {
-            moviesListLiveDataObserver[key]?.postValue(repositoryImpl.getListMoviesFromServer(key))
-        }.start()
-    }
 }

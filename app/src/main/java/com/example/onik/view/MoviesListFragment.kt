@@ -59,18 +59,18 @@ class MoviesListFragment : Fragment(), Constants {
 
     private fun renderData(appState: AppState?) {
         when (appState) {
-            is AppState.LoadingMovies -> binding.loadingLayout.show()
+            is AppState.Loading -> binding.loadingLayout.show()
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                appState.movies?.results?.let { myAdapter.moviesData = it}
+                appState.movies?.results?.let { myAdapter.moviesData = it }
             }
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
-                Snackbar.make(binding.container, appState.error.toString(), Snackbar.LENGTH_LONG)
-                    .setDefaultActionText { viewModel.getDataFromRemoteSource(moviesCollectionName) }
-                    .show()
+                binding.container.showSnackbar(action = {
+                    viewModel.getDataFromRemoteSource(moviesCollectionName)
+                })
             }
         }
     }
