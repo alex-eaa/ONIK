@@ -17,9 +17,11 @@ class MoviesCollectionViewModel : ViewModel() {
     private var moviesListLiveDataObserver: MutableMap<String, MutableLiveData<AppState>> =
         mutableMapOf("0" to MutableLiveData<AppState>())
 
-    fun getMoviesListLiveData(key: String): LiveData<AppState>? {
-        moviesListLiveDataObserver[key] = MutableLiveData<AppState>()
-        return moviesListLiveDataObserver[key]
+    fun getMoviesListLiveData(key: String): LiveData<AppState>? = moviesListLiveDataObserver.run {
+        remove("0")
+        put(key, MutableLiveData<AppState>())
+        get(key)
+
     }
 
 
@@ -31,14 +33,13 @@ class MoviesCollectionViewModel : ViewModel() {
         moviesListLiveDataObserver[key]?.value = AppState.LoadingMovies(key)
 
         Thread {
-            Thread.sleep((500..1500).random().toLong())
+            Thread.sleep((500..1000).random().toLong())
 //            if (Random.nextBoolean()) {
             if (true) {
                 moviesListLiveDataObserver[key]?.postValue(AppState.SuccessMovies(
                     repositoryImpl.getListMoviesFromRemoteSource(), key))
             } else {
-                moviesListLiveDataObserver[key]?.postValue(AppState.ErrorMovies(Exception("Нет связи"),
-                    key))
+                moviesListLiveDataObserver[key]?.postValue(AppState.Error(Exception("Нет связи")))
             }
         }.start()
     }

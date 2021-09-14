@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.onik.Foo.Companion.movies
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
 import com.example.onik.viewmodel.AppState
@@ -22,20 +20,19 @@ class MoviesListFragment : Fragment(), Constants {
     companion object {
         const val BUNDLE_EXTRA: String = "BUNDLE_EXTRA"
 
-        fun newInstance(bundle: Bundle): MoviesListFragment {
-            val fragment = MoviesListFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
+        fun newInstance(bundle: Bundle): MoviesListFragment =
+            MoviesListFragment().apply { arguments = bundle }
     }
 
-    private var movieListType: String = ""
-
-    private lateinit var viewModel: MoviesCollectionViewModel
+    private var moviesCollectionName: String = ""
     private var _binding: MoviesListFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: MoviesAdapter
+    private val viewModel: MoviesCollectionViewModel by lazy {
+        ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
+    }
+
+    private val myAdapter: MoviesAdapter by lazy { MoviesAdapter(R.layout.item) }
 
 
     override fun onCreateView(
@@ -49,54 +46,53 @@ class MoviesListFragment : Fragment(), Constants {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecyclerView()
 
-        movieListType = arguments?.getString(MovieFragment.BUNDLE_EXTRA)!!
-
-        viewModel = ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
-        val observer = Observer<AppState> { appState -> renderData(appState) }
-        viewModel.getMoviesListLiveData(movieListType)?.observe(viewLifecycleOwner, observer)
-        viewModel.getDataFromRemoteSource(movieListType)
+        arguments?.getString(MovieFragment.BUNDLE_EXTRA)?.let { it ->
+            initRecyclerView()
+            moviesCollectionName = it
+            viewModel.getMoviesListLiveData(moviesCollectionName)
+                ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
+            viewModel.getDataFromRemoteSource(moviesCollectionName)
+        }
     }
 
 
     private fun renderData(appState: AppState?) {
         when (appState) {
-            is AppState.LoadingMovies -> binding.loadingLayout.visibility = View.VISIBLE
+            is AppState.LoadingMovies -> binding.loadingLayout.show()
 
             is AppState.SuccessMovies -> {
-                binding.loadingLayout.visibility = View.GONE
-                adapter.moviesData = appState.movies
+                binding.loadingLayout.hide()
+                myAdapter.moviesData = appState.movies
             }
 
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
-                Snackbar
-                    .make(binding.container, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getDataFromRemoteSource(movieListType) }
-                    .show()
-            }
-            else -> {
+                binding.loadingLayout.hide()
+                binding.container.showSnackbar("Коллекцию не удалось загрузить.",
+                    "Повторить",
+                    action = { viewModel.getDataFromRemoteSource(moviesCollectionName) })
             }
         }
     }
 
 
     private fun initRecyclerView() {
-        adapter = MoviesAdapter(R.layout.item)
-        adapter.listener = MoviesAdapter.OnItemViewClickListener { idMovie ->
-            val bundle = Bundle()
-            bundle.putInt(MovieFragment.BUNDLE_EXTRA, idMovie)
-
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MovieFragment.newInstance(bundle))
-                .addToBackStack(null)
-                .commit()
+        myAdapter.listener = MoviesAdapter.OnItemViewClickListener { movie ->
+            activity?.supportFragmentManager?.let { fragmentManager ->
+                fragmentManager.beginTransaction()
+                    .replace(R.id.container, MovieFragment.newInstance(Bundle().apply {
+                        putInt(MovieFragment.BUNDLE_EXTRA, movie.id)
+                    }))
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
 
-        binding.mainRecyclerView.adapter = adapter
-        binding.mainRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        binding.mainRecyclerView.setHasFixedSize(true);
+        binding.mainRecyclerView.apply {
+            adapter = myAdapter
+            layoutManager = GridLayoutManager(context, 2)
+            setHasFixedSize(true);
+        }
     }
 
 

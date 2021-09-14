@@ -1,3 +1,4 @@
+
 package com.example.onik.viewmodel
 
 import androidx.lifecycle.LiveData
@@ -24,7 +25,7 @@ class MovieViewModel : ViewModel() {
         movieDetailsLiveDataObserver.value = AppState.Loading
 
         Thread {
-            Thread.sleep((500..1500).random().toLong())
+            Thread.sleep((300..600).random().toLong())
             if (true) {
                 movieDetailsLiveDataObserver.postValue(AppState.SuccessMovie(repositoryImpl.getMovieDetailsFromServer(id)))
             } else {
