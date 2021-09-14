@@ -15,8 +15,8 @@ fun View.hide() {
 }
 
 fun View.showSnackbar(
-    text: String = resources.getString(R.string.msgNotDownloaded),
-    actionText: String = resources.getString(R.string.buttonReloadText),
+    text: String = resources.getString(R.string.data_loading_error),
+    actionText: String = resources.getString(R.string.button_reload_text),
     action: (View) -> Unit,
     length: Int = Snackbar.LENGTH_INDEFINITE,
 ) {
@@ -27,9 +27,9 @@ fun View.showSnackbar(
 
 }
 
-fun Snackbar.setDefaultText(): Snackbar = this.setText(R.string.msgNotDownloaded)
+fun Snackbar.setDefaultText(): Snackbar = this.setText(R.string.button_reload_text)
 
-fun Snackbar.setDefaultActionText(action: (View) -> Unit): Snackbar = this.setAction(R.string.buttonReloadText, action)
+fun Snackbar.setDefaultActionText(action: (View) -> Unit): Snackbar = this.setAction(R.string.button_reload_text, action)
 
 
 fun View.hideKeyboard(): Boolean = try {

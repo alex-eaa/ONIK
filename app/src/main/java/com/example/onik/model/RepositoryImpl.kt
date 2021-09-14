@@ -1,6 +1,7 @@
 package com.example.onik.model
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.example.onik.Foo
@@ -9,6 +10,7 @@ import com.example.onik.viewmodel.CollectionId
 
 
 class RepositoryImpl : Repository {
+    private val TAG = "RepositoryImpl"
 
     override fun getMovieDetailsFromLocalStorage(id: Int): Movie = Foo.movies.first { it.id == id }
 
@@ -27,6 +29,7 @@ class RepositoryImpl : Repository {
                 }
 
                 override fun onFailed(throwable: Throwable) {
+                    Log.e(TAG, "Exception message ${throwable.message.toString()}")
                     liveData.postValue(AppState.Error(throwable))
                 }
             }
@@ -46,6 +49,7 @@ class RepositoryImpl : Repository {
                 }
 
                 override fun onFailed(throwable: Throwable) {
+                    Log.e(TAG, "Exception message ${throwable.message.toString()}")
                     liveData.postValue(AppState.Error(throwable))
                 }
             }
