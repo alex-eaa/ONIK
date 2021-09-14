@@ -3,10 +3,8 @@ package com.example.onik.view
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.NonNull
 import com.example.onik.R
 import com.google.android.material.snackbar.Snackbar
-import java.lang.RuntimeException
 
 fun View.show() {
     this.visibility = View.VISIBLE
@@ -17,10 +15,10 @@ fun View.hide() {
 }
 
 fun View.showSnackbar(
-    text: String,
-    actionText: String,
+    text: String = resources.getString(R.string.data_loading_error),
+    actionText: String = resources.getString(R.string.button_reload_text),
     action: (View) -> Unit,
-    length: Int = Snackbar.LENGTH_LONG,
+    length: Int = Snackbar.LENGTH_INDEFINITE,
 ) {
 
     Snackbar.make(this, text, length)
@@ -29,9 +27,9 @@ fun View.showSnackbar(
 
 }
 
-fun Snackbar.setDefaultText(): Snackbar = this.setText(R.string.msgNotDownloaded)
+fun Snackbar.setDefaultText(): Snackbar = this.setText(R.string.button_reload_text)
 
-fun Snackbar.setDefaultActionText(action: (View) -> Unit): Snackbar = this.setAction(R.string.buttonReloadText, action)
+fun Snackbar.setDefaultActionText(action: (View) -> Unit): Snackbar = this.setAction(R.string.button_reload_text, action)
 
 
 fun View.hideKeyboard(): Boolean = try {

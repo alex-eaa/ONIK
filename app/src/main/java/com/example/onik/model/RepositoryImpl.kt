@@ -1,19 +1,60 @@
 package com.example.onik.model
 
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import com.example.onik.Foo
+import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.CollectionId
 
 
 class RepositoryImpl : Repository {
-
-    // https://api.themoviedb.org/3/movie/436969?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RUS
-    override fun getMovieDetailsFromServer(id: Int): Movie = Foo.movies.first { it.id == id }
+    private val TAG = "RepositoryImpl"
 
     override fun getMovieDetailsFromLocalStorage(id: Int): Movie = Foo.movies.first { it.id == id }
 
-    // https://api.themoviedb.org/3/movie/popular?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RUS&page=1
-    // https://api.themoviedb.org/3/movie/top_rated?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RU&page=1
-    // https://api.themoviedb.org/3/movie/now_playing?api_key=be47b00f04df8db4b32e99ad4fdbe004&language=ru-RU&page=1
-    override fun getListMoviesFromRemoteSource(): List<Movie> = Foo.movies
-
     override fun getListMoviesFromLocalSource(): List<Movie> = Foo.movies
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getMovieDetailsFromServer(id: Int, liveData: MutableLiveData<AppState>) {
+        liveData.postValue(AppState.Loading)
+
+        val onLoadListener: MovieLoader.MovieLoaderListener =
+            object : MovieLoader.MovieLoaderListener {
+
+                override fun onLoaded(movieDTO: MovieDTO) {
+                    liveData.postValue(AppState.SuccessMovie(movieDTO))
+                }
+
+                override fun onFailed(throwable: Throwable) {
+                    Log.e(TAG, "Exception message ${throwable.message.toString()}")
+                    liveData.postValue(AppState.Error(throwable))
+                }
+            }
+
+        MovieLoader(onLoadListener, id).loadData()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getListMoviesFromServer(id: CollectionId, liveData: MutableLiveData<AppState>) {
+        liveData.postValue(AppState.Loading)
+
+        val onLoadListener: ListMoviesLoader.ListMoviesLoaderListener =
+            object : ListMoviesLoader.ListMoviesLoaderListener {
+
+                override fun onLoaded(listMoviesDTO: ListMoviesDTO) {
+                    liveData.postValue(AppState.SuccessMovies(listMoviesDTO))
+                }
+
+                override fun onFailed(throwable: Throwable) {
+                    Log.e(TAG, "Exception message ${throwable.message.toString()}")
+                    liveData.postValue(AppState.Error(throwable))
+                }
+            }
+
+        ListMoviesLoader(onLoadListener, id).loadData()
+    }
+
 }

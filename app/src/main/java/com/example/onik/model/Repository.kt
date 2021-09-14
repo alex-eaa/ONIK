@@ -1,9 +1,13 @@
 package com.example.onik.model
 
-interface Repository {
-    fun getMovieDetailsFromLocalStorage(id: Int): Movie
-    fun getMovieDetailsFromServer(id: Int): Movie
+import androidx.lifecycle.MutableLiveData
+import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.CollectionId
 
-    fun getListMoviesFromRemoteSource(): List<Movie>
+interface Repository {
+    fun getMovieDetailsFromServer(id: Int, liveData: MutableLiveData<AppState>)
+    fun getListMoviesFromServer(collectionId: CollectionId, liveData: MutableLiveData<AppState>)
+
+    fun getMovieDetailsFromLocalStorage(id: Int): Movie
     fun getListMoviesFromLocalSource(): List<Movie>
 }

@@ -1,16 +1,15 @@
 package com.example.onik.view
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
-import com.google.android.material.snackbar.Snackbar
 
 class MovieFragment : Fragment() {
 
@@ -58,28 +57,27 @@ class MovieFragment : Fragment() {
             is AppState.SuccessMovie -> {
                 binding.apply {
                     loadingLayout.hide()
-                    title.text = appState.movie.title
+                    title.text = appState.movie?.title
                     voteAverage.text =
-                        "${appState.movie.vote_average} (${appState.movie.vote_count})"
-                    overview.text = appState.movie.overview
-                    runtime.text = "${appState.movie.runtime} ${getString(R.string.min)}"
-                    releaseDate.text = appState.movie.release_date
-                    budget.text = appState.movie.budget.toString()
-                    revenue.text = appState.movie.revenue.toString()
+                        "${appState.movie?.vote_average} (${appState.movie?.vote_count})"
+                    overview.text = appState.movie?.overview
+                    runtime.text = "${appState.movie?.runtime} ${getString(R.string.min)}"
+                    releaseDate.text = appState.movie?.release_date
+                    budget.text = appState.movie?.budget.toString()
+                    revenue.text = appState.movie?.revenue.toString()
                 }
 
                 var genres = ""
-                appState.movie.genre_ids.forEach { genres += "${it.name}, " }
+                appState.movie?.genres?.forEach { genres += "${it.name}, " }
                 binding.genre.text = genres.dropLast(2)
 
             }
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
-                Snackbar.make(binding.main, "", Snackbar.LENGTH_LONG)
-                    .setDefaultText()
-                    .setDefaultActionText { viewModel.getDataFromRemoteSource(idMovie) }
-                    .show()
+                binding.container.showSnackbar(action = {
+                    viewModel.getDataFromRemoteSource(idMovie)
+                })
             }
         }
     }

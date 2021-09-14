@@ -33,10 +33,18 @@ android {
     buildFeatures {
         viewBinding true
     }
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("apikey.properties").newDataInputStream
+                ())
+        def apiKey = properties.getProperty("api_key", "")
+        it.buildConfigField "String", "THEMOVIEDB_API_KEY", apiKey
+    }
 }
 
 dependencies {
 
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

@@ -2,7 +2,8 @@
     <string name="app_name">ONIK</string>
     <string name="min">min</string>
 
-    <string name="buttonReloadText">Обновить</string>
-    <string name="msgNotDownloaded">Не удалось загрузить данные</string>
+    <string name="button_reload_text">Обновить</string>
+    <string name="data_loading_error">Не удалось загрузить данные</string>
+
 
 </resources>
