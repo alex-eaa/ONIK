@@ -89,19 +89,19 @@ class MainFragment : Fragment(), View.OnClickListener {
             }
 
             is AppState.SuccessMovies -> when (collectionName) {
-                CollectionId.POPULAR  -> {
+                CollectionId.POPULAR -> {
                     binding.loadingLayout1.hide()
                     appState.movies?.results?.let {
                         mapAdapters[CollectionId.POPULAR]?.moviesData = it
                     }
                 }
-                CollectionId.TOP_RATED  -> {
+                CollectionId.TOP_RATED -> {
                     binding.loadingLayout2.hide()
                     appState.movies?.results?.let {
                         mapAdapters[CollectionId.TOP_RATED]?.moviesData = it
                     }
                 }
-                CollectionId.NOW_PLAYING  -> {
+                CollectionId.NOW_PLAYING -> {
                     binding.loadingLayout3.hide()
                     appState.movies?.results?.let {
                         mapAdapters[CollectionId.NOW_PLAYING]?.moviesData = it
@@ -123,18 +123,18 @@ class MainFragment : Fragment(), View.OnClickListener {
                     CollectionId.UPCOMING -> binding.loadingLayout4.hide()
                 }
 
-                binding.container.showSnackbar(
-                    action = {
-                        viewModel.apply {
-                            getDataFromRemoteSource(CollectionId.POPULAR)
-                            getDataFromRemoteSource(CollectionId.TOP_RATED)
-                            getDataFromRemoteSource(CollectionId.NOW_PLAYING)
-                            getDataFromRemoteSource(CollectionId.UPCOMING)
-                        }
-                    })
+                binding.container.showSnackbar(action = {
+                    viewModel.apply {
+                        getDataFromRemoteSource(CollectionId.POPULAR)
+                        getDataFromRemoteSource(CollectionId.TOP_RATED)
+                        getDataFromRemoteSource(CollectionId.NOW_PLAYING)
+                        getDataFromRemoteSource(CollectionId.UPCOMING)
+                    }
+                })
             }
 
-            else -> {}
+            else -> {
+            }
         }
     }
 

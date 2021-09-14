@@ -26,16 +26,11 @@ class MovieLoader(
     @RequiresApi(Build.VERSION_CODES.N)
     fun loadData() {
         val handler = Handler(Looper.getMainLooper())
-        val uri: URL
 
-        try {
-            uri =
-                URL("https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=ru-RU")
-            Log.d(TAG, uri.toString())
+        val uri: URL = try {
+            URL("https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=ru-RU")
 
         } catch (e: MalformedURLException) {
-            Log.e(TAG, "Fail URI", e)
-            e.printStackTrace()
             handler.post { listener.onFailed(e) }
             return
         }
@@ -47,22 +42,14 @@ class MovieLoader(
                 urlConnection.requestMethod = "GET"
                 urlConnection.readTimeout = 10000
 
-                val bufferedReader =
-                    BufferedReader(InputStreamReader(urlConnection.inputStream))
+                val br = BufferedReader(InputStreamReader(urlConnection.inputStream))
 
-                val movieDTO: MovieDTO =
-                    Gson().fromJson(getLines(bufferedReader), MovieDTO::class.java)
-
-                handler.post { listener.onLoaded(movieDTO) }
-
-            } catch (e: JsonSyntaxException) {
-                Log.e(TAG, "Fail parsing", e)
-                e.printStackTrace()
-                handler.post { listener.onFailed(e) }
+                Gson().fromJson(getLines(br), MovieDTO::class.java)
+                    ?.let { movieDTO ->
+                        handler.post { listener.onLoaded(movieDTO) }
+                    } ?: throw JsonSyntaxException("Parsing error")
 
             } catch (e: Exception) {
-                Log.e(TAG, "Fail connection", e)
-                e.printStackTrace()
                 handler.post { listener.onFailed(e) }
 
             } finally {
