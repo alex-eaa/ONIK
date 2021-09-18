@@ -1,5 +1,9 @@
 package com.example.onik.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class MovieDTO (
     val id: Int?,
     val adult: Boolean?,
@@ -15,10 +19,11 @@ data class MovieDTO (
     val runtime: Int?,
     val revenue: Int?,
     val genres: List<GenresDTO>?,
-) {
+) : Parcelable {
 
+    @Parcelize
     data class GenresDTO(
         val id: Int?,
         val name: String?,
-    )
+    ) : Parcelable
 }
