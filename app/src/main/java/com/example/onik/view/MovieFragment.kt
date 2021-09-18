@@ -1,5 +1,7 @@
 package com.example.onik.view
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
+import com.example.onik.model.MovieLoader
 import com.example.onik.viewmodel.AppState
+import com.example.onik.viewmodel.MainBroadcastReceiver
 import com.example.onik.viewmodel.MovieViewModel
 
 class MovieFragment : Fragment() {
-
     companion object {
         const val BUNDLE_EXTRA: String = "BUNDLE_EXTRA"
 
