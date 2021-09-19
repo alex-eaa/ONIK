@@ -33,29 +33,29 @@ class MovieFragment : Fragment() {
         ViewModelProvider(this).get(MovieViewModel::class.java)
     }
 
-    private val localResultBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent?.getStringExtra(RESULT_EXTRA)) {
-                SUCCESS_RESULT -> renderData(AppState.SuccessMovie(intent.getParcelableExtra(
-                    DETAILS_EXTRA)))
-                ERROR_RESULT -> renderData(AppState.ErrorMessage(intent.getStringExtra(ERROR_EXTRA)))
-            }
-        }
+//    private val localResultBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            when (intent?.getStringExtra(RESULT_EXTRA)) {
+//                SUCCESS_RESULT -> renderData(AppState.SuccessMovie(intent.getParcelableExtra(
+//                    DETAILS_EXTRA)))
+//                ERROR_RESULT -> renderData(AppState.ErrorMessage(intent.getStringExtra(ERROR_EXTRA)))
+//            }
+//        }
+//
+//    }
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Подпысываемся на Broadcast
-//        context?.registerReceiver(localResultBroadcastReceiver, IntentFilter(DETAILS_INTENT_FILTER))
-
-        // Подпысываемся на локальный Broadcast
-        context?.let {
-            LocalBroadcastManager.getInstance(it)
-                .registerReceiver(localResultBroadcastReceiver, IntentFilter(DETAILS_INTENT_FILTER))
-        }
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        // Подпысываемся на Broadcast
+////        context?.registerReceiver(localResultBroadcastReceiver, IntentFilter(DETAILS_INTENT_FILTER))
+//
+//        // Подпысываемся на локальный Broadcast
+//        context?.let {
+//            LocalBroadcastManager.getInstance(it)
+//                .registerReceiver(localResultBroadcastReceiver, IntentFilter(DETAILS_INTENT_FILTER))
+//        }
+//    }
 
 
     override fun onCreateView(
@@ -74,8 +74,8 @@ class MovieFragment : Fragment() {
             idMovie = it
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
-//            viewModel.getDataFromRemoteSource(idMovie)
-            viewModel.startServiceDetailsLoader(context, idMovie)
+            viewModel.getDataFromRemoteSource(idMovie)
+//            viewModel.startServiceDetailsLoader(context, idMovie)
         }
     }
 
@@ -128,9 +128,9 @@ class MovieFragment : Fragment() {
 //        context?.unregisterReceiver(localResultBroadcastReceiver)
 
         // Отпысываемся от локального Broadcast
-        context?.let {
-            LocalBroadcastManager.getInstance(it).unregisterReceiver(localResultBroadcastReceiver)
-        }
+//        context?.let {
+//            LocalBroadcastManager.getInstance(it).unregisterReceiver(localResultBroadcastReceiver)
+//        }
     }
 
 }

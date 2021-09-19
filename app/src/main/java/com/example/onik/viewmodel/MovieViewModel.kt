@@ -23,12 +23,12 @@ class MovieViewModel : ViewModel() {
         repositoryImpl.getMovieDetailsFromServer(id, movieDetailsLiveDataObserver)
     }
 
-    fun startServiceDetailsLoader (context: Context?, id: Int){
-        context.let {
-            it?.startService(Intent(it, ServiceDetailsLoader::class.java).apply {
-                putExtra(MOVIE_ID_EXTRA, id)
-            })
-        }
-    }
+//    fun startServiceDetailsLoader (context: Context?, id: Int){
+//        context.let {
+//            it?.startService(Intent(it, ServiceDetailsLoader::class.java).apply {
+//                putExtra(MOVIE_ID_EXTRA, id)
+//            })
+//        }
+//    }
 
 }
