@@ -11,6 +11,7 @@ import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.model.MovieDTO
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
+import com.squareup.picasso.Picasso
 
 class MovieFragment : Fragment() {
     companion object {
@@ -57,6 +58,12 @@ class MovieFragment : Fragment() {
             is AppState.SuccessMovie -> {
                 binding.apply {
                     loadingLayout.hide()
+                    Picasso.get()
+                        .load("https://image.tmdb.org/t/p/w500/${appState.movie?.poster_path}")
+                        .into(posterMini)
+                    Picasso.get()
+                        .load("https://image.tmdb.org/t/p/w500/${appState.movie?.backdrop_path}")
+                        .into(backdrop)
                     title.text = appState.movie?.title
                     voteAverage.text =
                         "${appState.movie?.vote_average} (${appState.movie?.vote_count})"
@@ -78,8 +85,8 @@ class MovieFragment : Fragment() {
                 binding.container.showSnackbar(
                     text = appState.error.message!!,
                     action = {
-                    viewModel.getDataFromRemoteSource(idMovie)
-                })
+                        viewModel.getDataFromRemoteSource(idMovie)
+                    })
             }
         }
     }

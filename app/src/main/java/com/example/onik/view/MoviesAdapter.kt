@@ -3,10 +3,12 @@ package com.example.onik.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.model.MovieDTO
+import com.squareup.picasso.Picasso
 
 class MoviesAdapter(
     private val itemLayoutForInflate: Int,
@@ -27,6 +29,9 @@ class MoviesAdapter(
                 findViewById<TextView>(R.id.release_date).text = movie.release_date?.substring(0, 4)
                 findViewById<TextView>(R.id.title).text = movie.title
                 findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
+                Picasso.get()
+                    .load("https://image.tmdb.org/t/p/w500/${movie.poster_path}")
+                    .into(findViewById<ImageView>(R.id.poster))
                 setOnClickListener {
                     listener?.onItemClick(movie)
                 }
