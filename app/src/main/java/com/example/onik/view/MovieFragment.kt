@@ -1,19 +1,14 @@
 package com.example.onik.view
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
-import com.example.onik.model.*
+import com.example.onik.model.MovieDTO
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 
@@ -33,30 +28,6 @@ class MovieFragment : Fragment() {
         ViewModelProvider(this).get(MovieViewModel::class.java)
     }
 
-//    private val localResultBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent?) {
-//            when (intent?.getStringExtra(RESULT_EXTRA)) {
-//                SUCCESS_RESULT -> renderData(AppState.SuccessMovie(intent.getParcelableExtra(
-//                    DETAILS_EXTRA)))
-//                ERROR_RESULT -> renderData(AppState.ErrorMessage(intent.getStringExtra(ERROR_EXTRA)))
-//            }
-//        }
-//
-//    }
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        // Подпысываемся на Broadcast
-////        context?.registerReceiver(localResultBroadcastReceiver, IntentFilter(DETAILS_INTENT_FILTER))
-//
-//        // Подпысываемся на локальный Broadcast
-//        context?.let {
-//            LocalBroadcastManager.getInstance(it)
-//                .registerReceiver(localResultBroadcastReceiver, IntentFilter(DETAILS_INTENT_FILTER))
-//        }
-//    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,7 +46,6 @@ class MovieFragment : Fragment() {
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
             viewModel.getDataFromRemoteSource(idMovie)
-//            viewModel.startServiceDetailsLoader(context, idMovie)
         }
     }
 
@@ -109,13 +79,6 @@ class MovieFragment : Fragment() {
                     viewModel.getDataFromRemoteSource(idMovie)
                 })
             }
-
-            is AppState.ErrorMessage -> {
-                binding.loadingLayout.hide()
-                binding.container.showSnackbar(text = appState.message.toString(),
-                    action = { viewModel.getDataFromRemoteSource(idMovie) }
-                )
-            }
         }
     }
 
@@ -123,14 +86,6 @@ class MovieFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-
-        // Отпысываемся от Broadcast
-//        context?.unregisterReceiver(localResultBroadcastReceiver)
-
-        // Отпысываемся от локального Broadcast
-//        context?.let {
-//            LocalBroadcastManager.getInstance(it).unregisterReceiver(localResultBroadcastReceiver)
-//        }
     }
 
 }

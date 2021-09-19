@@ -1,26 +1,30 @@
 package com.example.onik.model
 
+import android.os.Parcelable
+
 data class Movie(
-    val poster_path: String = "",
-    val adult: Boolean = false,
-    val overview: String = "",
-    val release_date: String = "",
-    val id: Int = 0,
-    val original_title: String = "",
-    val original_language: String = "",
-    val title: String = "",
-    val backdrop_path: String = "",
-    val popularity: Double = 0.0,
-    val vote_count: Int = 0,
-    val vote_average: Double = 0.0,
-    val runtime: Int = 0,
-    val budget: Int = 0,
-    val revenue: Int = 0,
-    val genre_ids: List<Genre> = getDefaultGenres(),
-)
+    var poster_path: String? = null,
+    var adult: Boolean? = null,
+    var overview: String? = null,
+    var release_date: String? = null,
+    var id: Int? = null,
+    var title: String? = null,
+    var backdrop_path: String? = null,
+    var popularity: Double? = null,
+    var vote_count: Int? = null,
+    var vote_average: Double? = null,
+    var runtime: Int? = null,
+    var budget: Int? = null,
+    var revenue: Int? = null,
+    var genres: List<Genre>? = null
+) {
+
+    data class Genre(
+        val id: Int? = null,
+        val name: String? = null,
+    )
+}
 
 fun getDefaultGenres() = listOf(
-    Genre(18, "Drama"),
-    Genre(28, "Action"),
-    Genre(44, "Fantasy")
+    Movie.Genre(0, ""),
 )
