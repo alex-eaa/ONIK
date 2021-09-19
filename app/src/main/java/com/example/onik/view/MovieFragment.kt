@@ -75,7 +75,9 @@ class MovieFragment : Fragment() {
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
-                binding.container.showSnackbar(action = {
+                binding.container.showSnackbar(
+                    text = appState.error.message!!,
+                    action = {
                     viewModel.getDataFromRemoteSource(idMovie)
                 })
             }

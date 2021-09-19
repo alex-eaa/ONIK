@@ -1,23 +1,25 @@
 package com.example.onik.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.BuildConfig
 import com.example.onik.model.*
 import com.google.gson.Gson
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 
+private const val TAG = "ViewModel"
 private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 private const val api_key = BuildConfig.THEMOVIEDB_API_KEY
 
 class MovieViewModel : ViewModel() {
 
-    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSource())
+    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSourceDetails())
 
     private val movieDetailsLiveDataObserver: MutableLiveData<AppState> =
         MutableLiveData<AppState>()
@@ -29,17 +31,16 @@ class MovieViewModel : ViewModel() {
 
 
     fun getDataFromRemoteSource(movieId: Int) {
-        val requestLink =
-            "https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=ru-RU"
         movieDetailsLiveDataObserver.value = AppState.Loading
-        detailsRepositoryImpl.getMovieDetailsFromServer(requestLink, callBack)
+        detailsRepositoryImpl.getMovieDetailsFromServer(movieId, callBack)
     }
 
-    private val callBack = object : Callback {
-        @Throws(IOException::class)
+    private val callBack = object : Callback<MovieDTO> {
+//        @Throws(IOException::class)
 
-        override fun onResponse(call: Call?, response: Response) {
-            val serverResponse: String? = response.body()?.string()
+        override fun onResponse(call: Call<MovieDTO>, response: Response<MovieDTO>) {
+            val serverResponse: MovieDTO? = response.body()
+
             movieDetailsLiveDataObserver.postValue(
                 if (response.isSuccessful && serverResponse != null) {
                     checkResponse(serverResponse)
@@ -49,14 +50,14 @@ class MovieViewModel : ViewModel() {
             )
         }
 
-        override fun onFailure(call: Call?, e: IOException?) {
-            movieDetailsLiveDataObserver.postValue(AppState.Error(Throwable(e?.message
+        override fun onFailure(call: Call<MovieDTO>, t: Throwable) {
+            Log.d(TAG, t.message.toString())
+            movieDetailsLiveDataObserver.postValue(AppState.Error(Throwable(t.message
                 ?: REQUEST_ERROR)))
         }
 
-        private fun checkResponse(serverResponse: String): AppState {
-            val movieDTO: MovieDTO = Gson().fromJson(serverResponse, MovieDTO::class.java)
-            return AppState.SuccessMovie(convertDtoToModel(movieDTO))
+        private fun checkResponse(serverResponse: MovieDTO): AppState {
+            return AppState.SuccessMovie(convertDtoToModel(serverResponse))
         }
     }
 
