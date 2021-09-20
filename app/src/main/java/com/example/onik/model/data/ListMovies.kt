@@ -1,4 +1,5 @@
-package com.example.onik.model
+package com.example.onik.model.data
+
 
 data class ListMovies(
     val page: String? = null,

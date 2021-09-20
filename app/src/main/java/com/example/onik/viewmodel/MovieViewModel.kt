@@ -6,11 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.BuildConfig
 import com.example.onik.model.*
-import com.google.gson.Gson
+import com.example.onik.model.data.Movie
+import com.example.onik.model.data.MovieDTO
+import com.example.onik.model.repository.DetailsRepository
+import com.example.onik.model.repository.DetailsRepositoryImpl
+import com.example.onik.model.repository.RemoteDataSourceDetails
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
 
 private const val TAG = "ViewModel"
 private const val SERVER_ERROR = "Ошибка сервера"
@@ -19,7 +22,8 @@ private const val api_key = BuildConfig.THEMOVIEDB_API_KEY
 
 class MovieViewModel : ViewModel() {
 
-    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(RemoteDataSourceDetails())
+    private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(
+        RemoteDataSourceDetails())
 
     private val movieDetailsLiveDataObserver: MutableLiveData<AppState> =
         MutableLiveData<AppState>()

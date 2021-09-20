@@ -1,4 +1,4 @@
-package com.example.onik.model
+package com.example.onik.model.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

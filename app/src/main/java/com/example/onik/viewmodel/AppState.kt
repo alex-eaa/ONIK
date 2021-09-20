@@ -1,9 +1,7 @@
 package com.example.onik.viewmodel
 
-import com.example.onik.model.ListMovies
-import com.example.onik.model.ListMoviesDTO
-import com.example.onik.model.Movie
-import com.example.onik.model.MovieDTO
+import com.example.onik.model.data.ListMovies
+import com.example.onik.model.data.Movie
 
 sealed class AppState {
     data class SuccessMovie(val movie: Movie) : AppState()

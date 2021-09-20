@@ -5,6 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.model.*
+import com.example.onik.model.data.ListMovies
+import com.example.onik.model.data.ListMoviesDTO
+import com.example.onik.model.data.Movie
+import com.example.onik.model.data.MovieDTO
+import com.example.onik.model.repository.CollectionRepository
+import com.example.onik.model.repository.CollectionRepositoryImpl
+import com.example.onik.model.repository.RemoteDataSourceCollections
 
 import retrofit2.Call
 import retrofit2.Callback

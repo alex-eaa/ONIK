@@ -1,5 +1,6 @@
-package com.example.onik.model
+package com.example.onik.model.repository
 
+import com.example.onik.model.data.MovieDTO
 
 
 interface DetailsRepository {

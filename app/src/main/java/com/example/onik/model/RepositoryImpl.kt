@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.example.onik.Foo
+import com.example.onik.model.data.ListMoviesDTO
+import com.example.onik.model.data.Movie
+import com.example.onik.model.data.MovieDTO
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 

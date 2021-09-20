@@ -1,6 +1,5 @@
-package com.example.onik.model
+package com.example.onik.model.data
 
-import android.os.Parcelable
 
 data class Movie(
     var poster_path: String? = null,

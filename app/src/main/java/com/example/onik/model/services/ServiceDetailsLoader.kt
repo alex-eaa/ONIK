@@ -1,4 +1,4 @@
-package com.example.onik.model
+package com.example.onik.model.services
 
 import android.app.IntentService
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.onik.BuildConfig
+import com.example.onik.model.data.MovieDTO
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader

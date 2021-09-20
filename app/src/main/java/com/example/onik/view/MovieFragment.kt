@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
-import com.example.onik.model.MovieDTO
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso
@@ -75,7 +74,8 @@ class MovieFragment : Fragment() {
                 }
 
                 var genres = ""
-                appState.movie?.genres?.forEach { genres += "${it.name}, " }
+                appState.movie?.genres?.forEach {
+                    genres += "${it.name}, " }
                 binding.genre.text = genres.dropLast(2)
 
             }

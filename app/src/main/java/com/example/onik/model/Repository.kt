@@ -1,6 +1,7 @@
 package com.example.onik.model
 
 import androidx.lifecycle.MutableLiveData
+import com.example.onik.model.data.Movie
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 

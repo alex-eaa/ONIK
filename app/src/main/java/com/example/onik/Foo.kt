@@ -1,6 +1,7 @@
 package com.example.onik
 
-import com.example.onik.model.Movie
+import com.example.onik.model.data.Movie
+
 
 class Foo {
 

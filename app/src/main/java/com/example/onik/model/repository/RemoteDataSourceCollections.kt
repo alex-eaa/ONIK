@@ -1,6 +1,7 @@
-package com.example.onik.model
+package com.example.onik.model.repository
 
 import com.example.onik.BuildConfig
+import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.viewmodel.CollectionId
 import com.google.gson.GsonBuilder
 import retrofit2.Callback
