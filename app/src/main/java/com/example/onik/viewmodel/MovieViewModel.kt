@@ -86,11 +86,10 @@ class MovieViewModel : ViewModel() {
     }
 
     private fun convertDtoToModel(genresDTO: List<MovieDTO.GenresDTO>?): List<Movie.Genre> {
-        val listGenres: MutableList<Movie.Genre> = mutableListOf(Movie.Genre())
+        val listGenres: MutableList<Movie.Genre> = mutableListOf()
         genresDTO?.forEach {
             listGenres.add(Movie.Genre(it.id, it.name))
         }
-        listGenres.removeAt(0)   //TODO
         return listGenres
     }
 

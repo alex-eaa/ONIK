@@ -85,7 +85,7 @@ class MoviesCollectionViewModel : ViewModel() {
 
 
     private fun convertDtoToModel(results: List<MovieDTO>?): List<Movie> {
-        val listMovies: MutableList<Movie> = mutableListOf(Movie())
+        val listMovies: MutableList<Movie> = mutableListOf()
         results?.forEach {
             listMovies.add(
                 Movie(
@@ -96,7 +96,6 @@ class MoviesCollectionViewModel : ViewModel() {
                 )
             )
         }
-        listMovies.removeAt(0)   //TODO
         return listMovies
     }
 
