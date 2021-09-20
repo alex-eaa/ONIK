@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.example.onik.Foo
+import com.example.onik.model.data.ListMoviesDTO
+import com.example.onik.model.data.Movie
+import com.example.onik.model.data.MovieDTO
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 
@@ -25,7 +28,7 @@ class RepositoryImpl : Repository {
             object : MovieLoader.MovieLoaderListener {
 
                 override fun onLoaded(movieDTO: MovieDTO) {
-                    liveData.postValue(AppState.SuccessMovie(movieDTO))
+//                    liveData.postValue(AppState.SuccessMovie(movieDTO))
                 }
 
                 override fun onFailed(throwable: Throwable) {
@@ -45,7 +48,7 @@ class RepositoryImpl : Repository {
             object : ListMoviesLoader.ListMoviesLoaderListener {
 
                 override fun onLoaded(listMoviesDTO: ListMoviesDTO) {
-                    liveData.postValue(AppState.SuccessMovies(listMoviesDTO))
+//                    liveData.postValue(AppState.SuccessMovies(listMoviesDTO))
                 }
 
                 override fun onFailed(throwable: Throwable) {

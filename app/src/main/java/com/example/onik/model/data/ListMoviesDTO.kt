@@ -1,4 +1,4 @@
-package com.example.onik.model
+package com.example.onik.model.data
 
 data class ListMoviesDTO(
     val page: String?,

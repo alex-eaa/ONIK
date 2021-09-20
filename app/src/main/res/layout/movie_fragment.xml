@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.3" />
+            app:layout_constraintGuide_percent="0.30" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineVerticalCenter"
@@ -44,7 +44,7 @@
             android:id="@+id/backdrop"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/backdrop"
+
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@id/guidelineHorizontal"
             app:layout_constraintStart_toStartOf="@id/main"
@@ -53,15 +53,16 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPoster"
-            android:layout_width="80dp"
+            android:layout_width="70dp"
             android:layout_height="0dp"
             app:cardCornerRadius="4dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal"
             app:layout_constraintDimensionRatio="6:9"
             app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart">
 
             <ImageView
-                android:id="@+id/poster"
+                android:id="@+id/posterMini"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
@@ -95,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@id/guidelineHorizontal"
+            app:layout_constraintBottom_toBottomOf="@id/cardPoster"
             app:layout_constraintStart_toEndOf="@id/star"
             tools:text="5.43" />
 

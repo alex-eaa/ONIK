@@ -3,17 +3,19 @@ package com.example.onik.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
-import com.example.onik.model.MovieDTO
+import com.example.onik.model.data.Movie
+import com.squareup.picasso.Picasso
 
 class MoviesAdapter(
     private val itemLayoutForInflate: Int,
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    var moviesData: List<MovieDTO> = listOf()
+    var moviesData: List<Movie> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -22,11 +24,18 @@ class MoviesAdapter(
     var listener: OnItemViewClickListener? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: MovieDTO) {
+        fun bind(movie: Movie) {
             itemView.apply {
                 findViewById<TextView>(R.id.release_date).text = movie.release_date?.substring(0, 4)
                 findViewById<TextView>(R.id.title).text = movie.title
                 findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
+
+                Picasso.get()
+                    .load("https://image.tmdb.org/t/p/w500/${movie.poster_path}")
+                    .placeholder(R.drawable.placeholder)
+                    .fit()
+                    .into(findViewById<ImageView>(R.id.poster))
+
                 setOnClickListener {
                     listener?.onItemClick(movie)
                 }
@@ -55,7 +64,7 @@ class MoviesAdapter(
 
 
     fun interface OnItemViewClickListener {
-        fun onItemClick(movie: MovieDTO)
+        fun onItemClick(movie: Movie)
     }
 
 }

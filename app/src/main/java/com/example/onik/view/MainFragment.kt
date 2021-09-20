@@ -1,6 +1,7 @@
 package com.example.onik.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -123,6 +124,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                     CollectionId.UPCOMING -> binding.loadingLayout4.hide()
                 }
 
+                Log.d("zzz", appState.error.message!!)
                 binding.container.showSnackbar(action = {
                     viewModel.apply {
                         getDataFromRemoteSource(CollectionId.POPULAR)
