@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.model.*
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,7 +16,8 @@ private const val REQUEST_ERROR = "Ошибка запроса на сервер
 
 class MoviesCollectionViewModel : ViewModel() {
 
-    private val collectionRepositoryImpl: CollectionRepository = CollectionRepositoryImpl(RemoteDataSourceCollections())
+    private val collectionRepositoryImpl: CollectionRepository = CollectionRepositoryImpl(
+        RemoteDataSourceCollections())
 
     private var moviesListLiveDataObserver: MutableMap<CollectionId, MutableLiveData<AppState>> =
         mutableMapOf(CollectionId.EMPTY to MutableLiveData<AppState>())
@@ -37,7 +39,10 @@ class MoviesCollectionViewModel : ViewModel() {
             collectionId,
             object : Callback<ListMoviesDTO> {
 
-                override fun onResponse(call: Call<ListMoviesDTO>, response: Response<ListMoviesDTO>) {
+                override fun onResponse(
+                    call: Call<ListMoviesDTO>,
+                    response: Response<ListMoviesDTO>,
+                ) {
                     val serverResponse: ListMoviesDTO? = response.body()
 
                     moviesListLiveDataObserver[collectionId]?.postValue(
@@ -56,9 +61,36 @@ class MoviesCollectionViewModel : ViewModel() {
                 }
 
                 private fun checkResponse(serverResponse: ListMoviesDTO): AppState {
-                    return AppState.SuccessMovies(serverResponse)
+                    return AppState.SuccessMovies(convertDtoToModel(serverResponse))
                 }
             })
+    }
+
+
+    private fun convertDtoToModel(listMoviesDTO: ListMoviesDTO): ListMovies {
+        return ListMovies(
+            page = listMoviesDTO.page,
+            total_pages = listMoviesDTO.total_pages,
+            total_results = listMoviesDTO.total_results,
+            results = convertDtoToModel(listMoviesDTO.results)
+        )
+    }
+
+
+    private fun convertDtoToModel(results: List<MovieDTO>?): List<Movie> {
+        val listMovies: MutableList<Movie> = mutableListOf(Movie())
+        results?.forEach {
+            listMovies.add(
+                Movie(
+                    poster_path = it.poster_path,
+                    vote_average = it.vote_average,
+                    id = it.id,
+                    title = it.title,
+                )
+            )
+        }
+        listMovies.removeAt(0)   //TODO
+        return listMovies
     }
 
 

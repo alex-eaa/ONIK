@@ -45,7 +45,7 @@ class RepositoryImpl : Repository {
             object : ListMoviesLoader.ListMoviesLoaderListener {
 
                 override fun onLoaded(listMoviesDTO: ListMoviesDTO) {
-                    liveData.postValue(AppState.SuccessMovies(listMoviesDTO))
+//                    liveData.postValue(AppState.SuccessMovies(listMoviesDTO))
                 }
 
                 override fun onFailed(throwable: Throwable) {

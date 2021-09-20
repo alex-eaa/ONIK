@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
+import com.example.onik.model.Movie
 import com.example.onik.model.MovieDTO
 import com.squareup.picasso.Picasso
 
@@ -15,7 +16,7 @@ class MoviesAdapter(
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    var moviesData: List<MovieDTO> = listOf()
+    var moviesData: List<Movie> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -24,7 +25,7 @@ class MoviesAdapter(
     var listener: OnItemViewClickListener? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: MovieDTO) {
+        fun bind(movie: Movie) {
             itemView.apply {
                 findViewById<TextView>(R.id.release_date).text = movie.release_date?.substring(0, 4)
                 findViewById<TextView>(R.id.title).text = movie.title
@@ -60,7 +61,7 @@ class MoviesAdapter(
 
 
     fun interface OnItemViewClickListener {
-        fun onItemClick(movie: MovieDTO)
+        fun onItemClick(movie: Movie)
     }
 
 }

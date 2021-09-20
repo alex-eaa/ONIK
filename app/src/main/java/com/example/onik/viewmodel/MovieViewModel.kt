@@ -63,7 +63,6 @@ class MovieViewModel : ViewModel() {
 
 
     private fun convertDtoToModel(movieDTO: MovieDTO): Movie {
-
         return Movie(
             poster_path = movieDTO.poster_path,
             adult = movieDTO.adult,
