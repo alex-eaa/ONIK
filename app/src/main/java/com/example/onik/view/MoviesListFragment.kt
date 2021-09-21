@@ -52,6 +52,8 @@ class MoviesListFragment : Fragment() {
             viewModel.getMoviesListLiveData(collectionId)
                 ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
             viewModel.getDataFromRemoteSource(collectionId)
+
+            activity?.title = collectionId.description
         }
     }
 

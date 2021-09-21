@@ -51,7 +51,7 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        activity?.title = getString(R.string.app_name)
         initRecyclerView()
 
         binding.categoryTitleLayout1.setOnClickListener(this)
