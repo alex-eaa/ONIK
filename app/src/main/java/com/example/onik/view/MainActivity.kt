@@ -46,15 +46,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(findViewById(R.id.toolbar))
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        when (id) {
+        when (item.itemId) {
             R.id.action_settings -> {
-                // TODO
-                return true
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, MySettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
             R.id.action_main -> {
                 // TODO

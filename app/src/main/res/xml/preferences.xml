@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        app:defaultValue="0"
+        app:entries="@array/langArray"
+        app:entryValues="@array/langVal"
+        app:key="listPref_languages"
+        app:title="Язык приложения"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        app:key="pref_adult"
+        app:summaryOff="Не показывать"
+        app:summaryOn="Показывать"
+        app:title="Фильмы для взрослых" />
+
+</PreferenceScreen>
