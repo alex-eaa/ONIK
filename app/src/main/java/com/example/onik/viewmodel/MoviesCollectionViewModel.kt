@@ -9,9 +9,7 @@ import com.example.onik.model.data.ListMovies
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.model.data.Movie
 import com.example.onik.model.data.MovieDTO
-import com.example.onik.model.repository.CollectionRepository
-import com.example.onik.model.repository.CollectionRepositoryImpl
-import com.example.onik.model.repository.RemoteDataSourceCollections
+import com.example.onik.model.repository.*
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,12 +24,14 @@ class MoviesCollectionViewModel : ViewModel() {
     private val collectionRepositoryImpl: CollectionRepository = CollectionRepositoryImpl(
         RemoteDataSourceCollections())
 
+    private val searchRepositoryImpl: SearchRepository = SearchRepositoryImpl(
+        RemoteDataSourceSearch())
+
     private var moviesListLiveDataObserver: MutableMap<CollectionId, MutableLiveData<AppState>> =
-        mutableMapOf(CollectionId.EMPTY to MutableLiveData<AppState>())
+        mutableMapOf()
 
     fun getMoviesListLiveData(id: CollectionId): LiveData<AppState>? =
         moviesListLiveDataObserver.run {
-            remove(CollectionId.EMPTY)
             put(id, MutableLiveData<AppState>())
             get(id)
         }
@@ -72,6 +72,42 @@ class MoviesCollectionViewModel : ViewModel() {
                 }
             })
     }
+
+
+    fun findDataOnRemoteSource(collectionId: CollectionId, searchQuery: String) {
+        moviesListLiveDataObserver[collectionId]?.postValue(AppState.Loading)
+
+        searchRepositoryImpl.getSearchResultFromServer(
+            searchQuery,
+            object : Callback<ListMoviesDTO> {
+
+                override fun onResponse(
+                    call: Call<ListMoviesDTO>,
+                    response: Response<ListMoviesDTO>,
+                ) {
+                    val serverResponse: ListMoviesDTO? = response.body()
+
+                    moviesListLiveDataObserver[collectionId]?.postValue(
+                        if (response.isSuccessful && serverResponse != null) {
+                            checkResponse(serverResponse)
+                        } else {
+                            AppState.Error(Throwable(SERVER_ERROR))
+                        }
+                    )
+                }
+
+                override fun onFailure(call: Call<ListMoviesDTO>, t: Throwable) {
+                    Log.d(TAG, t.message.toString())
+                    moviesListLiveDataObserver[collectionId]?.postValue(AppState.Error(Throwable(t.message
+                        ?: REQUEST_ERROR)))
+                }
+
+                private fun checkResponse(serverResponse: ListMoviesDTO): AppState {
+                    return AppState.SuccessMovies(convertDtoToModel(serverResponse))
+                }
+            })
+    }
+
 
 
     private fun convertDtoToModel(listMoviesDTO: ListMoviesDTO): ListMovies {

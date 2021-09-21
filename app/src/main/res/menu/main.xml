@@ -12,7 +12,7 @@
         android:icon="@android:drawable/ic_menu_compass"
         android:orderInCategory="10"
         android:title="Главная"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"

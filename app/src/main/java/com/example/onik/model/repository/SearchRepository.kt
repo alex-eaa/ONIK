@@ -4,6 +4,6 @@ import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.viewmodel.CollectionId
 import retrofit2.Callback
 
-interface CollectionRepository {
-    fun getCollectionFromServer(collection: CollectionId, callback: Callback<ListMoviesDTO>)
+interface SearchRepository {
+    fun getSearchResultFromServer(searchQuery: String, callback: Callback<ListMoviesDTO>)
 }

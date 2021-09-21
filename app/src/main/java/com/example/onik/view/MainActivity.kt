@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import com.example.onik.R
@@ -33,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         settings.param2 = 100333
         settings.param3 = "Save PARAM3: VN4585"
 
-
         setContentView(R.layout.main_activity)
         initToolbar()
         if (savedInstanceState == null) {
@@ -49,36 +49,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_settings -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MySettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
-            R.id.action_main -> {
-                // TODO
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        val searchText: SearchView? = menu?.findItem(R.id.action_search)?.actionView as SearchView?
-        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                Toast.makeText(applicationContext, query, Toast.LENGTH_SHORT).show();
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-
-        })
         return true
     }
 
