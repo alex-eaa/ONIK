@@ -21,7 +21,7 @@
         </activity>
 
         <service
-            android:name=".model.ServiceDetailsLoader"
+            android:name=".model.services.ServiceDetailsLoader"
             android:exported="false" />
 
     </application>
