@@ -1,9 +1,13 @@
 package com.example.onik.app
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import androidx.room.Room
 import com.example.onik.model.room.MovieDao
 import com.example.onik.model.room.MovieDataBase
+import kotlinx.coroutines.withContext
 
 class App: Application() {
 
@@ -33,6 +37,10 @@ class App: Application() {
                 }
             }
             return db!!.historyDao()
+        }
+
+        fun getSettings(): SharedPreferences{
+            return getDefaultSharedPreferences(appInstance)
         }
     }
 }

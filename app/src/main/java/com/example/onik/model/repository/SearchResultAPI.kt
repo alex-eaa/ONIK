@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface SearchResultAPI {
 
     @GET("3/search/movie")
-    fun getCollection(
+    fun getFind(
         @Query("query") query: String,
         @Query("language") language: String,
         @Query("include_adult") include_adult: Boolean,

@@ -1,7 +1,6 @@
 package com.example.onik.model.repository
 
 import com.example.onik.model.data.ListMoviesDTO
-import com.example.onik.viewmodel.CollectionId
 import retrofit2.Callback
 
 class SearchRepositoryImpl(private val remoteDataSourceSearch: RemoteDataSourceSearch) :
@@ -11,7 +10,7 @@ class SearchRepositoryImpl(private val remoteDataSourceSearch: RemoteDataSourceS
         searchQuery: String,
         callback: Callback<ListMoviesDTO>,
     ) {
-        remoteDataSourceSearch.getCollection(searchQuery, callback)
+        remoteDataSourceSearch.getFind(searchQuery, callback)
     }
 
 }

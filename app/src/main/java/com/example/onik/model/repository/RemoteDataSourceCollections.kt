@@ -1,6 +1,7 @@
 package com.example.onik.model.repository
 
 import com.example.onik.BuildConfig
+import com.example.onik.app.App
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.viewmodel.CollectionId
 import com.google.gson.GsonBuilder
@@ -21,6 +22,7 @@ class RemoteDataSourceCollections {
         .build().create(CollectionMovieAPI::class.java)
 
     fun getCollection(collection: CollectionId, callback: Callback<ListMoviesDTO>) {
-        collectionAPI.getDetails(collection.id, "ru-RU", BuildConfig.THEMOVIEDB_API_KEY).enqueue(callback)
+        val language = App.getSettings().getString("listPref_languages", "ru-RU").toString()
+        collectionAPI.getCollection(collection.id, language, BuildConfig.THEMOVIEDB_API_KEY).enqueue(callback)
     }
 }

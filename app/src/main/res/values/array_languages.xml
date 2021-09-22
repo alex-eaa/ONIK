@@ -8,7 +8,7 @@
 
     <string-array name="langVal">
         <item>ru-RU</item>
-        <item>en-EN</item>
+        <item>en-US</item>
     </string-array>
 
 </resources>
