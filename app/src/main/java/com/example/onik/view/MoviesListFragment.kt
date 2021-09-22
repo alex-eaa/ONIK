@@ -36,10 +36,6 @@ class MoviesListFragment : Fragment() {
 
     private val myAdapter: MoviesAdapter by lazy { MoviesAdapter(R.layout.item) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +49,7 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        setHasOptionsMenu(true)
 
         arguments?.let { bundle ->
             bundle.getSerializable(BUNDLE_EXTRA)?.let { collectionId = it as CollectionId }
@@ -112,7 +109,7 @@ class MoviesListFragment : Fragment() {
         binding.mainRecyclerView.apply {
             adapter = myAdapter
             layoutManager = GridLayoutManager(context, 2)
-            setHasFixedSize(true);
+            setHasFixedSize(true)
         }
     }
 
@@ -137,12 +134,6 @@ class MoviesListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MySettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
             R.id.action_main -> {
                 Toast.makeText(requireActivity(), "Fragment 2", Toast.LENGTH_LONG).show()
                 return true

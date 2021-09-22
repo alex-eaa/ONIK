@@ -55,6 +55,19 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, MySettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onDestroy() {
         unregisterReceiver(receiver)

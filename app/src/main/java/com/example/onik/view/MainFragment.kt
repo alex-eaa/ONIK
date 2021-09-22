@@ -234,12 +234,6 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MySettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
             R.id.action_main -> {
                 Toast.makeText(requireActivity(), "Fragment", Toast.LENGTH_LONG).show()
                 return true
