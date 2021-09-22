@@ -1,8 +1,12 @@
 package com.example.onik.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
@@ -10,6 +14,7 @@ import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso
+
 
 class MovieFragment : Fragment() {
     companion object {
@@ -76,7 +81,8 @@ class MovieFragment : Fragment() {
 
                 var genres = ""
                 appState.movie?.genres?.forEach {
-                    genres += "${it.name}, " }
+                    genres += "${it.name}, "
+                }
                 binding.genre.text = genres.dropLast(2)
 
             }
@@ -102,7 +108,8 @@ class MovieFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> {
-                Toast.makeText(requireActivity(), "Add note 2", Toast.LENGTH_LONG).show()
+                showAlertDialogNoteEditClicked()
+                //Toast.makeText(requireActivity(), "Add note 2", Toast.LENGTH_LONG).show()
                 return true
             }
         }
@@ -110,9 +117,29 @@ class MovieFragment : Fragment() {
     }
 
 
+    private fun showAlertDialogNoteEditClicked() {
+        val customLayout: View = layoutInflater.inflate(R.layout.note_dialog_fragment, null)
+
+        AlertDialog.Builder(requireActivity()).apply {
+            setTitle("Редактирование заметки")
+            setView(layoutInflater.inflate(R.layout.note_dialog_fragment, null))
+            setView(customLayout)
+            setPositiveButton("OK") { dialog, which ->
+                val editText: EditText = customLayout.findViewById(R.id.editText)
+                sendDialogDataToActivity(editText.text.toString())
+            }
+            create()
+            show()
+        }
+    }
+
+    private fun sendDialogDataToActivity(data: String) {
+        Toast.makeText(requireActivity(), data, Toast.LENGTH_SHORT).show()
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
