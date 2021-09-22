@@ -5,9 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.BuildConfig
+import com.example.onik.app.App.Companion.getMovieDao
 import com.example.onik.model.*
 import com.example.onik.model.data.Movie
 import com.example.onik.model.data.MovieDTO
+import com.example.onik.model.localRepository.LocalRepository
+import com.example.onik.model.localRepository.LocalRepositoryImpl
 import com.example.onik.model.repository.DetailsRepository
 import com.example.onik.model.repository.DetailsRepositoryImpl
 import com.example.onik.model.repository.RemoteDataSourceDetails
@@ -25,13 +28,21 @@ class MovieViewModel : ViewModel() {
     private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(
         RemoteDataSourceDetails())
 
+    private val localRepository: LocalRepository = LocalRepositoryImpl(getMovieDao())
+
     private val movieDetailsLiveDataObserver: MutableLiveData<AppState> =
         MutableLiveData<AppState>()
 
     val movieDetailsLiveData: LiveData<AppState> = movieDetailsLiveDataObserver
 
 
-    fun getDataFromLocalSource(id: Int) {}
+    fun getMovieNoteFromLocalSource(movieId: Int) {
+        localRepository.getMovieNote(movieId)
+    }
+
+    fun saveMovieToDB(movie: Movie) {
+        localRepository.saveMovie(movie)
+    }
 
 
     fun getDataFromRemoteSource(movieId: Int) {
@@ -61,7 +72,11 @@ class MovieViewModel : ViewModel() {
         }
 
         private fun checkResponse(serverResponse: MovieDTO): AppState {
-            return AppState.SuccessMovie(convertDtoToModel(serverResponse))
+            val movie: Movie = convertDtoToModel(serverResponse)
+            movie.id?.let {
+                movie.note = localRepository.getMovieNote(it)
+            }
+            return AppState.SuccessMovie(movie)
         }
     }
 

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
+import com.example.onik.model.data.Movie
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso
@@ -23,6 +24,8 @@ class MovieFragment : Fragment() {
         fun newInstance(bundle: Bundle): MovieFragment =
             MovieFragment().apply { arguments = bundle }
     }
+
+    private var movieTemp: Movie? = Movie()
 
     private var idMovie: Int = 0
     private var _binding: MovieFragmentBinding? = null
@@ -52,6 +55,7 @@ class MovieFragment : Fragment() {
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
             viewModel.getDataFromRemoteSource(idMovie)
+
         }
     }
 
@@ -85,6 +89,7 @@ class MovieFragment : Fragment() {
                 }
                 binding.genre.text = genres.dropLast(2)
 
+                movieTemp = appState.movie
             }
 
             is AppState.Error -> {
@@ -119,21 +124,28 @@ class MovieFragment : Fragment() {
 
     private fun showAlertDialogNoteEditClicked() {
         val customLayout: View = layoutInflater.inflate(R.layout.note_dialog_fragment, null)
+        val editText: EditText = customLayout.findViewById(R.id.editText)
 
         AlertDialog.Builder(requireActivity()).apply {
             setTitle("Редактирование заметки")
-            setView(layoutInflater.inflate(R.layout.note_dialog_fragment, null))
             setView(customLayout)
-            setPositiveButton("OK") { dialog, which ->
-                val editText: EditText = customLayout.findViewById(R.id.editText)
+            setPositiveButton("Сохранить") { dialog, which ->
                 sendDialogDataToActivity(editText.text.toString())
             }
+            setNegativeButton("Отмена") { dialog, which -> }
             create()
             show()
         }
+
+        editText.setText(movieTemp?.note)
     }
 
+
     private fun sendDialogDataToActivity(data: String) {
+        movieTemp?.let {
+            it.note = data
+            viewModel.saveMovieToDB(it)
+        }
         Toast.makeText(requireActivity(), data, Toast.LENGTH_SHORT).show()
     }
 
