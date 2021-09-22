@@ -1,6 +1,8 @@
 package com.example.onik.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +16,7 @@ import com.example.onik.model.localRepository.LocalRepositoryImpl
 import com.example.onik.model.repository.DetailsRepository
 import com.example.onik.model.repository.DetailsRepositoryImpl
 import com.example.onik.model.repository.RemoteDataSourceDetails
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,10 +26,10 @@ private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 private const val api_key = BuildConfig.THEMOVIEDB_API_KEY
 
-class MovieViewModel : ViewModel() {
+class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
     private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(
-        RemoteDataSourceDetails())
+        RemoteDataSourceDetails(application))
 
     private val localRepository: LocalRepository = LocalRepositoryImpl(getMovieDao())
 

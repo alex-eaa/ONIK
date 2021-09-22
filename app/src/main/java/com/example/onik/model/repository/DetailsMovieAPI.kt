@@ -1,5 +1,6 @@
 package com.example.onik.model.repository
 
+import android.text.style.BulletSpan
 import com.example.onik.model.data.MovieDTO
 import retrofit2.Call
 import retrofit2.http.GET
@@ -14,6 +15,7 @@ interface DetailsMovieAPI {
         @Path("movieId") movieId: Int,
         @Query("language") language: String,
         @Query("api_key") api_key: String,
+        @Query("include_adult") include_adult: Boolean,
     ): Call<MovieDTO>
 
 }
