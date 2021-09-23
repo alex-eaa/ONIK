@@ -39,6 +39,7 @@ class App: Application() {
             return db!!.historyDao()
         }
 
+
         fun getSettings(): SharedPreferences{
             return getDefaultSharedPreferences(appInstance)
         }
