@@ -234,10 +234,10 @@ class MainFragment : Fragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_main -> {
-                Toast.makeText(requireActivity(), "Fragment", Toast.LENGTH_LONG).show()
-                return true
-            }
+//            R.id.action_main -> {
+//                Toast.makeText(requireActivity(), "Fragment", Toast.LENGTH_LONG).show()
+//                return true
+//            }
         }
         return super.onOptionsItemSelected(item)
     }

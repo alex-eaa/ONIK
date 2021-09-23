@@ -29,7 +29,7 @@ private const val api_key = BuildConfig.THEMOVIEDB_API_KEY
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
     private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(
-        RemoteDataSourceDetails(application))
+        RemoteDataSourceDetails())
 
     private val localRepository: LocalRepository = LocalRepositoryImpl(getMovieDao())
 

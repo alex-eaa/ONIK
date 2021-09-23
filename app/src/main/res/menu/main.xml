@@ -5,20 +5,15 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Настройки"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_main"
-        android:icon="@android:drawable/ic_menu_compass"
-        android:orderInCategory="10"
-        android:title="Главная"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/title_settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_baseline_search_24"
         android:orderInCategory="5"
-        android:title="Поиск"
+        android:title="@string/title_find"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

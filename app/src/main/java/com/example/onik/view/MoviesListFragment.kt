@@ -132,16 +132,6 @@ class MoviesListFragment : Fragment() {
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_main -> {
-                Toast.makeText(requireActivity(), "Fragment 2", Toast.LENGTH_LONG).show()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

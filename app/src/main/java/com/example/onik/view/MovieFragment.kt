@@ -1,12 +1,11 @@
 package com.example.onik.view
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
@@ -25,6 +24,7 @@ class MovieFragment : Fragment() {
             MovieFragment().apply { arguments = bundle }
     }
 
+    private var menu: Menu? = null
     private var movieTemp: Movie? = Movie()
 
     private var idMovie: Int = 0
@@ -68,19 +68,19 @@ class MovieFragment : Fragment() {
                 binding.apply {
                     loadingLayout.hide()
                     Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w500/${appState.movie?.poster_path}")
+                        .load("https://image.tmdb.org/t/p/w500/${appState.movie.poster_path}")
                         .into(posterMini)
                     Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w500/${appState.movie?.backdrop_path}")
+                        .load("https://image.tmdb.org/t/p/w500/${appState.movie.backdrop_path}")
                         .into(backdrop)
-                    title.text = appState.movie?.title
+                    title.text = appState.movie.title
                     voteAverage.text =
-                        "${appState.movie?.vote_average} (${appState.movie?.vote_count})"
-                    overview.text = appState.movie?.overview
-                    runtime.text = "${appState.movie?.runtime} ${getString(R.string.min)}"
-                    releaseDate.text = appState.movie?.release_date
-                    budget.text = appState.movie?.budget.toString()
-                    revenue.text = appState.movie?.revenue.toString()
+                        "${appState.movie.vote_average} (${appState.movie.vote_count})"
+                    overview.text = appState.movie.overview
+                    runtime.text = "${appState.movie.runtime} ${getString(R.string.min)}"
+                    releaseDate.text = appState.movie.release_date
+                    budget.text = appState.movie.budget.toString()
+                    revenue.text = appState.movie.revenue.toString()
                 }
 
                 var genres = ""
@@ -90,6 +90,9 @@ class MovieFragment : Fragment() {
                 binding.genre.text = genres.dropLast(2)
 
                 movieTemp = appState.movie
+                movieTemp?.note?.let { updateIconItemActionNoteEdit(it) }
+
+
             }
 
             is AppState.Error -> {
@@ -107,12 +110,12 @@ class MovieFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu_movie_fragment, menu)
         menu.findItem(R.id.action_search)?.isVisible = false
-
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_edit -> {
+            R.id.action_note_edit -> {
                 showAlertDialogNoteEditClicked()
                 //Toast.makeText(requireActivity(), "Add note 2", Toast.LENGTH_LONG).show()
                 return true
@@ -141,12 +144,26 @@ class MovieFragment : Fragment() {
     }
 
 
-    private fun sendDialogDataToActivity(data: String) {
+    private fun sendDialogDataToActivity(note: String) {
         movieTemp?.let {
-            it.note = data
+            it.note = note
             viewModel.saveMovieToDB(it)
         }
-        Toast.makeText(requireActivity(), data, Toast.LENGTH_SHORT).show()
+        updateIconItemActionNoteEdit(note)
+        Toast.makeText(requireActivity(), note, Toast.LENGTH_SHORT).show()
+    }
+
+
+    private fun updateIconItemActionNoteEdit(note: String) {
+        if (note == "") {
+            menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_add_comment_24)
+            }
+        } else {
+            menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_comment_24)
+            }
+        }
     }
 
 
