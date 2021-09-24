@@ -1,6 +1,8 @@
 package com.example.onik.model.localRepository
 
 import com.example.onik.model.data.Movie
+import com.example.onik.model.data.convertMovieEntityToMovie
+import com.example.onik.model.data.convertMovieToEntity
 import com.example.onik.model.room.MovieDao
 
 class LocalRepositoryImpl (private val localDataSource: MovieDao) : LocalRepository{

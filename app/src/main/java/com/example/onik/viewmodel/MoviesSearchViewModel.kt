@@ -4,11 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.onik.model.*
-import com.example.onik.model.data.ListMovies
-import com.example.onik.model.data.ListMoviesDTO
-import com.example.onik.model.data.Movie
-import com.example.onik.model.data.MovieDTO
+import com.example.onik.model.data.*
 import com.example.onik.model.repository.*
 
 import retrofit2.Call
@@ -24,8 +20,7 @@ class MoviesSearchViewModel : ViewModel() {
     private val searchRepositoryImpl: SearchRepository = SearchRepositoryImpl(
         RemoteDataSourceSearch())
 
-    private var moviesListLiveDataObserver: MutableLiveData<AppState> =
-        MutableLiveData<AppState>()
+    private var moviesListLiveDataObserver: MutableLiveData<AppState> = MutableLiveData<AppState>()
 
     val moviesListLiveData: LiveData<AppState> = moviesListLiveDataObserver
 
@@ -45,7 +40,7 @@ class MoviesSearchViewModel : ViewModel() {
 
                     moviesListLiveDataObserver.postValue(
                         if (response.isSuccessful && serverResponse != null) {
-                            checkResponse(serverResponse)
+                            AppState.SuccessMovies(convertListMoviesDtoToListMovies(serverResponse))
                         } else {
                             AppState.Error(Throwable(SERVER_ERROR))
                         }
@@ -57,38 +52,6 @@ class MoviesSearchViewModel : ViewModel() {
                     moviesListLiveDataObserver.postValue(AppState.Error(Throwable(t.message
                         ?: REQUEST_ERROR)))
                 }
-
-                private fun checkResponse(serverResponse: ListMoviesDTO): AppState {
-                    return AppState.SuccessMovies(convertDtoToModel(serverResponse))
-                }
             })
     }
-
-
-    private fun convertDtoToModel(listMoviesDTO: ListMoviesDTO): ListMovies {
-        return ListMovies(
-            page = listMoviesDTO.page,
-            total_pages = listMoviesDTO.total_pages,
-            total_results = listMoviesDTO.total_results,
-            results = convertDtoToModel(listMoviesDTO.results)
-        )
-    }
-
-
-    private fun convertDtoToModel(results: List<MovieDTO>?): List<Movie> {
-        val listMovies: MutableList<Movie> = mutableListOf()
-        results?.forEach {
-            listMovies.add(
-                Movie(
-                    poster_path = it.poster_path,
-                    vote_average = it.vote_average,
-                    id = it.id,
-                    title = it.title,
-                )
-            )
-        }
-        return listMovies
-    }
-
-
 }
