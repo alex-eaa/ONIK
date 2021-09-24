@@ -19,26 +19,22 @@ private const val TAG = "ViewModel"
 private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 
-class MoviesCollectionViewModel : ViewModel() {
+class MoviesSearchViewModel : ViewModel() {
 
-    private val collectionRepositoryImpl: CollectionRepository = CollectionRepositoryImpl(
-        RemoteDataSourceCollections())
+    private val searchRepositoryImpl: SearchRepository = SearchRepositoryImpl(
+        RemoteDataSourceSearch())
 
-    private var moviesListLiveDataObserver: MutableMap<CollectionId, MutableLiveData<AppState>> =
-        mutableMapOf()
+    private var moviesListLiveDataObserver: MutableLiveData<AppState> =
+        MutableLiveData<AppState>()
 
-    fun getMoviesListLiveData(id: CollectionId): LiveData<AppState>? =
-        moviesListLiveDataObserver.run {
-            put(id, MutableLiveData<AppState>())
-            get(id)
-        }
+    val moviesListLiveData: LiveData<AppState> = moviesListLiveDataObserver
 
 
-    fun getDataFromRemoteSource(collectionId: CollectionId) {
-        moviesListLiveDataObserver[collectionId]?.postValue(AppState.Loading)
+    fun findDataOnRemoteSource(searchQuery: String) {
+        moviesListLiveDataObserver.postValue(AppState.Loading)
 
-        collectionRepositoryImpl.getCollectionFromServer(
-            collectionId,
+        searchRepositoryImpl.getSearchResultFromServer(
+            searchQuery,
             object : Callback<ListMoviesDTO> {
 
                 override fun onResponse(
@@ -47,7 +43,7 @@ class MoviesCollectionViewModel : ViewModel() {
                 ) {
                     val serverResponse: ListMoviesDTO? = response.body()
 
-                    moviesListLiveDataObserver[collectionId]?.postValue(
+                    moviesListLiveDataObserver.postValue(
                         if (response.isSuccessful && serverResponse != null) {
                             checkResponse(serverResponse)
                         } else {
@@ -58,7 +54,7 @@ class MoviesCollectionViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<ListMoviesDTO>, t: Throwable) {
                     Log.d(TAG, t.message.toString())
-                    moviesListLiveDataObserver[collectionId]?.postValue(AppState.Error(Throwable(t.message
+                    moviesListLiveDataObserver.postValue(AppState.Error(Throwable(t.message
                         ?: REQUEST_ERROR)))
                 }
 

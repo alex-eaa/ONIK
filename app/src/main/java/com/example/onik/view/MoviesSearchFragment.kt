@@ -9,27 +9,29 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
+import com.example.onik.databinding.MoviesSearchFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
+import com.example.onik.viewmodel.MoviesSearchViewModel
 
 
-class MoviesListFragment : Fragment() {
+class MoviesSearchFragment : Fragment() {
 
     companion object {
-        const val BUNDLE_EXTRA: String = "BUNDLE_EXTRA"
+        const val BUNDLE_SEARCH_QUERY_EXTRA: String = "BUNDLE_SEARCH_QUERY_EXTRA"
 
-        fun newInstance(bundle: Bundle): MoviesListFragment =
-            MoviesListFragment().apply { arguments = bundle }
+        fun newInstance(bundle: Bundle): MoviesSearchFragment =
+            MoviesSearchFragment().apply { arguments = bundle }
     }
 
-    private var collectionId: CollectionId? = null
+    private var searchQuery: String = ""
 
-    private var _binding: MoviesListFragmentBinding? = null
+    private var _binding: MoviesSearchFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MoviesCollectionViewModel by lazy {
-        ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
+    private val viewModel: MoviesSearchViewModel by lazy {
+        ViewModelProvider(this).get(MoviesSearchViewModel::class.java)
     }
 
     private val myAdapter: MoviesAdapter by lazy { MoviesAdapter(R.layout.item) }
@@ -39,7 +41,7 @@ class MoviesListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = MoviesListFragmentBinding.inflate(inflater, container, false)
+        _binding = MoviesSearchFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -50,16 +52,14 @@ class MoviesListFragment : Fragment() {
         setHasOptionsMenu(true)
 
         arguments?.let { bundle ->
-            bundle.getSerializable(BUNDLE_EXTRA)?.let { collectionId = it as CollectionId }
+            bundle.getString(BUNDLE_SEARCH_QUERY_EXTRA)?.let { searchQuery = it }
         }
 
-        collectionId?.let { collectionId ->
-            activity?.title = collectionId.description
-            viewModel.getMoviesListLiveData(collectionId)
-                ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
+        activity?.title = resources.getString(R.string.title_find)
+        viewModel.moviesListLiveData.observe(viewLifecycleOwner,
+            { appState -> renderData(appState) })
 
-            viewModel.getDataFromRemoteSource(collectionId)
-        }
+        viewModel.findDataOnRemoteSource(searchQuery)
     }
 
 
@@ -76,9 +76,8 @@ class MoviesListFragment : Fragment() {
             is AppState.Error -> {
                 binding.loadingLayout.hide()
                 binding.container.showSnackbar(text = appState.error.message.toString(),
-                    action = {
-                        collectionId?.let { viewModel.getDataFromRemoteSource(it) }
-                    })
+                    action = { viewModel.findDataOnRemoteSource(searchQuery) }
+                )
             }
         }
     }
@@ -108,13 +107,9 @@ class MoviesListFragment : Fragment() {
         val searchText: SearchView? = menu.findItem(R.id.action_search)?.actionView as SearchView?
         searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
-                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
-                    }))
-                    .addToBackStack(null)
-                    .commit()
-
+                query?.let {
+                    viewModel.findDataOnRemoteSource(it)
+                }
                 return true
             }
 

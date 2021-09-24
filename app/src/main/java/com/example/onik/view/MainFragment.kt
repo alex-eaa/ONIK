@@ -213,9 +213,8 @@ class MainFragment : Fragment(), View.OnClickListener {
         searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MoviesListFragment.newInstance(Bundle().apply {
-                        putSerializable(MoviesListFragment.BUNDLE_EXTRA, CollectionId.FIND)
-                        putString(MoviesListFragment.BUNDLE_EXTRA_SEARCH, query)
+                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
+                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
                     }))
                     .addToBackStack(null)
                     .commit()
