@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
-import com.example.onik.model.data.Movie
+import com.example.onik.model.data.MovieLocal
+import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso
@@ -25,9 +26,9 @@ class MovieFragment : Fragment() {
     }
 
     private var menu: Menu? = null
-    private var movieTemp: Movie? = Movie()
-
     private var idMovie: Int = 0
+    private var movieEntity: MovieEntity = MovieEntity()
+
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -52,10 +53,20 @@ class MovieFragment : Fragment() {
 
         arguments?.getInt(BUNDLE_EXTRA)?.let { it ->
             idMovie = it
+            movieEntity.idMovie = it
+
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
             viewModel.getDataFromRemoteSource(idMovie)
 
+            viewModel.getNoteLiveData(idMovie)
+                .observe(viewLifecycleOwner, { movieEntity ->
+                    movieEntity?.let {
+                        this.movieEntity.note = it.note
+                        this.movieEntity.favorite = it.favorite
+                    }
+                    updateIconItemActionNoteEdit()
+                })
         }
     }
 
@@ -81,18 +92,15 @@ class MovieFragment : Fragment() {
                     releaseDate.text = appState.movie.release_date
                     budget.text = appState.movie.budget.toString()
                     revenue.text = appState.movie.revenue.toString()
+
+                    movieEntity.title = appState.movie.title.toString()
                 }
 
                 var genres = ""
-                appState.movie?.genres?.forEach {
+                appState.movie.genres?.forEach {
                     genres += "${it.name}, "
                 }
                 binding.genre.text = genres.dropLast(2)
-
-                movieTemp = appState.movie
-                movieTemp?.note?.let { updateIconItemActionNoteEdit(it) }
-
-
             }
 
             is AppState.Error -> {
@@ -117,7 +125,6 @@ class MovieFragment : Fragment() {
         when (item.itemId) {
             R.id.action_note_edit -> {
                 showAlertDialogNoteEditClicked()
-                //Toast.makeText(requireActivity(), "Add note 2", Toast.LENGTH_LONG).show()
                 return true
             }
         }
@@ -132,30 +139,27 @@ class MovieFragment : Fragment() {
         AlertDialog.Builder(requireActivity()).apply {
             setTitle("Редактирование заметки")
             setView(customLayout)
-            setPositiveButton("Сохранить") { dialog, which ->
+            setPositiveButton("Сохранить") { _, _ ->
                 sendDialogDataToActivity(editText.text.toString())
             }
-            setNegativeButton("Отмена") { dialog, which -> }
+            setNegativeButton("Отмена") { _, _ -> }
             create()
             show()
         }
 
-        editText.setText(movieTemp?.note)
+        editText.setText(movieEntity.note)
     }
 
 
     private fun sendDialogDataToActivity(note: String) {
-        movieTemp?.let {
-            it.note = note
-            viewModel.saveMovieToDB(it)
-        }
-        updateIconItemActionNoteEdit(note)
-        Toast.makeText(requireActivity(), note, Toast.LENGTH_SHORT).show()
+        movieEntity.note = note
+        viewModel.saveNoteToDB(movieEntity)
+        updateIconItemActionNoteEdit()
     }
 
 
-    private fun updateIconItemActionNoteEdit(note: String) {
-        if (note == "") {
+    private fun updateIconItemActionNoteEdit() {
+        if (movieEntity.note == "") {
             menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.ic_baseline_add_comment_24)
             }

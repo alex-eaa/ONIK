@@ -50,25 +50,12 @@ private fun convertMovieGenreDtoToMovieGenre(genreDTO: MovieDTO.GenresDTO): Movi
     )
 }
 
-fun convertMovieEntityToMovie(entityList: List<MovieEntity>): List<Movie> {
-    return entityList.map {
-        Movie(
-            id = it.idMovie,
-            note = it.note,
-            title = it.title,
-            vote_average = it.vote_average,
-            poster_path = it.poster_path,
-        )
-    }
-}
 
-
-fun convertMovieToEntity(movie: Movie): MovieEntity {
+fun convertMovieLocalToEntity(movieLocal: MovieLocal): MovieEntity {
     return MovieEntity(
-        idMovie = movie.id!!,
-        note = movie.note,
-        title = movie.title,
-        vote_average = movie.vote_average,
-        poster_path = movie.poster_path,
+        idMovie = movieLocal.idMovie,
+        note = movieLocal.note,
+        favorite = movieLocal.favorite.toString(),
+        title = movieLocal.title
     )
 }

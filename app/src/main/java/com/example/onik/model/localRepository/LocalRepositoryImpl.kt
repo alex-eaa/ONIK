@@ -1,20 +1,23 @@
 package com.example.onik.model.localRepository
 
-import com.example.onik.model.data.Movie
-import com.example.onik.model.data.convertMovieEntityToMovie
-import com.example.onik.model.data.convertMovieToEntity
+import androidx.lifecycle.LiveData
+import com.example.onik.model.data.MovieLocal
+import com.example.onik.model.data.convertMovieLocalToEntity
 import com.example.onik.model.room.MovieDao
+import com.example.onik.model.room.MovieEntity
+import io.reactivex.Flowable
 
 class LocalRepositoryImpl (private val localDataSource: MovieDao) : LocalRepository{
-    override fun getAllMovie(): List<Movie> {
-        return convertMovieEntityToMovie(localDataSource.all())
+
+    override fun getMovieRx(movieId: Int): Flowable<MovieEntity> {
+        return localDataSource.getMovieRx(movieId)
     }
 
-    override fun getMovieNote(movieId: Int): String {
-        return localDataSource.getNote(movieId)
+    override fun getMovieLiveData(movieId: Int): LiveData<MovieEntity> {
+        return localDataSource.getMovieLiveData(movieId)
     }
 
-    override fun saveMovie(movie: Movie) {
-        localDataSource.insert(convertMovieToEntity(movie))
+    override fun saveMovie(movieEntity: MovieEntity) {
+        localDataSource.insert(movieEntity)
     }
 }

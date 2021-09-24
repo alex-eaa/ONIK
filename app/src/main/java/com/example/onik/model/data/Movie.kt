@@ -19,7 +19,6 @@ data class Movie(
     var budget: Int? = null,
     var revenue: Int? = null,
     var genres: List<Genre>? = null,
-    var note: String? = null,
 ) : Parcelable {
 
     @Parcelize
