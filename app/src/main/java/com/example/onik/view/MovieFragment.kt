@@ -1,5 +1,7 @@
 package com.example.onik.view
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
@@ -75,12 +77,15 @@ class MovieFragment : Fragment() {
             is AppState.SuccessMovie -> {
                 binding.apply {
                     loadingLayout.hide()
+                    val gradientColor = binding.container.background as ColorDrawable
                     Picasso.get()
                         .load("https://image.tmdb.org/t/p/w500/${appState.movie.poster_path}")
                         .into(posterMini)
                     Picasso.get()
                         .load("https://image.tmdb.org/t/p/w500/${appState.movie.backdrop_path}")
+                        .transform(GradientTransformation(gradientColor.color))
                         .into(backdrop)
+
                     title.text = appState.movie.title
                     voteAverage.text =
                         "${appState.movie.vote_average} (${appState.movie.vote_count})"
