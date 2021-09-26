@@ -90,7 +90,7 @@ class MovieFragment : Fragment() {
                     voteAverage.text =
                         "${appState.movie.vote_average} (${appState.movie.vote_count})"
                     overview.text = appState.movie.overview
-                    runtime.text = "${appState.movie.runtime} ${getString(R.string.min)}"
+                    runtime.text = "${appState.movie.runtime} ${getString(R.string.details_min)}"
                     releaseDate.text = appState.movie.release_date
                     budget.text = appState.movie.budget.toString()
                     revenue.text = appState.movie.revenue.toString()
