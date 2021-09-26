@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
+import com.example.onik.model.data.Movie
 import com.example.onik.model.data.MovieLocal
 import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
@@ -90,9 +91,7 @@ class MovieFragment : Fragment() {
                     budget.text = appState.movie.budget.toString()
                     revenue.text = appState.movie.revenue.toString()
 
-                    movieLocal.title = appState.movie.title.toString()
-                    movieLocal.poster_path = appState.movie.poster_path.toString()
-                    appState.movie.vote_average?.let { movieLocal.vote_average = it }
+                    updateMovieLocalWithMovie(appState.movie)
                 }
 
                 var genres = ""
@@ -109,6 +108,18 @@ class MovieFragment : Fragment() {
                     action = {
                         viewModel.getDataFromRemoteSource(movieLocal.idMovie)
                     })
+            }
+        }
+    }
+
+
+    private fun updateMovieLocalWithMovie(movie: Movie) {
+        movieLocal.apply {
+            title = movie.title.toString()
+            poster_path = movie.poster_path.toString()
+            movie.vote_average?.let { vote_average = it }
+            if (favorite || note != "") {
+                viewModel.saveNoteToDB(movieLocal)
             }
         }
     }
