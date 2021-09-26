@@ -159,6 +159,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                     val bundle = Bundle()
                     bundle.putInt(MovieFragment.BUNDLE_EXTRA, movie.id!!)
                     fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.container, MovieFragment.newInstance(bundle))
                         .addToBackStack(null)
                         .commit()
@@ -188,6 +189,7 @@ class MainFragment : Fragment(), View.OnClickListener {
             || v.id == R.id.categoryTitleLayout4
         ) {
             requireActivity().supportFragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.container, MoviesListFragment.newInstance(Bundle().apply {
                     when (v.id) {
                         R.id.categoryTitleLayout1 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
@@ -204,28 +206,5 @@ class MainFragment : Fragment(), View.OnClickListener {
                 .commit()
         }
     }
-
-
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        val searchText: SearchView? = menu.findItem(R.id.action_search)?.actionView as SearchView?
-//        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                requireActivity().supportFragmentManager.beginTransaction()
-//                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
-//                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
-//                    }))
-//                    .addToBackStack(null)
-//                    .commit()
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return true
-//            }
-//
-//        })
-//        super.onPrepareOptionsMenu(menu)
-//    }
-
 
 }

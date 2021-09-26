@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
                         putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
                     }))
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_settings -> {
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MySettingsFragment())
                     .addToBackStack(null)
                     .commit()
@@ -84,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_show_favorites -> {
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MoviesFavoritesFragment())
                     .addToBackStack(null)
                     .commit()

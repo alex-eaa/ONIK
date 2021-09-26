@@ -61,6 +61,7 @@ class MoviesFavoritesFragment : Fragment() {
         myAdapter.listener = MoviesAdapter.OnItemViewClickListener { movie ->
             activity?.supportFragmentManager?.let { fragmentManager ->
                 fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MovieFragment.newInstance(Bundle().apply {
                         putInt(MovieFragment.BUNDLE_EXTRA, movie.id!!)
                     }))

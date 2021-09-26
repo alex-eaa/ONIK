@@ -264,7 +264,6 @@
         android:id="@+id/loadingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#6D6D6D"
         android:visibility="gone"
         tools:visibility="gone">
 
