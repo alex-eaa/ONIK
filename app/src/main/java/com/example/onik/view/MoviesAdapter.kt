@@ -26,7 +26,11 @@ class MoviesAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(movie: Movie) {
             itemView.apply {
-                findViewById<TextView>(R.id.release_date).text = movie.release_date?.substring(0, 4)
+                movie.release_date?.let {
+                    if (it.length > 4) {
+                        findViewById<TextView>(R.id.release_date).text = it.substring(0, 4)
+                    }
+                }
                 findViewById<TextView>(R.id.title).text = movie.title
                 findViewById<TextView>(R.id.voteAverage).text = movie.vote_average.toString()
 

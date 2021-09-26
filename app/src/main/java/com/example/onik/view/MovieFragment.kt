@@ -116,6 +116,7 @@ class MovieFragment : Fragment() {
         movieLocal.apply {
             title = movie.title.toString()
             poster_path = movie.poster_path.toString()
+            release_date = movie.release_date.toString()
             movie.vote_average?.let { vote_average = it }
             if (favorite || note != "") {
                 viewModel.saveNoteToDB(movieLocal)

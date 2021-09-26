@@ -7,4 +7,5 @@ data class MovieLocal(
     var title: String = "",
     var poster_path: String = "",
     var vote_average: Double = 0.0,
+    var release_date: String = "0000-00-00",
 )
