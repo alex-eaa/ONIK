@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import com.example.onik.R
 import com.example.onik.viewmodel.MainBroadcastReceiver
 import com.example.onik.viewmodel.Settings
@@ -49,8 +50,28 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+
+        val searchText: SearchView? = menu?.findItem(R.id.action_search)?.actionView as SearchView?
+        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
+                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
+                    }))
+                    .addToBackStack(null)
+                    .commit()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+
+        })
+
         return true
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
