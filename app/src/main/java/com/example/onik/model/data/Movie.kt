@@ -1,6 +1,9 @@
 package com.example.onik.model.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Movie(
     var poster_path: String? = null,
     var adult: Boolean? = null,
@@ -15,15 +18,12 @@ data class Movie(
     var runtime: Int? = null,
     var budget: Int? = null,
     var revenue: Int? = null,
-    var genres: List<Genre>? = null
-) {
+    var genres: List<Genre>? = null,
+) : Parcelable {
 
+    @Parcelize
     data class Genre(
         val id: Int? = null,
         val name: String? = null,
-    )
+    ) : Parcelable
 }
-
-fun getDefaultGenres() = listOf(
-    Movie.Genre(0, ""),
-)

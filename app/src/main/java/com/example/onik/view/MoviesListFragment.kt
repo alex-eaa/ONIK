@@ -2,8 +2,10 @@ package com.example.onik.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,7 +25,8 @@ class MoviesListFragment : Fragment() {
             MoviesListFragment().apply { arguments = bundle }
     }
 
-    private var collectionId: CollectionId = CollectionId.EMPTY
+    private var collectionId: CollectionId? = null
+
     private var _binding: MoviesListFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -45,12 +48,18 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+        setHasOptionsMenu(true)
 
-        arguments?.getSerializable(MovieFragment.BUNDLE_EXTRA)?.let { it ->
-            initRecyclerView()
-            collectionId = it as CollectionId
+        arguments?.let { bundle ->
+            bundle.getSerializable(BUNDLE_EXTRA)?.let { collectionId = it as CollectionId }
+        }
+
+        collectionId?.let { collectionId ->
+            activity?.title = collectionId.description
             viewModel.getMoviesListLiveData(collectionId)
                 ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
+
             viewModel.getDataFromRemoteSource(collectionId)
         }
     }
@@ -62,14 +71,16 @@ class MoviesListFragment : Fragment() {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                appState.movies?.results?.let { myAdapter.moviesData = it }
+                appState.movies.results?.let { myAdapter.moviesData = it }
+                view?.hideKeyboard()
             }
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
-                binding.container.showSnackbar(action = {
-                    viewModel.getDataFromRemoteSource(collectionId)
-                })
+                binding.container.showSnackbar(text = appState.error.message.toString(),
+                    action = {
+                        collectionId?.let { viewModel.getDataFromRemoteSource(it) }
+                    })
             }
         }
     }
@@ -90,8 +101,31 @@ class MoviesListFragment : Fragment() {
         binding.mainRecyclerView.apply {
             adapter = myAdapter
             layoutManager = GridLayoutManager(context, 2)
-            setHasFixedSize(true);
+            setHasFixedSize(true)
         }
+    }
+
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val searchText: SearchView? = menu.findItem(R.id.action_search)?.actionView as SearchView?
+        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
+                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
+                    }))
+                    .addToBackStack(null)
+                    .commit()
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+
+        })
+        super.onPrepareOptionsMenu(menu)
     }
 
 

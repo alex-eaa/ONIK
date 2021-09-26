@@ -6,12 +6,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ONIK">
+        android:theme="@style/Theme.ONIK.NoActionBar">
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".model.ServiceDetailsLoader"
+            android:name=".model.services.ServiceDetailsLoader"
             android:exported="false" />
 
     </application>

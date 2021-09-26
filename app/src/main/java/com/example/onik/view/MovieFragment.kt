@@ -1,16 +1,20 @@
 package com.example.onik.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
+import com.example.onik.model.data.MovieLocal
+import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso
+
 
 class MovieFragment : Fragment() {
     companion object {
@@ -20,7 +24,9 @@ class MovieFragment : Fragment() {
             MovieFragment().apply { arguments = bundle }
     }
 
-    private var idMovie: Int = 0
+    private var menu: Menu? = null
+    private var movieLocal: MovieLocal = MovieLocal()
+
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -40,12 +46,24 @@ class MovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+        activity?.title = resources.getString(R.string.title_details)
 
-        arguments?.getInt(BUNDLE_EXTRA)?.let { it ->
-            idMovie = it
+        arguments?.getInt(BUNDLE_EXTRA)?.let { idMovie ->
+            movieLocal.idMovie = idMovie
+
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
             viewModel.getDataFromRemoteSource(idMovie)
+
+            viewModel.getNoteLiveData(idMovie)
+                .observe(viewLifecycleOwner, { movieEntity ->
+                    movieEntity?.let {
+                        this.movieLocal.note = it.note
+                        this.movieLocal.favorite = it.favorite.toBoolean()
+                    }
+                    updateAllIcons()
+                })
         }
     }
 
@@ -58,26 +76,30 @@ class MovieFragment : Fragment() {
                 binding.apply {
                     loadingLayout.hide()
                     Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w500/${appState.movie?.poster_path}")
+                        .load("https://image.tmdb.org/t/p/w500/${appState.movie.poster_path}")
                         .into(posterMini)
                     Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w500/${appState.movie?.backdrop_path}")
+                        .load("https://image.tmdb.org/t/p/w500/${appState.movie.backdrop_path}")
                         .into(backdrop)
-                    title.text = appState.movie?.title
+                    title.text = appState.movie.title
                     voteAverage.text =
-                        "${appState.movie?.vote_average} (${appState.movie?.vote_count})"
-                    overview.text = appState.movie?.overview
-                    runtime.text = "${appState.movie?.runtime} ${getString(R.string.min)}"
-                    releaseDate.text = appState.movie?.release_date
-                    budget.text = appState.movie?.budget.toString()
-                    revenue.text = appState.movie?.revenue.toString()
+                        "${appState.movie.vote_average} (${appState.movie.vote_count})"
+                    overview.text = appState.movie.overview
+                    runtime.text = "${appState.movie.runtime} ${getString(R.string.min)}"
+                    releaseDate.text = appState.movie.release_date
+                    budget.text = appState.movie.budget.toString()
+                    revenue.text = appState.movie.revenue.toString()
+
+                    movieLocal.title = appState.movie.title.toString()
+                    movieLocal.poster_path = appState.movie.poster_path.toString()
+                    appState.movie.vote_average?.let { movieLocal.vote_average = it }
                 }
 
                 var genres = ""
-                appState.movie?.genres?.forEach {
-                    genres += "${it.name}, " }
+                appState.movie.genres?.forEach {
+                    genres += "${it.name}, "
+                }
                 binding.genre.text = genres.dropLast(2)
-
             }
 
             is AppState.Error -> {
@@ -85,8 +107,88 @@ class MovieFragment : Fragment() {
                 binding.container.showSnackbar(
                     text = appState.error.message!!,
                     action = {
-                        viewModel.getDataFromRemoteSource(idMovie)
+                        viewModel.getDataFromRemoteSource(movieLocal.idMovie)
                     })
+            }
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_menu_movie_fragment, menu)
+        menu.findItem(R.id.action_search)?.isVisible = false
+        this.menu = menu
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_note_edit -> {
+                showAlertDialogNoteEditClicked()
+                return true
+            }
+            R.id.action_to_favorite -> {
+                movieLocal.favorite = !movieLocal.favorite
+
+                viewModel.saveNoteToDB(movieLocal)
+                updateIconItemFavorite()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun showAlertDialogNoteEditClicked() {
+        val customLayout: View = layoutInflater.inflate(R.layout.note_dialog_fragment, null)
+        val editText: EditText = customLayout.findViewById(R.id.editText)
+
+        AlertDialog.Builder(requireActivity()).apply {
+            setTitle("Редактирование заметки")
+            setView(customLayout)
+            setPositiveButton("Сохранить") { _, _ ->
+                sendDialogDataToActivity(editText.text.toString())
+            }
+            setNegativeButton("Отмена") { _, _ -> }
+            create()
+            show()
+        }
+
+        editText.setText(movieLocal.note)
+    }
+
+
+    private fun sendDialogDataToActivity(note: String) {
+        movieLocal.note = note
+        viewModel.saveNoteToDB(movieLocal)
+        updateIconItemActionNoteEdit()
+    }
+
+
+    private fun updateAllIcons() {
+        updateIconItemActionNoteEdit()
+        updateIconItemFavorite()
+    }
+
+    private fun updateIconItemActionNoteEdit() {
+        if (movieLocal.note == "") {
+            menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_add_comment_24)
+            }
+        } else {
+            menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_comment_24)
+            }
+        }
+    }
+
+    private fun updateIconItemFavorite() {
+        if (!movieLocal.favorite) {
+            menu?.findItem(R.id.action_to_favorite)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_border_24)
+            }
+        } else if (movieLocal.favorite) {
+            menu?.findItem(R.id.action_to_favorite)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_24)
             }
         }
     }
@@ -96,5 +198,4 @@ class MovieFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

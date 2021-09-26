@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface CollectionMovieAPI {
 
     @GET("3/movie/{collection}")
-    fun getDetails(
+    fun getCollection(
         @Path("collection") collection: String,
         @Query("language") language: String,
         @Query("api_key") api_key: String,

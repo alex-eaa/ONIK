@@ -1,9 +1,22 @@
 <resources>
     <string name="app_name">ONIK</string>
-    <string name="min">min</string>
+    <string name="min">минут</string>
 
     <string name="button_reload_text">Обновить</string>
     <string name="data_loading_error">Не удалось загрузить данные</string>
+
+    <!-- fragment names -->
+    <string name="title_find">Поиск</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_favorites">Избранные</string>
+    <string name="title_details">Описание</string>
+
+    <!-- toolbar items -->
+    <string name="item_action_search">Поиск</string>
+    <string name="item_action_settings">Настройки</string>
+    <string name="item_action_to_favorite">В избранные</string>
+    <string name="item_action_note_edit">Редактировать заметку</string>
+    <string name="item_action_show_favorites">Показать избранные</string>
 
 
 </resources>
