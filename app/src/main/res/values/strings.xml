@@ -8,6 +8,7 @@
     <string name="title_note_edit">Заметка</string>
     <string name="title_find">Поиск</string>
     <string name="title_settings">Настройки</string>
+    <string name="title_favorite">Любимые</string>
 
 
 </resources>

@@ -44,12 +44,11 @@
             android:id="@+id/backdrop"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@id/guidelineHorizontal"
             app:layout_constraintStart_toStartOf="@id/main"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/backdrop_gradient" />
+            tools:srcCompat="@drawable/poster_sample" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPoster"
@@ -66,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/poster_sample" />
+                tools:srcCompat="@drawable/poster_sample" />
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -128,13 +127,13 @@
             android:id="@+id/titleInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="104dp"
             android:text="Информация"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
             app:layout_constraintTop_toBottomOf="@id/overview" />
-
 
         <TextView
             android:id="@+id/titleReleaseDate"

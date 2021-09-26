@@ -3,14 +3,12 @@ package com.example.onik.view
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
-import com.example.onik.model.data.MovieLocal
 import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
@@ -65,7 +63,7 @@ class MovieFragment : Fragment() {
                         this.movieEntity.note = it.note
                         this.movieEntity.favorite = it.favorite
                     }
-                    updateIconItemActionNoteEdit()
+                    updateAllIcons()
                 })
         }
     }
@@ -127,6 +125,17 @@ class MovieFragment : Fragment() {
                 showAlertDialogNoteEditClicked()
                 return true
             }
+            R.id.favorite -> {
+                if (movieEntity.favorite == "false") {
+                    movieEntity.favorite = "true"
+                } else if (movieEntity.favorite == "true") {
+                    movieEntity.favorite = "false"
+                }
+
+                viewModel.saveNoteToDB(movieEntity)
+                updateIconItemFavorite()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -158,6 +167,11 @@ class MovieFragment : Fragment() {
     }
 
 
+    private fun updateAllIcons() {
+        updateIconItemActionNoteEdit()
+        updateIconItemFavorite()
+    }
+
     private fun updateIconItemActionNoteEdit() {
         if (movieEntity.note == "") {
             menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
@@ -166,6 +180,18 @@ class MovieFragment : Fragment() {
         } else {
             menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.ic_baseline_comment_24)
+            }
+        }
+    }
+
+    private fun updateIconItemFavorite() {
+        if (movieEntity.favorite == "false") {
+            menu?.findItem(R.id.favorite)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_border_24)
+            }
+        } else if (movieEntity.favorite == "true") {
+            menu?.findItem(R.id.favorite)?.icon = activity?.let {
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_24)
             }
         }
     }
