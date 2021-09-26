@@ -1,21 +1,23 @@
 package com.example.onik.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
 import com.example.onik.model.data.convertMovieEntityToMovieForCard
+import com.example.onik.model.localRepository.ORDER_BY_TITLE
+import com.example.onik.model.localRepository.ORDER_BY_TITLE_DESC
+import com.example.onik.model.localRepository.ORDER_BY_VOTE
+import com.example.onik.model.localRepository.ORDER_BY_VOTE_DESC
 import com.example.onik.viewmodel.MoviesFavoritesViewModel
 
 
 class MoviesFavoritesFragment : Fragment() {
+
+    private var orderBy: String = ORDER_BY_TITLE
 
     private var _binding: MoviesListFragmentBinding? = null
     private val binding get() = _binding!!
@@ -42,8 +44,13 @@ class MoviesFavoritesFragment : Fragment() {
         setHasOptionsMenu(true)
         activity?.title = resources.getString(R.string.title_favorites)
 
-        viewModel.getAllMovieLocalLiveData().observe(viewLifecycleOwner, { listMovieEntity ->
-            myAdapter.moviesData  = listMovieEntity.map { movieEntity ->
+        subscribeObserver()
+    }
+
+
+    private fun subscribeObserver() {
+        viewModel.getAllMovieLocalLiveData(orderBy).observe(viewLifecycleOwner, { listMovieEntity ->
+            myAdapter.moviesData = listMovieEntity.map { movieEntity ->
                 convertMovieEntityToMovieForCard(movieEntity)
             }
         })
@@ -70,26 +77,33 @@ class MoviesFavoritesFragment : Fragment() {
     }
 
 
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        val searchText: SearchView? = menu.findItem(R.id.action_search)?.actionView as SearchView?
-//        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                requireActivity().supportFragmentManager.beginTransaction()
-//                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
-//                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
-//                    }))
-//                    .addToBackStack(null)
-//                    .commit()
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return true
-//            }
-//
-//        })
-//        super.onPrepareOptionsMenu(menu)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_menu_favorites_fragment, menu)
+        menu.findItem(R.id.action_search)?.isVisible = false
+        menu.findItem(R.id.action_show_favorites)?.isVisible = false
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_sort_by_title -> {
+                orderBy = if (orderBy == ORDER_BY_TITLE) {
+                    ORDER_BY_TITLE_DESC
+                } else {
+                    ORDER_BY_TITLE
+                }
+                subscribeObserver()
+                return true
+            }
+            R.id.action_sort_by_vote_average -> {
+                orderBy = if (orderBy == ORDER_BY_VOTE) ORDER_BY_VOTE_DESC
+                else ORDER_BY_VOTE
+
+                subscribeObserver()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 
     override fun onDestroyView() {

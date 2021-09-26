@@ -11,7 +11,6 @@ import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.model.data.Movie
 import com.example.onik.model.data.MovieLocal
-import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso

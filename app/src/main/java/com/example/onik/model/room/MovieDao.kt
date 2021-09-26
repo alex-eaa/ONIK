@@ -7,8 +7,17 @@ import io.reactivex.Flowable
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true'")
-    fun allFavorites(): LiveData<List<MovieEntity>>
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY title")
+    fun allFavoritesByTitle(): LiveData<List<MovieEntity>>
+
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY title DESC")
+    fun allFavoritesByTitleDesc(): LiveData<List<MovieEntity>>
+
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY vote_average ")
+    fun allFavoritesByVote(): LiveData<List<MovieEntity>>
+
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY vote_average DESC")
+    fun allFavoritesByVoteDesc(): LiveData<List<MovieEntity>>
 
     @Query("SELECT * FROM MovieEntity WHERE idMovie LIKE :idMovie")
     fun getDataByWord(idMovie: Int): List<MovieEntity>
