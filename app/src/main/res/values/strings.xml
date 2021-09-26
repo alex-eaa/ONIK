@@ -4,6 +4,7 @@
 
     <string name="button_reload_text">Обновить</string>
     <string name="data_loading_error">Не удалось загрузить данные</string>
+    <string name="not_found">Ничего не найдено...</string>
 
     <!-- fragment names -->
     <string name="title_find">Поиск</string>

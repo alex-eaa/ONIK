@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -64,11 +65,18 @@ class MoviesSearchFragment : Fragment() {
 
     private fun renderData(appState: AppState?) {
         when (appState) {
-            is AppState.Loading -> binding.loadingLayout.show()
+            is AppState.Loading -> {binding.loadingLayout.show()}
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                appState.movies.results?.let { myAdapter.moviesData = it }
+                binding.notFound.hide()
+                appState.movies.results?.let {
+                    if (it.isEmpty()) {
+                        binding.notFound.show()
+                    } else {
+                        myAdapter.moviesData = it
+                    }
+                }
                 view?.hideKeyboard()
             }
 
