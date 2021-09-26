@@ -10,4 +10,7 @@ data class MovieEntity(
     var note: String = "",
     var favorite: String = "false",
     var title: String = "",
+    var poster_path: String = "",
+    var vote_average: Double = 0.0,
+
 )

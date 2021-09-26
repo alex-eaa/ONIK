@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import com.example.onik.R
 import com.example.onik.viewmodel.MainBroadcastReceiver
 import com.example.onik.viewmodel.Settings
@@ -60,6 +57,13 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.container, MySettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                return true
+            }
+            R.id.action_show_favorites -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, MoviesFavoritesFragment())
                     .addToBackStack(null)
                     .commit()
                 return true

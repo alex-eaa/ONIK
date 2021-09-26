@@ -8,5 +8,6 @@ import io.reactivex.Flowable
 interface LocalRepository {
     fun getMovieRx(movieId: Int): Flowable<MovieEntity>
     fun getMovieLiveData(movieId: Int): LiveData<MovieEntity>
-    fun saveMovie(movieEntity: MovieEntity)
+    fun getAllMovieLiveData(): LiveData<List<MovieEntity>>
+    fun saveMovie(movieLocal: MovieLocal)
 }

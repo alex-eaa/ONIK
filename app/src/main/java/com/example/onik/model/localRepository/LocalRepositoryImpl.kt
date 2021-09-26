@@ -17,7 +17,11 @@ class LocalRepositoryImpl (private val localDataSource: MovieDao) : LocalReposit
         return localDataSource.getMovieLiveData(movieId)
     }
 
-    override fun saveMovie(movieEntity: MovieEntity) {
-        localDataSource.insert(movieEntity)
+    override fun getAllMovieLiveData(): LiveData<List<MovieEntity>> {
+        return localDataSource.allFavorites()
+    }
+
+    override fun saveMovie(movieLocal: MovieLocal) {
+        localDataSource.insert(convertMovieLocalToEntity(movieLocal))
     }
 }

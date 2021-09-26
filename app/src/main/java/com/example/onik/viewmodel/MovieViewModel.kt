@@ -1,10 +1,9 @@
 package com.example.onik.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.onik.app.App.Companion.getMovieDao
 import com.example.onik.model.data.MovieDTO
 import com.example.onik.model.data.MovieLocal
@@ -25,7 +24,7 @@ private const val TAG = "ViewModel"
 private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 
-class MovieViewModel(application: Application) : AndroidViewModel(application) {
+class MovieViewModel : ViewModel(){
 
     private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(
         RemoteDataSourceDetails())
@@ -41,9 +40,9 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun saveNoteToDB(movieEntity: MovieEntity) {
+    fun saveNoteToDB(movieLocal: MovieLocal) {
         Observable
-            .fromCallable { localRepository.saveMovie(movieEntity) }
+            .fromCallable { localRepository.saveMovie(movieLocal) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }

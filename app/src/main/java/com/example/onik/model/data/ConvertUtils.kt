@@ -56,6 +56,18 @@ fun convertMovieLocalToEntity(movieLocal: MovieLocal): MovieEntity {
         idMovie = movieLocal.idMovie,
         note = movieLocal.note,
         favorite = movieLocal.favorite.toString(),
-        title = movieLocal.title
+        title = movieLocal.title,
+        poster_path = movieLocal.poster_path,
+        vote_average = movieLocal.vote_average
+    )
+}
+
+
+fun convertMovieEntityToMovieForCard(movieEntity: MovieEntity): Movie {
+    return Movie(
+        poster_path = movieEntity.poster_path,
+        vote_average = movieEntity.vote_average,
+        id = movieEntity.idMovie,
+        title = movieEntity.title,
     )
 }

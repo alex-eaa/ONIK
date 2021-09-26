@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.onik.model.data.*
-import com.example.onik.model.repository.*
-
+import com.example.onik.model.data.ListMoviesDTO
+import com.example.onik.model.data.convertListMoviesDtoToListMovies
+import com.example.onik.model.repository.RemoteDataSourceSearch
+import com.example.onik.model.repository.SearchRepository
+import com.example.onik.model.repository.SearchRepositoryImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

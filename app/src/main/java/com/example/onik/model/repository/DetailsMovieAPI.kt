@@ -1,6 +1,5 @@
 package com.example.onik.model.repository
 
-import android.text.style.BulletSpan
 import com.example.onik.model.data.MovieDTO
 import retrofit2.Call
 import retrofit2.http.GET

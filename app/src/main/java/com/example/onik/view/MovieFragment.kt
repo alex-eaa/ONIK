@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
+import com.example.onik.model.data.MovieLocal
 import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
@@ -24,8 +25,7 @@ class MovieFragment : Fragment() {
     }
 
     private var menu: Menu? = null
-    private var idMovie: Int = 0
-    private var movieEntity: MovieEntity = MovieEntity()
+    private var movieLocal: MovieLocal = MovieLocal()
 
     private var _binding: MovieFragmentBinding? = null
     private val binding get() = _binding!!
@@ -47,11 +47,10 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        activity?.title = "Описание"
+        activity?.title = resources.getString(R.string.title_details)
 
-        arguments?.getInt(BUNDLE_EXTRA)?.let { it ->
-            idMovie = it
-            movieEntity.idMovie = it
+        arguments?.getInt(BUNDLE_EXTRA)?.let { idMovie ->
+            movieLocal.idMovie = idMovie
 
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
@@ -60,8 +59,8 @@ class MovieFragment : Fragment() {
             viewModel.getNoteLiveData(idMovie)
                 .observe(viewLifecycleOwner, { movieEntity ->
                     movieEntity?.let {
-                        this.movieEntity.note = it.note
-                        this.movieEntity.favorite = it.favorite
+                        this.movieLocal.note = it.note
+                        this.movieLocal.favorite = it.favorite.toBoolean()
                     }
                     updateAllIcons()
                 })
@@ -91,7 +90,9 @@ class MovieFragment : Fragment() {
                     budget.text = appState.movie.budget.toString()
                     revenue.text = appState.movie.revenue.toString()
 
-                    movieEntity.title = appState.movie.title.toString()
+                    movieLocal.title = appState.movie.title.toString()
+                    movieLocal.poster_path = appState.movie.poster_path.toString()
+                    appState.movie.vote_average?.let { movieLocal.vote_average = it }
                 }
 
                 var genres = ""
@@ -106,7 +107,7 @@ class MovieFragment : Fragment() {
                 binding.container.showSnackbar(
                     text = appState.error.message!!,
                     action = {
-                        viewModel.getDataFromRemoteSource(idMovie)
+                        viewModel.getDataFromRemoteSource(movieLocal.idMovie)
                     })
             }
         }
@@ -125,14 +126,10 @@ class MovieFragment : Fragment() {
                 showAlertDialogNoteEditClicked()
                 return true
             }
-            R.id.favorite -> {
-                if (movieEntity.favorite == "false") {
-                    movieEntity.favorite = "true"
-                } else if (movieEntity.favorite == "true") {
-                    movieEntity.favorite = "false"
-                }
+            R.id.action_to_favorite -> {
+                movieLocal.favorite = !movieLocal.favorite
 
-                viewModel.saveNoteToDB(movieEntity)
+                viewModel.saveNoteToDB(movieLocal)
                 updateIconItemFavorite()
                 return true
             }
@@ -156,13 +153,13 @@ class MovieFragment : Fragment() {
             show()
         }
 
-        editText.setText(movieEntity.note)
+        editText.setText(movieLocal.note)
     }
 
 
     private fun sendDialogDataToActivity(note: String) {
-        movieEntity.note = note
-        viewModel.saveNoteToDB(movieEntity)
+        movieLocal.note = note
+        viewModel.saveNoteToDB(movieLocal)
         updateIconItemActionNoteEdit()
     }
 
@@ -173,7 +170,7 @@ class MovieFragment : Fragment() {
     }
 
     private fun updateIconItemActionNoteEdit() {
-        if (movieEntity.note == "") {
+        if (movieLocal.note == "") {
             menu?.findItem(R.id.action_note_edit)?.icon = activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.ic_baseline_add_comment_24)
             }
@@ -185,12 +182,12 @@ class MovieFragment : Fragment() {
     }
 
     private fun updateIconItemFavorite() {
-        if (movieEntity.favorite == "false") {
-            menu?.findItem(R.id.favorite)?.icon = activity?.let {
+        if (!movieLocal.favorite) {
+            menu?.findItem(R.id.action_to_favorite)?.icon = activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_border_24)
             }
-        } else if (movieEntity.favorite == "true") {
-            menu?.findItem(R.id.favorite)?.icon = activity?.let {
+        } else if (movieLocal.favorite) {
+            menu?.findItem(R.id.action_to_favorite)?.icon = activity?.let {
                 ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_24)
             }
         }

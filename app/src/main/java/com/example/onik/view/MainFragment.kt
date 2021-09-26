@@ -1,13 +1,13 @@
 package com.example.onik.view
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -230,15 +230,5 @@ class MainFragment : Fragment(), View.OnClickListener {
         super.onPrepareOptionsMenu(menu)
     }
 
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-//            R.id.action_main -> {
-//                Toast.makeText(requireActivity(), "Fragment", Toast.LENGTH_LONG).show()
-//                return true
-//            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 }
