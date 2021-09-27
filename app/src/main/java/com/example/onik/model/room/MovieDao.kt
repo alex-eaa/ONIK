@@ -3,6 +3,7 @@ package com.example.onik.model.room
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
@@ -26,7 +27,7 @@ interface MovieDao {
     fun getMovieLiveData(idMovie: Int): LiveData<MovieEntity>
 
     @Query("SELECT * FROM MovieEntity WHERE idMovie = :idMovie")
-    fun getMovieRx(idMovie: Int): Flowable<MovieEntity>
+    fun getMovieRx(idMovie: Int): Single<MovieEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: MovieEntity)

@@ -3,6 +3,7 @@ package com.example.onik.view
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
@@ -13,10 +14,17 @@ import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.model.data.Movie
 import com.example.onik.model.data.MovieLocal
+import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MovieViewModel
 import com.squareup.picasso.Picasso
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
+const val TAG = "MovieFragment"
 
 class MovieFragment : Fragment() {
     companion object {
@@ -58,15 +66,27 @@ class MovieFragment : Fragment() {
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
             viewModel.getDataFromRemoteSource(idMovie)
 
-            viewModel.getNoteLiveData(idMovie)
-                .observe(viewLifecycleOwner, { movieEntity ->
-                    movieEntity?.let {
-                        this.movieLocal.note = it.note
-                        this.movieLocal.favorite = it.favorite.toBoolean()
-                    }
+//            viewModel.getLocalMovieLiveData(idMovie)
+//                .observe(viewLifecycleOwner, { movieEntity ->
+//                    movieEntity?.let {
+//                        this.movieLocal.note = it.note
+//                        this.movieLocal.favorite = it.favorite.toBoolean()
+//                    }
+//                    updateAllIcons()
+//                })
+
+            viewModel.getLocalMovieRx(idMovie)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    movieLocal.note = it.note
+                    movieLocal.favorite = it.favorite.toBoolean()
                     updateAllIcons()
+                }, {
+                    it.printStackTrace()
                 })
         }
+
     }
 
 
