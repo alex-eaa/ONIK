@@ -2,10 +2,8 @@ package com.example.onik.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -90,6 +88,7 @@ class MoviesListFragment : Fragment() {
         myAdapter.listener = MoviesAdapter.OnItemViewClickListener { movie ->
             activity?.supportFragmentManager?.let { fragmentManager ->
                 fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MovieFragment.newInstance(Bundle().apply {
                         putInt(MovieFragment.BUNDLE_EXTRA, movie.id!!)
                     }))
@@ -106,27 +105,26 @@ class MoviesListFragment : Fragment() {
     }
 
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        val searchText: SearchView? = menu.findItem(R.id.action_search)?.actionView as SearchView?
-        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
-                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
-                    }))
-                    .addToBackStack(null)
-                    .commit()
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-
-        })
-        super.onPrepareOptionsMenu(menu)
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        val searchText: SearchView? = menu.findItem(R.id.action_search)?.actionView as SearchView?
+//        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                requireActivity().supportFragmentManager.beginTransaction()
+//                    .replace(R.id.container, MoviesSearchFragment.newInstance(Bundle().apply {
+//                        putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
+//                    }))
+//                    .addToBackStack(null)
+//                    .commit()
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return true
+//            }
+//
+//        })
+//        super.onPrepareOptionsMenu(menu)
+//    }
 
 
     override fun onDestroyView() {

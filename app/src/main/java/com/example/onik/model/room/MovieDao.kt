@@ -3,12 +3,22 @@ package com.example.onik.model.room
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true'")
-    fun allFavorites(): LiveData<List<MovieEntity>>
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY title")
+    fun allFavoritesByTitle(): LiveData<List<MovieEntity>>
+
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY title DESC")
+    fun allFavoritesByTitleDesc(): LiveData<List<MovieEntity>>
+
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY vote_average ")
+    fun allFavoritesByVote(): LiveData<List<MovieEntity>>
+
+    @Query("SELECT * FROM MovieEntity WHERE favorite = 'true' ORDER BY vote_average DESC")
+    fun allFavoritesByVoteDesc(): LiveData<List<MovieEntity>>
 
     @Query("SELECT * FROM MovieEntity WHERE idMovie LIKE :idMovie")
     fun getDataByWord(idMovie: Int): List<MovieEntity>
@@ -17,7 +27,7 @@ interface MovieDao {
     fun getMovieLiveData(idMovie: Int): LiveData<MovieEntity>
 
     @Query("SELECT * FROM MovieEntity WHERE idMovie = :idMovie")
-    fun getMovieRx(idMovie: Int): Flowable<MovieEntity>
+    fun getMovieRx(idMovie: Int): Single<MovieEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: MovieEntity)

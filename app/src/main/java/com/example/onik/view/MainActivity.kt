@@ -1,18 +1,41 @@
 package com.example.onik.view
 
+import android.Manifest
+import android.app.Activity
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import com.example.onik.R
 import com.example.onik.viewmodel.MainBroadcastReceiver
 import com.example.onik.viewmodel.Settings
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val permissionResult =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            when {
+                result -> runContactFragment()
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS) -> {
+                    Toast.makeText(this, "НЕЛЬЗЯ ПОКАЗАТЬ КОНТАКТЫ. ВЫ НЕ ДАЛИ РАЗРЕШЕНИЕ",
+                        Toast.LENGTH_LONG).show()
+                }
+                else -> {
+//                    Toast.makeText(this, "ЗАПРЕЩЕН ДОСТУП К КОНТАКТАМ", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
 
     private val receiver: MainBroadcastReceiver by lazy { MainBroadcastReceiver() }
 
@@ -49,36 +72,74 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+
+        val searchText: SearchView? =
+            menu?.findItem(R.id.action_search)?.actionView as SearchView?
+        searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.container,
+                        MoviesSearchFragment.newInstance(Bundle().apply {
+                            putString(MoviesSearchFragment.BUNDLE_SEARCH_QUERY_EXTRA, query)
+                        }))
+                    .addToBackStack(null)
+                    .commit()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+
+        })
+
         return true
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_settings -> {
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MySettingsFragment())
                     .addToBackStack(null)
                     .commit()
-                return true
+                true
             }
             R.id.action_show_favorites -> {
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                     .replace(R.id.container, MoviesFavoritesFragment())
                     .addToBackStack(null)
                     .commit()
-                return true
+                true
+            }
+            R.id.action_contacts -> {
+                permissionResult.launch(Manifest.permission.READ_CONTACTS)
+                true
             }
             android.R.id.home -> {
                 onBackPressed()
-                return true
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+
     }
 
 
     override fun onDestroy() {
         unregisterReceiver(receiver)
         super.onDestroy()
+    }
+
+    private fun runContactFragment() {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            .replace(R.id.container, ContentProviderFragment())
+            .addToBackStack(null)
+            .commit()
     }
 }

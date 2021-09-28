@@ -34,31 +34,33 @@ class MoviesCollectionViewModel : ViewModel() {
 
     fun getDataFromRemoteSource(collectionId: CollectionId) {
         moviesListLiveDataObserver[collectionId]?.postValue(AppState.Loading)
+        collectionRepositoryImpl.getCollectionFromServer(collectionId, getCallBack(collectionId))
+    }
 
-        collectionRepositoryImpl.getCollectionFromServer(
-            collectionId,
-            object : Callback<ListMoviesDTO> {
 
-                override fun onResponse(
-                    call: Call<ListMoviesDTO>,
-                    response: Response<ListMoviesDTO>,
-                ) {
-                    val serverResponse: ListMoviesDTO? = response.body()
+    private fun getCallBack(collectionId: CollectionId): Callback<ListMoviesDTO> {
+        return object : Callback<ListMoviesDTO> {
 
-                    moviesListLiveDataObserver[collectionId]?.postValue(
-                        if (response.isSuccessful && serverResponse != null) {
-                            AppState.SuccessMovies(convertListMoviesDtoToListMovies(serverResponse))
-                        } else {
-                            AppState.Error(Throwable(SERVER_ERROR))
-                        }
-                    )
-                }
+            override fun onResponse(
+                call: Call<ListMoviesDTO>,
+                response: Response<ListMoviesDTO>,
+            ) {
+                val serverResponse: ListMoviesDTO? = response.body()
 
-                override fun onFailure(call: Call<ListMoviesDTO>, t: Throwable) {
-                    Log.d(TAG, t.message.toString())
-                    moviesListLiveDataObserver[collectionId]?.postValue(AppState.Error(Throwable(t.message
-                        ?: REQUEST_ERROR)))
-                }
-            })
+                moviesListLiveDataObserver[collectionId]?.postValue(
+                    if (response.isSuccessful && serverResponse != null) {
+                        AppState.SuccessMovies(convertListMoviesDtoToListMovies(serverResponse))
+                    } else {
+                        AppState.Error(Throwable(SERVER_ERROR))
+                    }
+                )
+            }
+
+            override fun onFailure(call: Call<ListMoviesDTO>, t: Throwable) {
+                Log.d(TAG, t.message.toString())
+                moviesListLiveDataObserver[collectionId]?.postValue(AppState.Error(Throwable(t.message
+                    ?: REQUEST_ERROR)))
+            }
+        }
     }
 }

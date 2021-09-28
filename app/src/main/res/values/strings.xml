@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">ONIK</string>
-    <string name="min">минут</string>
 
     <string name="button_reload_text">Обновить</string>
     <string name="data_loading_error">Не удалось загрузить данные</string>
+    <string name="not_found">Ничего не найдено...</string>
 
     <!-- fragment names -->
     <string name="title_find">Поиск</string>
@@ -17,6 +17,18 @@
     <string name="item_action_to_favorite">В избранные</string>
     <string name="item_action_note_edit">Редактировать заметку</string>
     <string name="item_action_show_favorites">Показать избранные</string>
+    <string name="item_action_sort_by_title">По названию</string>
+    <string name="item_action_sort_by_vote_average">По рейтингу</string>
+
+    <!-- Movie fragment -->
+    <string name="details_min">минут</string>
+    <string name="details_overview">Обзор</string>
+    <string name="details_information">Информация</string>
+    <string name="details_release_date">Дата релиза</string>
+    <string name="details_runtime">Продолжительность</string>
+    <string name="details_genre">Жанр</string>
+    <string name="details_budget">Бюджет</string>
+    <string name="details_revenue">Сборы</string>
 
 
 </resources>

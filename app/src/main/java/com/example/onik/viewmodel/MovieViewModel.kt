@@ -14,7 +14,9 @@ import com.example.onik.model.repository.DetailsRepository
 import com.example.onik.model.repository.DetailsRepositoryImpl
 import com.example.onik.model.repository.RemoteDataSourceDetails
 import com.example.onik.model.room.MovieEntity
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,12 +33,18 @@ class MovieViewModel : ViewModel(){
 
     private val localRepository: LocalRepository = LocalRepositoryImpl(getMovieDao())
 
+
     private val movieDetailsLiveDataObserver: MutableLiveData<AppState> =
         MutableLiveData<AppState>()
     val movieDetailsLiveData: LiveData<AppState> = movieDetailsLiveDataObserver
 
-    fun getNoteLiveData(movieId: Int): LiveData<MovieEntity> {
+
+    fun getLocalMovieLiveData(movieId: Int): LiveData<MovieEntity> {
         return localRepository.getMovieLiveData(movieId)
+    }
+
+    fun getLocalMovieRx(movieId: Int): Single<MovieEntity> {
+        return localRepository.getMovieRx(movieId)
     }
 
 
@@ -52,7 +60,6 @@ class MovieViewModel : ViewModel(){
         movieDetailsLiveDataObserver.value = AppState.Loading
         detailsRepositoryImpl.getMovieDetailsFromServer(movieId, callBack)
     }
-
 
     private val callBack = object : Callback<MovieDTO> {
         override fun onResponse(call: Call<MovieDTO>, response: Response<MovieDTO>) {

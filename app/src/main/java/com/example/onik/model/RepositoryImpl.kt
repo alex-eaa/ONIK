@@ -41,7 +41,7 @@ class RepositoryImpl : Repository {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun getListMoviesFromServer(id: CollectionId, liveData: MutableLiveData<AppState>) {
+    override fun getListMoviesFromServer(collectionId: CollectionId, liveData: MutableLiveData<AppState>) {
         liveData.postValue(AppState.Loading)
 
         val onLoadListener: ListMoviesLoader.ListMoviesLoaderListener =
@@ -57,7 +57,7 @@ class RepositoryImpl : Repository {
                 }
             }
 
-        ListMoviesLoader(onLoadListener, id).loadData()
+        ListMoviesLoader(onLoadListener, collectionId).loadData()
     }
 
 }

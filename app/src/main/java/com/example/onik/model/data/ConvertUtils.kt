@@ -19,6 +19,7 @@ fun convertMovieDtoToMovieForCard(movieDTO: MovieDTO): Movie {
         vote_average = movieDTO.vote_average,
         id = movieDTO.id,
         title = movieDTO.title,
+        release_date = movieDTO.release_date
     )
 }
 
@@ -58,7 +59,8 @@ fun convertMovieLocalToEntity(movieLocal: MovieLocal): MovieEntity {
         favorite = movieLocal.favorite.toString(),
         title = movieLocal.title,
         poster_path = movieLocal.poster_path,
-        vote_average = movieLocal.vote_average
+        vote_average = movieLocal.vote_average,
+        release_date = movieLocal.release_date
     )
 }
 
@@ -69,5 +71,6 @@ fun convertMovieEntityToMovieForCard(movieEntity: MovieEntity): Movie {
         vote_average = movieEntity.vote_average,
         id = movieEntity.idMovie,
         title = movieEntity.title,
+        release_date = movieEntity.release_date
     )
 }
