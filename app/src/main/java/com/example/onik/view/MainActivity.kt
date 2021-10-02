@@ -1,17 +1,14 @@
 package com.example.onik.view
 
 import android.Manifest
-import android.app.Activity
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
@@ -26,13 +23,32 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
             when {
                 result -> runContactFragment()
+
                 ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_CONTACTS) -> {
                     Toast.makeText(this, "НЕЛЬЗЯ ПОКАЗАТЬ КОНТАКТЫ. ВЫ НЕ ДАЛИ РАЗРЕШЕНИЕ",
                         Toast.LENGTH_LONG).show()
                 }
+
                 else -> {
-//                    Toast.makeText(this, "ЗАПРЕЩЕН ДОСТУП К КОНТАКТАМ", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "ВЫ НЕ ДАЛИ ДОСТУП К КОНТАКТАМ", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+    private val permissionGeoResult =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            when {
+                result -> runMapsFragment()
+
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                    Toast.makeText(this, "Для использования геолокации предоставьте разрешение!",
+                        Toast.LENGTH_LONG).show()
+                }
+
+                else -> {
+                    Toast.makeText(this, "ВЫ НЕ ДАЛИ ДОСТУП К ГЕОДОКАЦИИ", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -120,6 +136,10 @@ class MainActivity : AppCompatActivity() {
                 permissionResult.launch(Manifest.permission.READ_CONTACTS)
                 true
             }
+            R.id.action_maps -> {
+                permissionGeoResult.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                true
+            }
             android.R.id.home -> {
                 onBackPressed()
                 true
@@ -139,6 +159,14 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.container, ContentProviderFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun runMapsFragment() {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            .replace(R.id.container, GoogleMapsFragment())
             .addToBackStack(null)
             .commit()
     }

@@ -4,28 +4,34 @@
 
     <item
         android:id="@+id/action_show_favorites"
-        android:orderInCategory="100"
+        android:orderInCategory="10"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/item_action_show_favorites"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="20"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/item_action_settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_contacts"
         android:icon="@drawable/ic_baseline_contacts_24"
-        android:orderInCategory="100"
-        android:title="@string/item_action_search"
-        app:showAsAction="always" />
+        android:orderInCategory="40"
+        android:title="@string/item_action_contacts"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_maps"
+        android:icon="@drawable/ic_baseline_map_24"
+        android:orderInCategory="30"
+        android:title="@string/item_action_maps"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_baseline_search_24"
-        android:orderInCategory="5"
+        android:orderInCategory="1"
         android:title="@string/item_action_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
