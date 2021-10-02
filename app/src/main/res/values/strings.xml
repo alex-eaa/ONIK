@@ -35,6 +35,8 @@
     <string name="details_genre">Жанр</string>
     <string name="details_budget">Бюджет</string>
     <string name="details_revenue">Сборы</string>
+    <string name="details_casts">Актерский состав</string>
+    <string name="details_movie_credits">Фильмография</string>
 
     <!-- Mapst -->
     <string name="button_search_map">Поиск</string>

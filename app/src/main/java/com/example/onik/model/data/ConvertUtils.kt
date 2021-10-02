@@ -12,6 +12,11 @@ fun convertListMoviesDtoToListMovies(listMoviesDTO: ListMoviesDTO): ListMovies {
     )
 }
 
+fun convertListMovieCreditsDtoToListMovies(listMovieCreditsDTO: ListMovieCreditsDTO): ListMovies {
+    return ListMovies(
+        results = listMovieCreditsDTO.cast?.map { convertMovieDtoToMovieForCard(it) }
+    )
+}
 
 fun convertMovieDtoToMovieForCard(movieDTO: MovieDTO): Movie {
     return Movie(
@@ -72,5 +77,25 @@ fun convertMovieEntityToMovieForCard(movieEntity: MovieEntity): Movie {
         id = movieEntity.idMovie,
         title = movieEntity.title,
         release_date = movieEntity.release_date
+    )
+}
+
+
+fun convertListCastsDtoToListCasts(listCastsDTO: ListCastsDTO): ListCasts {
+    return ListCasts(
+        id = listCastsDTO.id,
+        cast = listCastsDTO.cast?.map { convertCastDtoToCast(it) }
+    )
+}
+
+fun convertCastDtoToCast(castDTO: CastDTO): Cast {
+    return Cast(
+        id = castDTO.id,
+        name = castDTO.name,
+        profile_path = castDTO.profile_path,
+        character = castDTO.character,
+        birthday = castDTO.birthday,
+        place_of_birth = castDTO.place_of_birth,
+        homepage = castDTO.homepage,
     )
 }
