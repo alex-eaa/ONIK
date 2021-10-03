@@ -1,12 +1,17 @@
 package com.example.onik.view
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.*
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.onik.R
 import com.example.onik.databinding.FragmentMapsBinding
@@ -23,8 +28,31 @@ import java.io.IOException
 
 class GoogleMapsFragment : Fragment() {
 
+    private val permissionGeoResult =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            when (result) {
+                result -> if (result) {
+                    map?.let { activateMyLocation(it) }
+                }
+                else -> {
+                    Toast.makeText(requireContext(),
+                        "ВЫ НЕ ДАЛИ ДОСТУП К ГЕОЛОКАЦИИ",
+                        Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+    companion object {
+        const val BUNDLE_EXTRA_ADDRESS: String = "BUNDLE_EXTRA_ADDRESS"
+
+        fun newInstance(bundle: Bundle): GoogleMapsFragment =
+            GoogleMapsFragment().apply { arguments = bundle }
+    }
+
     private var _binding: FragmentMapsBinding? = null
     private val binding get() = _binding!!
+
+    private var menu: Menu? = null
 
     private var myLocation: Location? = null
     private var map: GoogleMap? = null
@@ -32,7 +60,6 @@ class GoogleMapsFragment : Fragment() {
     private val callback = OnMapReadyCallback { googleMap ->
         activateMyLocation(googleMap)
         map = googleMap
-        getLocation()
 
         googleMap.setOnMapLongClickListener { latLng ->
             getAddressAsync(latLng)
@@ -53,6 +80,10 @@ class GoogleMapsFragment : Fragment() {
         setHasOptionsMenu(true)
         activity?.title = resources.getString(R.string.title_maps)
 
+        arguments?.getString(BUNDLE_EXTRA_ADDRESS)?.let {
+            searchByAddress(it)
+        }
+
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
         initSearchByAddress()
@@ -64,6 +95,7 @@ class GoogleMapsFragment : Fragment() {
         menu.findItem(R.id.action_sort)?.isVisible = false
         menu.findItem(R.id.action_maps)?.isVisible = false
         menu.findItem(R.id.action_search)?.isVisible = false
+        this.menu = menu
     }
 
 
@@ -85,17 +117,31 @@ class GoogleMapsFragment : Fragment() {
     }
 
 
-    @SuppressLint("MissingPermission")
     private fun activateMyLocation(googleMap: GoogleMap) {
         context?.let {
-            googleMap.isMyLocationEnabled = true
-            googleMap.uiSettings.isMyLocationButtonEnabled = true
+            val isPermissionGranted =
+                ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED
+
+            googleMap.isMyLocationEnabled = isPermissionGranted
+            googleMap.uiSettings.isMyLocationButtonEnabled = isPermissionGranted
+
+            menu?.findItem(R.id.action_get_address)?.isVisible = isPermissionGranted
+            menu?.findItem(R.id.action_get_location)?.isVisible = isPermissionGranted
+
+
+            if (!isPermissionGranted) {
+                permissionGeoResult.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            } else {
+                getMyLocation()
+            }
         }
+
     }
 
 
     @SuppressLint("MissingPermission")
-    private fun getLocation() {
+    private fun getMyLocation() {
         val locationManager =
             activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -142,7 +188,6 @@ class GoogleMapsFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
     private fun showMyAddressAsync(location: Location) {
         context?.let { context ->
             val geoCoder = Geocoder(context)
@@ -174,8 +219,8 @@ class GoogleMapsFragment : Fragment() {
 
                     view?.let { view ->
                         view.post {
-                            addresses[0].getAddressLine(0).also {
-                                binding.textAddress.text = it
+                            addresses[0].getAddressLine(0).also { str ->
+                                binding.textAddress.text = str
                             }
                         }
 
@@ -190,20 +235,26 @@ class GoogleMapsFragment : Fragment() {
 
     private fun initSearchByAddress() {
         binding.buttonSearch.setOnClickListener {
-            val geoCoder = Geocoder(it.context)
             val searchText = binding.searchAddress.text.toString()
-            Thread {
-                try {
-                    val addresses = geoCoder.getFromLocationName(searchText, 1)
-                    if (addresses.size > 0) {
-                        goToAddress(addresses, it, searchText)
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }.start()
+            searchByAddress(searchText)
         }
     }
+
+
+    private fun searchByAddress(address: String) {
+        val geoCoder = Geocoder(view?.context)
+        Thread {
+            try {
+                val addresses = geoCoder.getFromLocationName(address, 1)
+                if (addresses.size > 0) {
+                    view?.let { goToAddress(addresses, it, address) }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }.start()
+    }
+
 
     private fun goToAddress(
         addresses: MutableList<Address>,
@@ -215,8 +266,8 @@ class GoogleMapsFragment : Fragment() {
             addresses[0].longitude
         )
         view.post {
-            setMarker(location, searchText, R.drawable.pin)
-            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+            setMarker(location, searchText)
+            map?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
         }
     }
 
@@ -224,13 +275,12 @@ class GoogleMapsFragment : Fragment() {
     private fun setMarker(
         location: LatLng,
         searchText: String,
-        resourceId: Int,
     ): Marker {
         return map?.addMarker(
             MarkerOptions()
                 .position(location)
                 .title(searchText)
-                .icon(BitmapDescriptorFactory.fromResource(resourceId))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin))
         )!!
     }
 

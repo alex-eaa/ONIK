@@ -36,22 +36,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private val permissionGeoResult =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
-            when {
-                result -> runMapsFragment()
-
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                    Toast.makeText(this, "Для использования геолокации предоставьте разрешение!",
-                        Toast.LENGTH_LONG).show()
-                }
-
-                else -> {
-                    Toast.makeText(this, "ВЫ НЕ ДАЛИ ДОСТУП К ГЕОДОКАЦИИ", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
+//    private val permissionGeoResult =
+//        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+//            when {
+//                result -> runMapsFragment()
+//
+//                ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                    Manifest.permission.ACCESS_FINE_LOCATION) -> {
+//                    Toast.makeText(this, "Для использования геолокации предоставьте разрешение!",
+//                        Toast.LENGTH_LONG).show()
+//                }
+//
+//                else -> {
+//                    Toast.makeText(this, "ВЫ НЕ ДАЛИ ДОСТУП К ГЕОДОКАЦИИ", Toast.LENGTH_LONG).show()
+//                }
+//            }
+//        }
 
     private val receiver: MainBroadcastReceiver by lazy { MainBroadcastReceiver() }
 
@@ -144,7 +144,11 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_maps -> {
-                permissionGeoResult.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.container, GoogleMapsFragment())
+                    .addToBackStack(null)
+                    .commit()
                 true
             }
             android.R.id.home -> {

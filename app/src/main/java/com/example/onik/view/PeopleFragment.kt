@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -37,7 +38,6 @@ class PeopleFragment : Fragment() {
             PeopleFragment().apply { arguments = bundle }
     }
 
-    private var menu: Menu? = null
     private var idPeople = 0
 
     private var _binding: PeopleFragmentBinding? = null
@@ -61,9 +61,7 @@ class PeopleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
-        activity?.title = resources.getString(R.string.title_details)
-        initRecyclerView()
+        initView()
 
         arguments?.getInt(BUNDLE_EXTRA_PEOPLE_ID)?.let { idPeople ->
             this.idPeople = idPeople
@@ -76,6 +74,27 @@ class PeopleFragment : Fragment() {
             viewModel.getDataFromRemoteSource(idPeople)
 
         }
+    }
+
+    private fun initView() {
+        setHasOptionsMenu(true)
+        initRecyclerView()
+
+        binding.peoplePlaceOfBirth.setOnClickListener { view ->
+            val address = binding.peoplePlaceOfBirth.text
+            if (!address.isNullOrEmpty()) {
+                activity?.let {
+                    it.supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.container, GoogleMapsFragment.newInstance(Bundle().apply {
+                            putString(GoogleMapsFragment.BUNDLE_EXTRA_ADDRESS, address.toString())
+                        }))
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+        }
+
     }
 
 
