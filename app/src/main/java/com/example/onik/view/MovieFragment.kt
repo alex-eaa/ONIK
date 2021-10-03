@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.model.data.Movie
@@ -44,6 +45,9 @@ class MovieFragment : Fragment() {
         ViewModelProvider(this).get(MovieViewModel::class.java)
     }
 
+    private val myAdapter: CastsAdapter by lazy { CastsAdapter(R.layout.item_cast_horizontal) }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,12 +62,16 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         activity?.title = resources.getString(R.string.title_details)
+        initRecyclerView()
 
         arguments?.getInt(BUNDLE_EXTRA)?.let { idMovie ->
             movieLocal.idMovie = idMovie
 
             viewModel.movieDetailsLiveData
                 .observe(viewLifecycleOwner, { appState -> renderData(appState) })
+            viewModel.castsListLiveData
+                .observe(viewLifecycleOwner, { appState -> renderDataCasts(appState) })
+
             viewModel.getDataFromRemoteSource(idMovie)
 
 //            viewModel.getLocalMovieLiveData(idMovie)
@@ -123,6 +131,27 @@ class MovieFragment : Fragment() {
                     genres += "${it.name}, "
                 }
                 binding.genre.text = genres.dropLast(2)
+            }
+
+            is AppState.Error -> {
+                binding.loadingLayout.hide()
+                binding.container.showSnackbar(
+                    text = appState.error.message!!,
+                    action = {
+                        viewModel.getDataFromRemoteSource(movieLocal.idMovie)
+                    })
+            }
+        }
+    }
+
+
+    private fun renderDataCasts(appState: AppState?) {
+        when (appState) {
+            is AppState.Loading -> binding.loadingLayout.show()
+
+            is AppState.SuccessCasts -> {
+//                Log.d(TAG, appState.casts.toString())
+                appState.casts.cast?.let { myAdapter.data = it }
             }
 
             is AppState.Error -> {
@@ -233,5 +262,25 @@ class MovieFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    private fun initRecyclerView() {
+        myAdapter.listener = CastsAdapter.OnItemViewClickListener { cast ->
+            activity?.supportFragmentManager?.let { fragmentManager ->
+                fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.container, PeopleFragment.newInstance(Bundle().apply {
+                        putInt(PeopleFragment.BUNDLE_EXTRA_PEOPLE_ID, cast.id)
+                    }))
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
+        binding.castRecyclerView.apply {
+            adapter = myAdapter
+            setHasFixedSize(true)
+        }
     }
 }

@@ -5,16 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.app.App.Companion.getMovieDao
-import com.example.onik.model.data.MovieDTO
-import com.example.onik.model.data.MovieLocal
-import com.example.onik.model.data.convertMovieDtoToMovie
+import com.example.onik.model.data.*
 import com.example.onik.model.localRepository.LocalRepository
 import com.example.onik.model.localRepository.LocalRepositoryImpl
-import com.example.onik.model.repository.DetailsRepository
-import com.example.onik.model.repository.DetailsRepositoryImpl
-import com.example.onik.model.repository.RemoteDataSourceDetails
+import com.example.onik.model.repository.*
 import com.example.onik.model.room.MovieEntity
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -26,10 +21,12 @@ private const val TAG = "ViewModel"
 private const val SERVER_ERROR = "Ошибка сервера"
 private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 
-class MovieViewModel : ViewModel(){
+class MovieViewModel : ViewModel() {
 
     private val detailsRepositoryImpl: DetailsRepository = DetailsRepositoryImpl(
         RemoteDataSourceDetails())
+
+    private val castsRepositoryImpl: CastsRepository = CastsRepositoryImpl()
 
     private val localRepository: LocalRepository = LocalRepositoryImpl(getMovieDao())
 
@@ -37,6 +34,10 @@ class MovieViewModel : ViewModel(){
     private val movieDetailsLiveDataObserver: MutableLiveData<AppState> =
         MutableLiveData<AppState>()
     val movieDetailsLiveData: LiveData<AppState> = movieDetailsLiveDataObserver
+
+    private val castsListLiveDataObserver: MutableLiveData<AppState> =
+        MutableLiveData<AppState>()
+    val castsListLiveData: LiveData<AppState> = castsListLiveDataObserver
 
 
     fun getLocalMovieLiveData(movieId: Int): LiveData<MovieEntity> {
@@ -58,10 +59,11 @@ class MovieViewModel : ViewModel(){
 
     fun getDataFromRemoteSource(movieId: Int) {
         movieDetailsLiveDataObserver.value = AppState.Loading
-        detailsRepositoryImpl.getMovieDetailsFromServer(movieId, callBack)
+        detailsRepositoryImpl.getMovieDetailsFromServer(movieId, callBackMovie)
+        castsRepositoryImpl.getListCastsFromServer(movieId, callBackCasts)
     }
 
-    private val callBack = object : Callback<MovieDTO> {
+    private val callBackMovie = object : Callback<MovieDTO> {
         override fun onResponse(call: Call<MovieDTO>, response: Response<MovieDTO>) {
             val serverResponse: MovieDTO? = response.body()
 
@@ -77,6 +79,27 @@ class MovieViewModel : ViewModel(){
         override fun onFailure(call: Call<MovieDTO>, t: Throwable) {
             Log.d(TAG, t.message.toString())
             movieDetailsLiveDataObserver.postValue(AppState.Error(Throwable(t.message
+                ?: REQUEST_ERROR)))
+        }
+    }
+
+
+    private val callBackCasts = object : Callback<ListCastsDTO> {
+        override fun onResponse(call: Call<ListCastsDTO>, response: Response<ListCastsDTO>) {
+            val serverResponse: ListCastsDTO? = response.body()
+
+            castsListLiveDataObserver.postValue(
+                if (response.isSuccessful && serverResponse != null) {
+                    AppState.SuccessCasts(convertListCastsDtoToListCasts(serverResponse))
+                } else {
+                    AppState.Error(Throwable(SERVER_ERROR))
+                }
+            )
+        }
+
+        override fun onFailure(call: Call<ListCastsDTO>, t: Throwable) {
+            Log.d(TAG, t.message.toString())
+            castsListLiveDataObserver.postValue(AppState.Error(Throwable(t.message
                 ?: REQUEST_ERROR)))
         }
     }

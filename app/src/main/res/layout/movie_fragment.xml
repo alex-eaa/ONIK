@@ -7,258 +7,292 @@
     android:layout_height="match_parent"
     android:background="?attr/colorOnPrimary">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.30" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineVerticalCenter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineVerticalStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="8dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineVerticalEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="8dp" />
-
-        <ImageView
-            android:id="@+id/backdrop"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="@id/guidelineHorizontal"
-            app:layout_constraintStart_toStartOf="@id/main"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/poster_sample" />
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardPoster"
-            android:layout_width="70dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="4dp"
-            app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal"
-            app:layout_constraintDimensionRatio="6:9"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart">
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.30" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineVerticalStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="12dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineVerticalEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="12dp" />
 
             <ImageView
-                android:id="@+id/posterMini"
+                android:id="@+id/backdrop"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@id/guidelineHorizontal"
+                app:layout_constraintStart_toStartOf="@id/main"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@drawable/poster_sample" />
-        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:maxLines="2"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/star"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toStartOf="@id/star"
-            tools:text="Название фильма d fd dgdg ree ter dfg" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardPoster"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="6dp"
+                app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal"
+                app:layout_constraintDimensionRatio="6:9"
+                app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart">
 
-        <ImageView
-            android:id="@+id/star"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@id/voteAverage"
-            app:layout_constraintStart_toEndOf="@id/cardPoster"
-            app:layout_constraintTop_toTopOf="@id/voteAverage"
-            app:srcCompat="@drawable/ic_star_yellow_24dp" />
+                <ImageView
+                    android:id="@+id/posterMini"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    tools:srcCompat="@drawable/poster_sample" />
+            </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/voteAverage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@id/cardPoster"
-            app:layout_constraintStart_toEndOf="@id/star"
-            tools:text="5.43" />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:maxLines="2"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/star"
+                app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
+                app:layout_constraintStart_toStartOf="@id/star"
+                tools:text="Название фильма d fd dgdg ree ter dfg" />
 
-        <TextView
-            android:id="@+id/titleContents"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/details_overview"
-            android:textSize="16sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal" />
+            <ImageView
+                android:id="@+id/star"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/voteAverage"
+                app:layout_constraintStart_toEndOf="@id/cardPoster"
+                app:layout_constraintTop_toTopOf="@id/voteAverage"
+                app:srcCompat="@drawable/ic_star_yellow_24dp" />
 
-        <TextView
-            android:id="@+id/overview"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/titleContents"
-            tools:text="Описание фильма. Описание фильма. Описание фильма. Описание фильма. Описание фильма. Описание фильма. Описание фильма." />
+            <TextView
+                android:id="@+id/voteAverage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/cardPoster"
+                app:layout_constraintStart_toEndOf="@id/star"
+                tools:text="5.43" />
 
 
-        <TextView
-            android:id="@+id/titleInfo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/details_information"
-            android:textSize="16sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/overview" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineVerticalCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
-        <TextView
-            android:id="@+id/titleReleaseDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="4dp"
-            android:text="@string/details_release_date"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/titleInfo" />
+            <TextView
+                android:id="@+id/titleContents"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/details_overview"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@+id/backdrop" />
 
-        <TextView
-            android:id="@+id/releaseDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/titleReleaseDate"
-            tools:text="2021" />
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/titleContents"
+                tools:text="Описание фильма. Описание фильма. Описание фильма. Описание фильма. Описание фильма. Описание фильма. Описание фильма." />
 
-        <TextView
-            android:id="@+id/titleRuntime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="4dp"
-            android:text="@string/details_runtime"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/releaseDate" />
+            <TextView
+                android:id="@+id/titleGenre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/details_genre"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/overview" />
 
-        <TextView
-            android:id="@+id/runtime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
-            app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
-            app:layout_constraintTop_toBottomOf="@id/titleRuntime"
-            tools:text="93 мин" />
+            <TextView
+                android:id="@+id/genre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/titleGenre"
+                tools:text="фантастика, боевик, приключения" />
+
+            <TextView
+                android:id="@+id/titleCasts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/details_casts"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/genre" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cast_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                app:layoutManager="LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleCasts"
+                tools:listitem="@layout/item_cast_horizontal" />
 
 
-        <TextView
-            android:id="@+id/titleGenre"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="6dp"
-            android:text="@string/details_genre"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-            app:layout_constraintTop_toBottomOf="@id/titleInfo" />
+            <TextView
+                android:id="@+id/titleInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/details_information"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/cast_recycler_view" />
 
-        <TextView
-            android:id="@+id/genre"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-            app:layout_constraintTop_toBottomOf="@id/titleGenre"
-            tools:text="фантастика, боевик, приключения" />
+            <TextView
+                android:id="@+id/titleReleaseDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="@string/details_release_date"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/titleInfo" />
 
-        <TextView
-            android:id="@+id/titleBudget"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="6dp"
-            android:text="@string/details_budget"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-            app:layout_constraintTop_toBottomOf="@id/genre" />
+            <TextView
+                android:id="@+id/releaseDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/titleReleaseDate"
+                tools:text="2021" />
 
-        <TextView
-            android:id="@+id/budget"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-            app:layout_constraintTop_toBottomOf="@id/titleBudget"
-            tools:text="100000" />
+            <TextView
+                android:id="@+id/titleRuntime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="@string/details_runtime"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/releaseDate" />
 
-        <TextView
-            android:id="@+id/titleRevenue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="6dp"
-            android:text="@string/details_revenue"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-            app:layout_constraintTop_toBottomOf="@id/budget" />
+            <TextView
+                android:id="@+id/runtime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
+                app:layout_constraintStart_toStartOf="@+id/guidelineVerticalStart"
+                app:layout_constraintTop_toBottomOf="@id/titleRuntime"
+                tools:text="93 мин" />
 
-        <TextView
-            android:id="@+id/revenue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/guidelineVerticalEnd"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-            app:layout_constraintTop_toBottomOf="@id/titleRevenue"
-            tools:text="120000" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/titleBudget"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/details_budget"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
+                app:layout_constraintTop_toBottomOf="@id/titleInfo" />
+
+            <TextView
+                android:id="@+id/budget"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
+                app:layout_constraintTop_toBottomOf="@id/titleBudget"
+                tools:text="100000" />
+
+            <TextView
+                android:id="@+id/titleRevenue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/details_revenue"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
+                app:layout_constraintTop_toBottomOf="@id/budget" />
+
+            <TextView
+                android:id="@+id/revenue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineVerticalEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
+                app:layout_constraintTop_toBottomOf="@id/titleRevenue"
+                tools:text="120000" />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
 
     <FrameLayout
         android:id="@+id/loadingLayout"

@@ -10,11 +10,18 @@
     <string name="title_settings">Настройки</string>
     <string name="title_favorites">Избранные</string>
     <string name="title_details">Описание</string>
+    <string name="title_maps">Карта</string>
 
     <!-- toolbar items -->
+    <string name="item_action_contacts">Контакты</string>
+    <string name="item_action_maps">Карты</string>
+    <string name="item_get_address">Где я нахожусь</string>
+    <string name="item_get_address_by_coordinates">Узнать адрес по координатам</string>
+    <string name="item_get_coordination">Мои координаты</string>
     <string name="item_action_search">Поиск</string>
     <string name="item_action_settings">Настройки</string>
     <string name="item_action_to_favorite">В избранные</string>
+    <string name="item_action_to_home">На главную</string>
     <string name="item_action_note_edit">Редактировать заметку</string>
     <string name="item_action_show_favorites">Показать избранные</string>
     <string name="item_action_sort_by_title">По названию</string>
@@ -29,6 +36,11 @@
     <string name="details_genre">Жанр</string>
     <string name="details_budget">Бюджет</string>
     <string name="details_revenue">Сборы</string>
+    <string name="details_casts">Актерский состав</string>
+    <string name="details_movie_credits">Фильмография</string>
 
+    <!-- Mapst -->
+    <string name="button_search_map">Поиск</string>
+    <string name="marker_start">Старт</string>
 
 </resources>

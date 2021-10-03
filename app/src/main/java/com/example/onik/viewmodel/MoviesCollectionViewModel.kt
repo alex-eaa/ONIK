@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.model.data.convertListMoviesDtoToListMovies
-import com.example.onik.model.repository.CollectionRepository
-import com.example.onik.model.repository.CollectionRepositoryImpl
-import com.example.onik.model.repository.RemoteDataSourceCollections
+import com.example.onik.model.repository.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +19,8 @@ class MoviesCollectionViewModel : ViewModel() {
 
     private val collectionRepositoryImpl: CollectionRepository = CollectionRepositoryImpl(
         RemoteDataSourceCollections())
+
+    private val collRepositoryImpl: CollRepository = CollRepositoryImpl()
 
     private var moviesListLiveDataObserver: MutableMap<CollectionId, MutableLiveData<AppState>> =
         mutableMapOf()
@@ -35,6 +35,11 @@ class MoviesCollectionViewModel : ViewModel() {
     fun getDataFromRemoteSource(collectionId: CollectionId) {
         moviesListLiveDataObserver[collectionId]?.postValue(AppState.Loading)
         collectionRepositoryImpl.getCollectionFromServer(collectionId, getCallBack(collectionId))
+    }
+
+    fun getDataFromRemoteSource2(collectionId: CollectionId) {
+        moviesListLiveDataObserver[collectionId]?.postValue(AppState.Loading)
+        collRepositoryImpl.getCollFromServer(collectionId, getCallBack(collectionId), 1)
     }
 
 

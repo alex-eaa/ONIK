@@ -1,17 +1,14 @@
 package com.example.onik.view
 
 import android.Manifest
-import android.app.Activity
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
@@ -26,16 +23,35 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
             when {
                 result -> runContactFragment()
+
                 ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_CONTACTS) -> {
                     Toast.makeText(this, "НЕЛЬЗЯ ПОКАЗАТЬ КОНТАКТЫ. ВЫ НЕ ДАЛИ РАЗРЕШЕНИЕ",
                         Toast.LENGTH_LONG).show()
                 }
+
                 else -> {
-//                    Toast.makeText(this, "ЗАПРЕЩЕН ДОСТУП К КОНТАКТАМ", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "ВЫ НЕ ДАЛИ ДОСТУП К КОНТАКТАМ", Toast.LENGTH_LONG).show()
                 }
             }
         }
+
+//    private val permissionGeoResult =
+//        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+//            when {
+//                result -> runMapsFragment()
+//
+//                ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                    Manifest.permission.ACCESS_FINE_LOCATION) -> {
+//                    Toast.makeText(this, "Для использования геолокации предоставьте разрешение!",
+//                        Toast.LENGTH_LONG).show()
+//                }
+//
+//                else -> {
+//                    Toast.makeText(this, "ВЫ НЕ ДАЛИ ДОСТУП К ГЕОДОКАЦИИ", Toast.LENGTH_LONG).show()
+//                }
+//            }
+//        }
 
     private val receiver: MainBroadcastReceiver by lazy { MainBroadcastReceiver() }
 
@@ -100,6 +116,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_home -> {
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.container, MainFragment.newInstance())
+                    .commit()
+                true
+            }
             R.id.action_settings -> {
                 supportFragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -118,6 +141,14 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_contacts -> {
                 permissionResult.launch(Manifest.permission.READ_CONTACTS)
+                true
+            }
+            R.id.action_maps -> {
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .replace(R.id.container, GoogleMapsFragment())
+                    .addToBackStack(null)
+                    .commit()
                 true
             }
             android.R.id.home -> {
@@ -139,6 +170,14 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
             .replace(R.id.container, ContentProviderFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun runMapsFragment() {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+            .replace(R.id.container, GoogleMapsFragment())
             .addToBackStack(null)
             .commit()
     }

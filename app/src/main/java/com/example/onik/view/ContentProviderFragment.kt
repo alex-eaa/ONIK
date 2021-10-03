@@ -4,12 +4,11 @@ import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import com.example.onik.R
 import com.example.onik.databinding.FragmentContactsBinding
 
 class ContentProviderFragment : Fragment() {
@@ -29,6 +28,8 @@ class ContentProviderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+        activity?.title = resources.getString(R.string.item_action_contacts)
         getContacts()
     }
 
@@ -77,5 +78,10 @@ class ContentProviderFragment : Fragment() {
         }
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.findItem(R.id.action_contacts)?.isVisible = false
+        menu.findItem(R.id.action_search)?.isVisible = false
+    }
 
 }
