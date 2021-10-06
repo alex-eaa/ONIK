@@ -43,4 +43,8 @@
     <string name="button_search_map">Поиск</string>
     <string name="marker_start">Старт</string>
 
+    <!-- NotificationChannel  -->
+    <string name="channel1_name">Новое</string>
+    <string name="сhannel1_description">Отображает уведомления о новых фильмах в базе</string>
+
 </resources>

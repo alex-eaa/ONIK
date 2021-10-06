@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "826471274192",
+    "project_id": "onik-5f5e9",
+    "storage_bucket": "onik-5f5e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826471274192:android:3e198aa42e40e39c3db0d5",
+        "android_client_info": {
+          "package_name": "com.example.onik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826471274192-4it4q4llvaqh43k7nks67mumapcv60tq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTPC-VvVWv6pcB_9Z9jUp0Pj07OCaV3-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826471274192-4it4q4llvaqh43k7nks67mumapcv60tq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
