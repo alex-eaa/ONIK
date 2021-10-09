@@ -20,28 +20,68 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
+
+    buildTypes {
+        def localPropertiesFile = rootProject.file("local.properties")
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(localPropertiesFile))
+
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue("string", "GoogleMapsApiKey", "${localProperties['RELEASE_MAPS_API_KEY']}")
+        }
+
+        debug {
+            resValue("string", "GoogleMapsApiKey", "${localProperties['DEBUG_MAPS_API_KEY']}")
+        }
+    }
+
+    buildTypes.each {
+        def localProperties = new Properties()
+        localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+        it.buildConfigField "String", "THEMOVIEDB_API_KEY", "${localProperties['THEMOVIEDB_API_KEY']}"
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         viewBinding true
     }
-    buildTypes.each {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("apikey.properties").newDataInputStream
-                ())
-        def apiKey = properties.getProperty("api_key", "")
-        it.buildConfigField "String", "THEMOVIEDB_API_KEY", apiKey
+
+    flavorDimensions 'version'
+    productFlavors {
+        free {
+            dimension 'version'
+            versionNameSuffix '.free'
+        }
+    }
+    productFlavors {
+        training {
+            dimension 'version'
+            versionNameSuffix '.training'
+        }
     }
 }
 
@@ -69,11 +109,11 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
