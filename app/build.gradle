@@ -57,6 +57,20 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions 'version'
+    productFlavors {
+        free {
+            dimension 'version'
+            versionNameSuffix '.free'
+        }
+    }
+    productFlavors {
+        training {
+            dimension 'version'
+            versionNameSuffix '.training'
+        }
+    }
 }
 
 dependencies {
