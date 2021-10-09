@@ -20,29 +20,41 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        def localPropertiesFile = rootProject.file("local.properties")
+        def localProperties = new Properties()
+        localProperties.load(new FileInputStream(localPropertiesFile))
 
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            def mapsApiKey = properties.getProperty("RELEASE_MAPS_API_KEY", "")
-            resValue("string", "GoogleMapsApiKey", "${mapsApiKey}")
+            resValue("string", "GoogleMapsApiKey", "${localProperties['RELEASE_MAPS_API_KEY']}")
         }
 
         debug {
-            def mapsApiKey = properties.getProperty("DEBUG_MAPS_API_KEY", "")
-            resValue("string", "GoogleMapsApiKey", "${mapsApiKey}")
+            resValue("string", "GoogleMapsApiKey", "${localProperties['DEBUG_MAPS_API_KEY']}")
         }
     }
 
     buildTypes.each {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
-        def apiKey = properties.getProperty("THEMOVIEDB_API_KEY", "")
-        it.buildConfigField "String", "THEMOVIEDB_API_KEY", apiKey
+        def localProperties = new Properties()
+        localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+        it.buildConfigField "String", "THEMOVIEDB_API_KEY", "${localProperties['THEMOVIEDB_API_KEY']}"
     }
 
     compileOptions {
