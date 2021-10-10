@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.model.data.Movie
@@ -17,8 +18,11 @@ class MoviesAdapter(
 
     var moviesData: List<Movie> = listOf()
         set(value) {
+            val productDiffUtilCallback = ProductDiffUtilCallback(field, value)
+            val productDiffResult: DiffUtil.DiffResult =
+                DiffUtil.calculateDiff(productDiffUtilCallback, true)
             field = value
-            notifyDataSetChanged()
+            productDiffResult.dispatchUpdatesTo(this)
         }
 
     var listener: OnItemViewClickListener? = null

@@ -96,6 +96,7 @@ dependencies {
 
     implementation 'androidx.room:room-runtime:2.3.0'
     implementation 'com.google.firebase:firebase-messaging-ktx:22.0.0'
+    implementation 'com.google.android.gms:play-services-analytics-impl:17.0.1'
     kapt 'androidx.room:room-compiler:2.3.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
