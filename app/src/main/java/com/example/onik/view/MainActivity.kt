@@ -1,7 +1,6 @@
 package com.example.onik.view
 
 import android.Manifest
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -14,11 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import com.example.onik.R
-import com.example.onik.model.services.MyFirebaseMessagingService
-import com.example.onik.model.services.PUSH_KEY_ID_MOVIE
+import com.example.onik.services.PUSH_KEY_ID_MOVIE
 import com.example.onik.viewmodel.MainBroadcastReceiver
 import com.example.onik.viewmodel.Settings
-import java.io.ByteArrayInputStream
 
 
 class MainActivity : AppCompatActivity() {

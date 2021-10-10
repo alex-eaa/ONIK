@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.onik.app.App.Companion.getMovieDao
+import com.example.onik.App.Companion.getMovieDao
 import com.example.onik.model.data.*
 import com.example.onik.model.localRepository.LocalRepository
 import com.example.onik.model.localRepository.LocalRepositoryImpl

@@ -1,32 +1,16 @@
 package com.example.onik.view
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import android.widget.EditText
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
-import com.example.onik.databinding.MovieFragmentBinding
 import com.example.onik.databinding.PeopleFragmentBinding
-import com.example.onik.model.data.Movie
-import com.example.onik.model.data.MovieLocal
-import com.example.onik.model.room.MovieEntity
 import com.example.onik.viewmodel.AppState
-import com.example.onik.viewmodel.MovieViewModel
 import com.example.onik.viewmodel.PeopleViewModel
 import com.squareup.picasso.Picasso
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 const val TAGG = "PeopleFragment"
 

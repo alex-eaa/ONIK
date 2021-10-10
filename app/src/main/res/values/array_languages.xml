@@ -4,11 +4,13 @@
     <string-array name="langArray">
         <item>Русский</item>
         <item>Английский</item>
+        <item>Немецкий</item>
     </string-array>
 
     <string-array name="langVal">
         <item>ru-RU</item>
         <item>en-US</item>
+        <item>de-DE</item>
     </string-array>
 
 </resources>

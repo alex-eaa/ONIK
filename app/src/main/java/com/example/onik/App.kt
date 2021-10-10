@@ -1,4 +1,4 @@
-package com.example.onik.app
+package com.example.onik
 
 import android.app.Application
 import android.content.SharedPreferences
@@ -29,7 +29,8 @@ class App: Application() {
                         db = Room.databaseBuilder(
                             appInstance!!.applicationContext,
                             MovieDataBase::class.java,
-                            DB_NAME)
+                            DB_NAME
+                        )
 //                            .allowMainThreadQueries()
                             .build()
                     }

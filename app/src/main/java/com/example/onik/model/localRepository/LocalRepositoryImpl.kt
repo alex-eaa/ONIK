@@ -5,7 +5,6 @@ import com.example.onik.model.data.MovieLocal
 import com.example.onik.model.data.convertMovieLocalToEntity
 import com.example.onik.model.room.MovieDao
 import com.example.onik.model.room.MovieEntity
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 class LocalRepositoryImpl(private val localDataSource: MovieDao) : LocalRepository {

@@ -1,8 +1,6 @@
 package com.example.onik.model.repository
 
-import com.example.onik.model.data.CastDTO
 import com.example.onik.model.data.ListMovieCreditsDTO
-import com.example.onik.model.data.ListMoviesDTO
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Retrofit

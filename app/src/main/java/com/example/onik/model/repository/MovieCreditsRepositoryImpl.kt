@@ -1,13 +1,8 @@
 package com.example.onik.model.repository
 
 import com.example.onik.BuildConfig
-import com.example.onik.app.App
-import com.example.onik.model.data.CastDTO
-import com.example.onik.model.data.ListCastsDTO
+import com.example.onik.App
 import com.example.onik.model.data.ListMovieCreditsDTO
-import com.example.onik.model.data.ListMoviesDTO
-import com.example.onik.model.repository.CastAPI.Companion.getApiCast
-import com.example.onik.model.repository.CastsAPI.Companion.getApiCasts
 import com.example.onik.model.repository.MovieCreditsAPI.Companion.getApiMovieCredits
 import retrofit2.Callback
 

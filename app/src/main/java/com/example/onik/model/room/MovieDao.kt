@@ -2,7 +2,6 @@ package com.example.onik.model.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao

@@ -1,4 +1,4 @@
-package com.example.onik.model.services
+package com.example.onik.services
 
 import android.app.IntentService
 import android.content.Intent

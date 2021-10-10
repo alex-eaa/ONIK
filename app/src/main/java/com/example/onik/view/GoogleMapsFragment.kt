@@ -10,7 +10,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.onik.R
@@ -25,6 +24,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.io.IOException
 
+const val REFRESH_PERIOD = 60000L
+const val MINIMAL_DISTANCE = 100F
 
 class GoogleMapsFragment : Fragment() {
 

@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.model.data.Cast
-import com.example.onik.model.data.Movie
 import com.squareup.picasso.Picasso
 
 class CastsAdapter(

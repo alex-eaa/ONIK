@@ -3,7 +3,6 @@ package com.example.onik.model.localRepository
 import androidx.lifecycle.LiveData
 import com.example.onik.model.data.MovieLocal
 import com.example.onik.model.room.MovieEntity
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 const val ORDER_BY_TITLE = "ORDER_BY_TITLE"

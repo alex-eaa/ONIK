@@ -1,7 +1,7 @@
 package com.example.onik.model.repository
 
 import com.example.onik.BuildConfig
-import com.example.onik.app.App
+import com.example.onik.App
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.model.repository.CollAPI.Companion.getApiColl
 import com.example.onik.viewmodel.CollectionId
