@@ -7,6 +7,8 @@
         <entry key="app/src/main/res/drawable/backdrop_gradient.xml" value="0.3614583333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_comment_24.xml" value="0.3614583333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_assistant_photo_24.xml" value="0.3614583333333333" />
+        <entry key="app/src/main/res/drawable/ic_baseline_bookmark_24.xml" value="0.346875" />
+        <entry key="app/src/main/res/drawable/ic_baseline_bookmark_border_24.xml" value="0.346875" />
         <entry key="app/src/main/res/drawable/ic_baseline_border_left_24.xml" value="0.3614583333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_comment_24.xml" value="0.3614583333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_contacts_24.xml" value="0.3614583333333333" />
@@ -35,7 +37,9 @@
         <entry key="app/src/main/res/layout/people_fragment.xml" value="0.27445652173913043" />
         <entry key="app/src/main/res/layout/progressbar_incl.xml" value="0.27445652173913043" />
         <entry key="app/src/main/res/layout/xxx_movies_search_fragment.xml" value="0.27445652173913043" />
+        <entry key="app/src/main/res/menu/toolbar_menu_favorites_fragment.xml" value="0.3265625" />
         <entry key="app/src/main/res/menu/toolbar_menu_maps_fragment.xml" value="0.12760416666666666" />
+        <entry key="app/src/main/res/menu/toolbar_menu_movie_fragment.xml" value="0.3265625" />
         <entry key="app/src/main/res/xml/preferences.xml" value="0.27445652173913043" />
         <entry key="app/src/training/res/menu/menu.xml" value="0.12760416666666666" />
       </map>

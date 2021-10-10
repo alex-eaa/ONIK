@@ -242,11 +242,11 @@ class MovieFragment : Fragment() {
     private fun updateIconItemFavorite() {
         if (!movieLocal.favorite) {
             menu?.findItem(R.id.action_to_favorite)?.icon = activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_border_24)
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_bookmark_border_24)
             }
         } else if (movieLocal.favorite) {
             menu?.findItem(R.id.action_to_favorite)?.icon = activity?.let {
-                ContextCompat.getDrawable(it, R.drawable.ic_baseline_favorite_24)
+                ContextCompat.getDrawable(it, R.drawable.ic_baseline_bookmark_24)
             }
         }
     }
