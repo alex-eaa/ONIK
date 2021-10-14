@@ -68,7 +68,9 @@ class PeopleViewModel : ViewModel() {
 
             movieCreditsLiveDataObserver.postValue(
                 if (response.isSuccessful && serverResponse != null) {
-                    AppState.SuccessMovies(convertListMovieCreditsDtoToListMovies(serverResponse))
+                    convertListMovieCreditsDtoToListMovies(serverResponse).results?.let{
+                        AppState.SuccessMovies(it)
+                    }
                 } else {
                     AppState.Error(Throwable(SERVER_ERROR))
                 }

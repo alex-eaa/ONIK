@@ -7,7 +7,7 @@ import com.example.onik.model.data.Movie
 
 sealed class AppState {
     data class SuccessMovie(val movie: Movie) : AppState()
-    data class SuccessMovies(val movies: ListMovies) : AppState()
+    data class SuccessMovies(val movies: List<Movie>) : AppState()
     data class SuccessCasts(val casts: ListCasts) : AppState()
     data class SuccessCast(val cast: Cast) : AppState()
     data class Success<T>(val t: T?) : AppState()

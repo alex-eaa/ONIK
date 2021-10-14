@@ -64,17 +64,17 @@ class MoviesSearchFragment : Fragment() {
 
     private fun renderData(appState: AppState?) {
         when (appState) {
-            is AppState.Loading -> {binding.loadingLayout.show()}
+            is AppState.Loading -> {
+                binding.loadingLayout.show()
+            }
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
                 binding.notFound.hide()
-                appState.movies.results?.let {
-                    if (it.isEmpty()) {
-                        binding.notFound.show()
-                    } else {
-                        myAdapter.moviesData = it
-                    }
+                if (appState.movies.isEmpty()) {
+                    binding.notFound.show()
+                } else {
+                    myAdapter.moviesData = appState.movies
                 }
                 view?.hideKeyboard()
             }

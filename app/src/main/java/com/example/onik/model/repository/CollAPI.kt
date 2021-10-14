@@ -2,13 +2,17 @@ package com.example.onik.model.repository
 
 import com.example.onik.model.data.ListMoviesDTO
 import com.google.gson.GsonBuilder
-import retrofit2.Call
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Single
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
+import java.util.*
 
 interface CollAPI {
 
@@ -18,13 +22,13 @@ interface CollAPI {
         @Query("language") language: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int,
-    ): Call<ListMoviesDTO>
+    ): Single<ListMoviesDTO>
 
 
     companion object {
-
-        fun getApiColl() = Retrofit.Builder()
+        fun getCollRetrofit() = Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/")
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .build()
             .create(CollAPI::class.java)

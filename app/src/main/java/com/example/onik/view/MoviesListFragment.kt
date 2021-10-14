@@ -1,6 +1,7 @@
 package com.example.onik.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +13,13 @@ import com.example.onik.databinding.MoviesListFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
+import androidx.recyclerview.widget.RecyclerView
 
 
 class MoviesListFragment : Fragment() {
 
     companion object {
+        private const val TAG = "MoviesListFragment"
         const val BUNDLE_EXTRA: String = "BUNDLE_EXTRA"
 
         fun newInstance(bundle: Bundle): MoviesListFragment =
@@ -30,6 +33,7 @@ class MoviesListFragment : Fragment() {
 
     private val viewModel: MoviesCollectionViewModel by lazy {
         ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
+
     }
 
     private val myAdapter: MoviesAdapter by lazy { MoviesAdapter(R.layout.item) }
@@ -58,7 +62,9 @@ class MoviesListFragment : Fragment() {
             viewModel.getMoviesListLiveData(collectionId)
                 ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
 
-            viewModel.getDataFromRemoteSource(collectionId)
+//            viewModel.listCollectionId.clear()
+//            viewModel.listCollectionId.add(collectionId)
+            viewModel.getOneCollection(collectionId, 1)
         }
     }
 
@@ -69,15 +75,15 @@ class MoviesListFragment : Fragment() {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                appState.movies.results?.let { myAdapter.moviesData = it }
+                myAdapter.moviesData = appState.movies
                 view?.hideKeyboard()
             }
 
             is AppState.Error -> {
                 binding.loadingLayout.hide()
                 binding.container.showSnackbar(text = appState.error.message.toString(),
-                    action = {
-                        collectionId?.let { viewModel.getDataFromRemoteSource(it) }
+                    action = { view ->
+                        collectionId?.let { viewModel.getOneCollection(it, 1) }
                     })
             }
         }
@@ -101,13 +107,29 @@ class MoviesListFragment : Fragment() {
             adapter = myAdapter
             layoutManager = GridLayoutManager(context, 2)
             setHasFixedSize(true)
+            setUpLoadMoreListener(this)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+
+    private fun setUpLoadMoreListener(recyclerView: RecyclerView) {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int, dy: Int
+            ) {
+                super.onScrolled(recyclerView, dx, dy)
+                Log.d(TAG, myAdapter.position.toString())
+                Log.d(TAG, "getItemCount = ${myAdapter.getItemCount()}")
+                if (myAdapter.position > myAdapter.getItemCount() - 10) {
+                    collectionId?.let { viewModel.getOneCollection(it, 2) }
+                }
+            }
+        })
+    }
 }

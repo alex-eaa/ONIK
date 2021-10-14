@@ -19,6 +19,7 @@ import com.example.onik.viewmodel.MoviesCollectionViewModel
 class MainFragment : Fragment(), View.OnClickListener {
 
     companion object {
+        private const val TAG = "MainFragment"
         fun newInstance() = MainFragment()
     }
 
@@ -41,6 +42,14 @@ class MainFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        with(viewModel) {
+            listCollectionId.clear()
+            listCollectionId.add(CollectionId.POPULAR)
+            listCollectionId.add(CollectionId.TOP_RATED)
+            listCollectionId.add(CollectionId.NOW_PLAYING)
+            listCollectionId.add(CollectionId.UPCOMING)
+            getAllCollections()
+        }
     }
 
     override fun onCreateView(
@@ -64,6 +73,7 @@ class MainFragment : Fragment(), View.OnClickListener {
         binding.categoryTitleLayout4.setOnClickListener(this)
 
         with(viewModel) {
+
             getMoviesListLiveData(CollectionId.POPULAR)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState, CollectionId.POPULAR) })
 
@@ -75,11 +85,6 @@ class MainFragment : Fragment(), View.OnClickListener {
 
             getMoviesListLiveData(CollectionId.UPCOMING)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState, CollectionId.UPCOMING) })
-
-            getDataFromRemoteSource(CollectionId.POPULAR)
-            getDataFromRemoteSource(CollectionId.TOP_RATED)
-            getDataFromRemoteSource(CollectionId.NOW_PLAYING)
-            getDataFromRemoteSource(CollectionId.UPCOMING)
         }
     }
 
@@ -96,27 +101,19 @@ class MainFragment : Fragment(), View.OnClickListener {
             is AppState.SuccessMovies -> when (collectionName) {
                 CollectionId.POPULAR -> {
                     binding.loadingLayout1.hide()
-                    appState.movies?.results?.let {
-                        mapAdapters[CollectionId.POPULAR]?.moviesData = it
-                    }
+                    mapAdapters[CollectionId.POPULAR]?.moviesData = appState.movies
                 }
                 CollectionId.TOP_RATED -> {
                     binding.loadingLayout2.hide()
-                    appState.movies?.results?.let {
-                        mapAdapters[CollectionId.TOP_RATED]?.moviesData = it
-                    }
+                    mapAdapters[CollectionId.TOP_RATED]?.moviesData = appState.movies
                 }
                 CollectionId.NOW_PLAYING -> {
                     binding.loadingLayout3.hide()
-                    appState.movies?.results?.let {
-                        mapAdapters[CollectionId.NOW_PLAYING]?.moviesData = it
-                    }
+                    mapAdapters[CollectionId.NOW_PLAYING]?.moviesData = appState.movies
                 }
                 CollectionId.UPCOMING -> {
                     binding.loadingLayout4.hide()
-                    appState.movies?.results?.let {
-                        mapAdapters[CollectionId.UPCOMING]?.moviesData = it
-                    }
+                    mapAdapters[CollectionId.UPCOMING]?.moviesData = appState.movies
                 }
             }
 
@@ -131,10 +128,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                 Log.d("zzz", appState.error.message!!)
                 binding.container.showSnackbar(action = {
                     viewModel.apply {
-                        getDataFromRemoteSource(CollectionId.POPULAR)
-                        getDataFromRemoteSource(CollectionId.TOP_RATED)
-                        getDataFromRemoteSource(CollectionId.NOW_PLAYING)
-                        getDataFromRemoteSource(CollectionId.UPCOMING)
+                        viewModel.getAllCollections()
                     }
                 })
             }
@@ -192,14 +186,22 @@ class MainFragment : Fragment(), View.OnClickListener {
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.container, MoviesListFragment.newInstance(Bundle().apply {
                     when (v.id) {
-                        R.id.categoryTitleLayout1 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
-                            CollectionId.POPULAR)
-                        R.id.categoryTitleLayout2 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
-                            CollectionId.TOP_RATED)
-                        R.id.categoryTitleLayout3 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
-                            CollectionId.NOW_PLAYING)
-                        R.id.categoryTitleLayout4 -> putSerializable(MoviesListFragment.BUNDLE_EXTRA,
-                            CollectionId.UPCOMING)
+                        R.id.categoryTitleLayout1 -> putSerializable(
+                            MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.POPULAR
+                        )
+                        R.id.categoryTitleLayout2 -> putSerializable(
+                            MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.TOP_RATED
+                        )
+                        R.id.categoryTitleLayout3 -> putSerializable(
+                            MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.NOW_PLAYING
+                        )
+                        R.id.categoryTitleLayout4 -> putSerializable(
+                            MoviesListFragment.BUNDLE_EXTRA,
+                            CollectionId.UPCOMING
+                        )
                     }
                 }))
                 .addToBackStack(null)

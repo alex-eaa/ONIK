@@ -119,7 +119,7 @@ class PeopleFragment : Fragment() {
             is AppState.SuccessMovies -> {
                 binding.apply {
                     loadingLayout.hide()
-                    appState.movies.results?.let { myAdapter.moviesData = it }
+                    myAdapter.moviesData = appState.movies
                 }
             }
 

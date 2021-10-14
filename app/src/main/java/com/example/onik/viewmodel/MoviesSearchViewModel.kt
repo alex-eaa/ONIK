@@ -20,7 +20,8 @@ private const val REQUEST_ERROR = "Ошибка запроса на сервер
 class MoviesSearchViewModel : ViewModel() {
 
     private val searchRepositoryImpl: SearchRepository = SearchRepositoryImpl(
-        RemoteDataSourceSearch())
+        RemoteDataSourceSearch()
+    )
 
     private var moviesListLiveDataObserver: MutableLiveData<AppState> = MutableLiveData<AppState>()
 
@@ -42,7 +43,9 @@ class MoviesSearchViewModel : ViewModel() {
 
             moviesListLiveDataObserver.postValue(
                 if (response.isSuccessful && serverResponse != null) {
-                    AppState.SuccessMovies(convertListMoviesDtoToListMovies(serverResponse))
+                    convertListMoviesDtoToListMovies(serverResponse).results?.let {
+                        AppState.SuccessMovies(it)
+                    }
                 } else {
                     AppState.Error(Throwable(SERVER_ERROR))
                 }
@@ -51,8 +54,14 @@ class MoviesSearchViewModel : ViewModel() {
 
         override fun onFailure(call: Call<ListMoviesDTO>, t: Throwable) {
             Log.d(TAG, t.message.toString())
-            moviesListLiveDataObserver.postValue(AppState.Error(Throwable(t.message
-                ?: REQUEST_ERROR)))
+            moviesListLiveDataObserver.postValue(
+                AppState.Error(
+                    Throwable(
+                        t.message
+                            ?: REQUEST_ERROR
+                    )
+                )
+            )
         }
     }
 }
