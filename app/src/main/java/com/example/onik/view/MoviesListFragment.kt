@@ -14,6 +14,12 @@ import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 
 
 class MoviesListFragment : Fragment() {
@@ -62,9 +68,7 @@ class MoviesListFragment : Fragment() {
             viewModel.getMoviesListLiveData(collectionId)
                 ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
 
-//            viewModel.listCollectionId.clear()
-//            viewModel.listCollectionId.add(collectionId)
-            viewModel.getOneCollection(collectionId, 1)
+            viewModel.getOneCollectionCoroutines(collectionId, 1)
         }
     }
 
@@ -83,7 +87,10 @@ class MoviesListFragment : Fragment() {
                 binding.loadingLayout.hide()
                 binding.container.showSnackbar(text = appState.error.message.toString(),
                     action = { view ->
-                        collectionId?.let { viewModel.getOneCollection(it, 1) }
+                        collectionId?.let {
+//                            viewModel.getOneCollection(it, 1)
+                            viewModel.getOneCollectionCoroutines(it, 1)
+                        }
                     })
             }
         }
@@ -107,29 +114,11 @@ class MoviesListFragment : Fragment() {
             adapter = myAdapter
             layoutManager = GridLayoutManager(context, 2)
             setHasFixedSize(true)
-            setUpLoadMoreListener(this)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-
-    private fun setUpLoadMoreListener(recyclerView: RecyclerView) {
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int, dy: Int
-            ) {
-                super.onScrolled(recyclerView, dx, dy)
-                Log.d(TAG, myAdapter.position.toString())
-                Log.d(TAG, "getItemCount = ${myAdapter.getItemCount()}")
-                if (myAdapter.position > myAdapter.getItemCount() - 10) {
-                    collectionId?.let { viewModel.getOneCollection(it, 2) }
-                }
-            }
-        })
     }
 }

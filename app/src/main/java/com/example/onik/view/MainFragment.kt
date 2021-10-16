@@ -42,14 +42,6 @@ class MainFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        with(viewModel) {
-            listCollectionId.clear()
-            listCollectionId.add(CollectionId.POPULAR)
-            listCollectionId.add(CollectionId.TOP_RATED)
-            listCollectionId.add(CollectionId.NOW_PLAYING)
-            listCollectionId.add(CollectionId.UPCOMING)
-            getAllCollections()
-        }
     }
 
     override fun onCreateView(
@@ -74,6 +66,11 @@ class MainFragment : Fragment(), View.OnClickListener {
 
         with(viewModel) {
 
+            viewModel.getOneCollectionCoroutines(CollectionId.POPULAR, 1)
+            viewModel.getOneCollectionCoroutines(CollectionId.TOP_RATED, 1)
+            viewModel.getOneCollectionCoroutines(CollectionId.NOW_PLAYING, 1)
+            viewModel.getOneCollectionCoroutines(CollectionId.UPCOMING, 1)
+
             getMoviesListLiveData(CollectionId.POPULAR)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState, CollectionId.POPULAR) })
 
@@ -85,6 +82,7 @@ class MainFragment : Fragment(), View.OnClickListener {
 
             getMoviesListLiveData(CollectionId.UPCOMING)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState, CollectionId.UPCOMING) })
+
         }
     }
 
@@ -128,7 +126,11 @@ class MainFragment : Fragment(), View.OnClickListener {
                 Log.d("zzz", appState.error.message!!)
                 binding.container.showSnackbar(action = {
                     viewModel.apply {
-                        viewModel.getAllCollections()
+//                        viewModel.getAllCollections()
+                        viewModel.getOneCollectionCoroutines(CollectionId.POPULAR, 1)
+                        viewModel.getOneCollectionCoroutines(CollectionId.TOP_RATED, 1)
+                        viewModel.getOneCollectionCoroutines(CollectionId.NOW_PLAYING, 1)
+                        viewModel.getOneCollectionCoroutines(CollectionId.UPCOMING, 1)
                     }
                 })
             }
