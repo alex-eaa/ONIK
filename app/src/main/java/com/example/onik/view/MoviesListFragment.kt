@@ -1,25 +1,17 @@
 package com.example.onik.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
-import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import com.example.onik.viewmodel.MoviesCollectionViewModelFactory
 
 
 class MoviesListFragment : Fragment() {
@@ -32,14 +24,13 @@ class MoviesListFragment : Fragment() {
             MoviesListFragment().apply { arguments = bundle }
     }
 
-    private var collectionId: CollectionId? = null
+    private var collectionId: CollectionId = CollectionId.EMPTY
 
     private var _binding: MoviesListFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MoviesCollectionViewModel by lazy {
-        ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
-
+    private val viewModel: MoviesCollectionViewModel by viewModels {
+        MoviesCollectionViewModelFactory(collectionId)
     }
 
     private val myAdapter: MoviesAdapterForPaging by lazy { MoviesAdapterForPaging(R.layout.item) }
@@ -63,49 +54,11 @@ class MoviesListFragment : Fragment() {
             bundle.getSerializable(BUNDLE_EXTRA)?.let { collectionId = it as CollectionId }
         }
 
-        collectionId?.let { collectionId ->
-            activity?.title = collectionId.description
+        activity?.title = collectionId.description
 
-//            viewModel.getMoviesListLiveData(collectionId)
-//                ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
-
-//            viewModel.moviesLiveData.observe(viewLifecycleOwner, {
-//                myAdapter.submitData(lifecycle, it)
-//            })
-
-//            viewModel.getOneCollectionCoroutines(collectionId, 1)
-
-
-            lifecycleScope.launch{
-                viewModel.moviesFlow.collectLatest(myAdapter::submitData)
-            }
-
-        }
-    }
-
-
-    private fun renderData(appState: AppState?) {
-        when (appState) {
-            is AppState.Loading -> binding.loadingLayout.show()
-
-            is AppState.SuccessMovies -> {
-                binding.loadingLayout.hide()
-//                myAdapter.moviesData = appState.movies
-                view?.hideKeyboard()
-            }
-
-            is AppState.Error -> {
-                binding.loadingLayout.hide()
-                binding.container.showSnackbar(text = appState.error.message.toString(),
-                    action = { view ->
-                        collectionId?.let {
-                            lifecycleScope.launch{
-                                viewModel.moviesFlow.collectLatest(myAdapter::submitData)
-                            }
-                        }
-                    })
-            }
-        }
+        viewModel.moviesLiveData.observe(viewLifecycleOwner, {
+            myAdapter.submitData(lifecycle, it)
+        })
     }
 
 
@@ -128,6 +81,7 @@ class MoviesListFragment : Fragment() {
             setHasFixedSize(true)
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

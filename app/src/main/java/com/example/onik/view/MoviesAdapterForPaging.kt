@@ -28,6 +28,7 @@ class MoviesAdapterForPaging(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        Log.d("MoviesAdapterForPaging", "onBindViewHolder position = $position")
         viewHolder.bind(getItem(position))
     }
 
@@ -72,7 +73,7 @@ private object ArticleDiffItemCallback : DiffUtil.ItemCallback<Movie>() {
     }
 
     override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem.title == newItem.title && oldItem.overview == newItem.overview
+        return oldItem.id == newItem.id
     }
 
 }

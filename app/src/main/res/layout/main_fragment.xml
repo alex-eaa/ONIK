@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Смотрят сейчас"
+                android:text="Лучшие"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -133,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Лучшие"
+                android:text="Смотрят сейчас"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

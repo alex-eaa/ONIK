@@ -26,11 +26,11 @@ class RemoteDataSourceCollections {
         .build().create(CollectionMovieAPI::class.java)
 
     suspend fun getCollection(collection: CollectionId, page: Int) : ListMoviesDTO {
-        Log.d("Paging", "getCollection page = $page")
         val language = App.getSettings().getString("listPref_languages", "ru-RU").toString()
         val data = collectionAPI.getCollection(collection.id, language, BuildConfig.THEMOVIEDB_API_KEY, page)
-        Log.d("Paging", "getCollection page = $page")
-        Log.d("Paging", "received collection = $data")
+
+        Log.d("PagingRemoteDataSource", "getCollection page = $page")
+        Log.d("PagingRemoteDataSource", "received collection = $data")
         return data
     }
 }

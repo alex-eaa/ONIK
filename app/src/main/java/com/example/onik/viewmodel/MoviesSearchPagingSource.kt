@@ -20,7 +20,6 @@ class MoviesSearchPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
         val page = params.key ?: STARTING_PAGE_INDEX
-        Log.d("Paging", "page = $page")
         val pageSize = params.loadSize
         try {
             val response: ListMoviesDTO = service.getFind(query, page)
@@ -28,12 +27,11 @@ class MoviesSearchPagingSource(
 
             val nextKey = if (repos.size < pageSize) null else page + 1
             val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
-            Log.d("Paging", "nextKey = $nextKey, prevKey = $prevKey")
 
             return LoadResult.Page(
                 data = repos,
-                prevKey = nextKey,
-                nextKey = prevKey
+                prevKey = prevKey,
+                nextKey = nextKey
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
