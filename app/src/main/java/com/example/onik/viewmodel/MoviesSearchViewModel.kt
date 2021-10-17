@@ -1,67 +1,36 @@
 package com.example.onik.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.onik.model.data.ListMoviesDTO
-import com.example.onik.model.data.convertListMoviesDtoToListMovies
+import androidx.lifecycle.viewModelScope
+import androidx.paging.*
+import com.example.onik.model.data.Movie
 import com.example.onik.model.repository.RemoteDataSourceSearch
-import com.example.onik.model.repository.SearchRepository
-import com.example.onik.model.repository.SearchRepositoryImpl
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.flow.Flow
 
-private const val TAG = "ViewModel"
-private const val SERVER_ERROR = "Ошибка сервера"
-private const val REQUEST_ERROR = "Ошибка запроса на сервер"
 
 class MoviesSearchViewModel : ViewModel() {
 
-    private val searchRepositoryImpl: SearchRepository = SearchRepositoryImpl(
-        RemoteDataSourceSearch()
-    )
-
-    private var moviesListLiveDataObserver: MutableLiveData<AppState> = MutableLiveData<AppState>()
-
-    val moviesListLiveData: LiveData<AppState> = moviesListLiveDataObserver
-
-
-    fun findDataOnRemoteSource(searchQuery: String) {
-        moviesListLiveDataObserver.postValue(AppState.Loading)
-        searchRepositoryImpl.getSearchResultFromServer(searchQuery, callBack)
+    fun findDataOnRemoteSource(query: String): Flow<PagingData<Movie>> {
+        return getSearchStreamFlow(query)
     }
 
+    private fun getSearchStreamFlow(query: String): Flow<PagingData<Movie>> {
+        val pagingConfig = PagingConfig(
+            pageSize = PAGE_SIZE,
+            prefetchDistance = PAGE_SIZE / 2,
+            initialLoadSize = PAGE_SIZE,
+            enablePlaceholders = false
+        )
 
-    private val callBack = object : Callback<ListMoviesDTO> {
-        override fun onResponse(
-            call: Call<ListMoviesDTO>,
-            response: Response<ListMoviesDTO>,
-        ) {
-            val serverResponse: ListMoviesDTO? = response.body()
+        val pager: Pager<Int, Movie> = Pager(
+            config = pagingConfig,
+            pagingSourceFactory = { MoviesSearchPagingSource(RemoteDataSourceSearch(), query) }
+        )
 
-            moviesListLiveDataObserver.postValue(
-                if (response.isSuccessful && serverResponse != null) {
-                    convertListMoviesDtoToListMovies(serverResponse).results?.let {
-                        AppState.SuccessMovies(it)
-                    }
-                } else {
-                    AppState.Error(Throwable(SERVER_ERROR))
-                }
-            )
-        }
+        return pager.flow.cachedIn(viewModelScope)
+    }
 
-        override fun onFailure(call: Call<ListMoviesDTO>, t: Throwable) {
-            Log.d(TAG, t.message.toString())
-            moviesListLiveDataObserver.postValue(
-                AppState.Error(
-                    Throwable(
-                        t.message
-                            ?: REQUEST_ERROR
-                    )
-                )
-            )
-        }
+    companion object {
+        const val PAGE_SIZE = 20
     }
 }

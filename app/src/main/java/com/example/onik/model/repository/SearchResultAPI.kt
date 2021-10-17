@@ -9,11 +9,12 @@ import retrofit2.http.Query
 interface SearchResultAPI {
 
     @GET("3/search/movie")
-    fun getFind(
+    suspend fun getFind(
         @Query("query") query: String,
         @Query("language") language: String,
         @Query("include_adult") include_adult: Boolean,
         @Query("api_key") api_key: String,
-    ): Call<ListMoviesDTO>
+        @Query("page") page: Int,
+    ): ListMoviesDTO
 
 }

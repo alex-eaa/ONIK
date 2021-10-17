@@ -53,22 +53,6 @@ class MoviesCollectionViewModel : ViewModel() {
         getCollectionStreamLiveData(CollectionId.POPULAR)
 
 
-    fun getOneCollectionCoroutines(collectionId: CollectionId, page: Int) {
-        viewModelScope.launch {
-            collectionRepositoryImpl.getCollectionFromServer(collectionId, page)
-                .onStart { moviesListLiveDataObserver[collectionId]?.value = AppState.Loading }
-                .catch { exception ->
-                    moviesListLiveDataObserver[collectionId]?.value = AppState.Error(exception)
-                }
-                .collect { listMovies ->
-                    moviesListLiveDataObserver[collectionId]?.value = listMovies.results?.let {
-                        AppState.SuccessMovies(it)
-                    }
-                }
-        }
-    }
-
-
     private fun getCollectionStreamFlow(collectionId: CollectionId): Flow<PagingData<Movie>> {
         val pagingConfig = PagingConfig(
             pageSize = PAGE_SIZE,

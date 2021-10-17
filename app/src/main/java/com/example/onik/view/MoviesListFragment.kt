@@ -99,8 +99,9 @@ class MoviesListFragment : Fragment() {
                 binding.container.showSnackbar(text = appState.error.message.toString(),
                     action = { view ->
                         collectionId?.let {
-//                            viewModel.getOneCollection(it, 1)
-                            viewModel.getOneCollectionCoroutines(it, 1)
+                            lifecycleScope.launch{
+                                viewModel.moviesFlow.collectLatest(myAdapter::submitData)
+                            }
                         }
                     })
             }

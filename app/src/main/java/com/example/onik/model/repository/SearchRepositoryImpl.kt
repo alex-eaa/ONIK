@@ -6,11 +6,11 @@ import retrofit2.Callback
 class SearchRepositoryImpl(private val remoteDataSourceSearch: RemoteDataSourceSearch) :
     SearchRepository {
 
-    override fun getSearchResultFromServer(
+    override suspend fun getSearchResultFromServer(
         searchQuery: String,
-        callback: Callback<ListMoviesDTO>,
+        page: Int
     ) {
-        remoteDataSourceSearch.getFind(searchQuery, callback)
+        remoteDataSourceSearch.getFind(searchQuery, page)
     }
 
 }

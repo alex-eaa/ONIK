@@ -7,12 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.MoviesSearchViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class MoviesSearchFragment : Fragment() {
@@ -33,7 +37,7 @@ class MoviesSearchFragment : Fragment() {
         ViewModelProvider(this).get(MoviesSearchViewModel::class.java)
     }
 
-    private val myAdapter: MoviesAdapter by lazy { MoviesAdapter(R.layout.item) }
+    private val myAdapter: MoviesAdapterForPaging by lazy { MoviesAdapterForPaging(R.layout.item) }
 
 
     override fun onCreateView(
@@ -55,12 +59,15 @@ class MoviesSearchFragment : Fragment() {
         }
 
         activity?.title = resources.getString(R.string.title_find)
-        viewModel.moviesListLiveData.observe(viewLifecycleOwner,
-            { appState -> renderData(appState) })
 
-        viewModel.findDataOnRemoteSource(searchQuery)
+        getData(searchQuery)
     }
 
+    private fun getData(query: String) {
+        lifecycleScope.launch {
+            viewModel.findDataOnRemoteSource(query).collectLatest(myAdapter::submitData)
+        }
+    }
 
     private fun renderData(appState: AppState?) {
         when (appState) {
@@ -74,7 +81,7 @@ class MoviesSearchFragment : Fragment() {
                 if (appState.movies.isEmpty()) {
                     binding.notFound.show()
                 } else {
-                    myAdapter.moviesData = appState.movies
+//                    myAdapter.moviesData = appState.movies
                 }
                 view?.hideKeyboard()
             }
@@ -90,7 +97,7 @@ class MoviesSearchFragment : Fragment() {
 
 
     private fun initRecyclerView() {
-        myAdapter.listener = MoviesAdapter.OnItemViewClickListener { movie ->
+        myAdapter.listener = MoviesAdapterForPaging.OnItemViewClickListener { movie ->
             activity?.supportFragmentManager?.let { fragmentManager ->
                 fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -115,7 +122,7 @@ class MoviesSearchFragment : Fragment() {
         searchText?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
-                    viewModel.findDataOnRemoteSource(it)
+                    getData(it)
                 }
                 return true
             }

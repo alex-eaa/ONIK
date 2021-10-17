@@ -19,14 +19,16 @@ class RemoteDataSourceSearch {
         )
         .build().create(SearchResultAPI::class.java)
 
-    fun getFind(searchQuery: String, callback: Callback<ListMoviesDTO>) {
+    suspend fun getFind(searchQuery: String, page: Int): ListMoviesDTO {
         val adult: Boolean = App.getSettings().getBoolean("pref_adult", true)
         val language = App.getSettings().getString("listPref_languages", "ru-RU").toString()
 
-        collectionAPI.getFind(searchQuery,
+        return collectionAPI.getFind(
+            searchQuery,
             language,
             adult,
-            BuildConfig.THEMOVIEDB_API_KEY)
-            .enqueue(callback)
+            BuildConfig.THEMOVIEDB_API_KEY,
+            page
+        )
     }
 }
