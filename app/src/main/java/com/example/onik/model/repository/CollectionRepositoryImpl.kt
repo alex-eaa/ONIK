@@ -17,11 +17,11 @@ class CollectionRepositoryImpl(private val remoteDataSourceCollections: RemoteDa
     CollectionRepository {
 
     override fun getCollectionFromServer(
-        collection: CollectionId,
+        collectionId: CollectionId,
         page: Int
     ) : Flow<ListMovies> {
         return flow{
-            val data = remoteDataSourceCollections.getCollection(collection, page)
+            val data = remoteDataSourceCollections.getCollection(collectionId, page)
                 emit(convertListMoviesDtoToListMovies(data))
         }.flowOn(Dispatchers.IO)
     }

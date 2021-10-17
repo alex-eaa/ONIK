@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.example.onik.model.data.ListMovies
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.model.data.Movie
@@ -16,9 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -46,6 +45,13 @@ class MoviesCollectionViewModel : ViewModel() {
             get(collectionId)
         }
 
+    val moviesFlow: StateFlow<PagingData<Movie>> =
+        getCollectionStreamFlow(CollectionId.POPULAR)
+            .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+
+    val moviesLiveData: LiveData<PagingData<Movie>> =
+        getCollectionStreamLiveData(CollectionId.POPULAR)
+
 
     fun getOneCollectionCoroutines(collectionId: CollectionId, page: Int) {
         viewModelScope.launch {
@@ -60,5 +66,42 @@ class MoviesCollectionViewModel : ViewModel() {
                     }
                 }
         }
+    }
+
+
+    private fun getCollectionStreamFlow(collectionId: CollectionId): Flow<PagingData<Movie>> {
+        val pagingConfig = PagingConfig(
+            pageSize = PAGE_SIZE,
+            prefetchDistance = PAGE_SIZE / 2,
+            initialLoadSize = PAGE_SIZE,
+            enablePlaceholders = false
+        )
+
+        val pager: Pager<Int, Movie> = Pager(
+            config = pagingConfig,
+            pagingSourceFactory = { CollectionPagingSource(RemoteDataSourceCollections(), collectionId) }
+        )
+
+        return pager.flow.cachedIn(viewModelScope)
+    }
+
+    private fun getCollectionStreamLiveData(collectionId: CollectionId): LiveData<PagingData<Movie>> {
+        val pagingConfig = PagingConfig(
+            pageSize = PAGE_SIZE,
+            prefetchDistance = PAGE_SIZE / 2,
+            initialLoadSize = PAGE_SIZE,
+            enablePlaceholders = false
+        )
+
+        val pager: Pager<Int, Movie> = Pager(
+            config = pagingConfig,
+            pagingSourceFactory = { CollectionPagingSource(RemoteDataSourceCollections(), collectionId) }
+        )
+
+        return pager.liveData.cachedIn(viewModelScope)
+    }
+
+    companion object {
+        const val PAGE_SIZE = 20
     }
 }

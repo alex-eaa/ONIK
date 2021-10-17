@@ -9,5 +9,5 @@ import retrofit2.Callback
 import retrofit2.Response
 
 interface CollectionRepository {
-    fun getCollectionFromServer(collection: CollectionId, page: Int): Flow<ListMovies>
+    fun getCollectionFromServer(collectionId: CollectionId, page: Int): Flow<ListMovies>
 }

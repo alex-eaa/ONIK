@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onik.R
 import com.example.onik.databinding.MoviesListFragmentBinding
@@ -15,10 +17,8 @@ import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MoviesCollectionViewModel
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
@@ -42,7 +42,7 @@ class MoviesListFragment : Fragment() {
 
     }
 
-    private val myAdapter: MoviesAdapter by lazy { MoviesAdapter(R.layout.item) }
+    private val myAdapter: MoviesAdapterForPaging by lazy { MoviesAdapterForPaging(R.layout.item) }
 
 
     override fun onCreateView(
@@ -65,10 +65,21 @@ class MoviesListFragment : Fragment() {
 
         collectionId?.let { collectionId ->
             activity?.title = collectionId.description
-            viewModel.getMoviesListLiveData(collectionId)
-                ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
 
-            viewModel.getOneCollectionCoroutines(collectionId, 1)
+//            viewModel.getMoviesListLiveData(collectionId)
+//                ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
+
+            viewModel.moviesLiveData.observe(viewLifecycleOwner, {
+                myAdapter.submitData(lifecycle, it)
+            })
+
+//            viewModel.getOneCollectionCoroutines(collectionId, 1)
+
+
+//            lifecycleScope.launch{
+//                viewModel.moviesFlow.collectLatest(myAdapter::submitData)
+//            }
+
         }
     }
 
@@ -79,7 +90,7 @@ class MoviesListFragment : Fragment() {
 
             is AppState.SuccessMovies -> {
                 binding.loadingLayout.hide()
-                myAdapter.moviesData = appState.movies
+//                myAdapter.moviesData = appState.movies
                 view?.hideKeyboard()
             }
 
@@ -98,7 +109,7 @@ class MoviesListFragment : Fragment() {
 
 
     private fun initRecyclerView() {
-        myAdapter.listener = MoviesAdapter.OnItemViewClickListener { movie ->
+        myAdapter.listener = MoviesAdapterForPaging.OnItemViewClickListener { movie ->
             activity?.supportFragmentManager?.let { fragmentManager ->
                 fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)

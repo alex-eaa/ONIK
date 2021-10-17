@@ -1,12 +1,10 @@
 package com.example.onik.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onik.R
 import com.example.onik.model.data.Movie
@@ -17,15 +15,9 @@ class MoviesAdapter(
 ) :
     RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
-    var position: Int  = 0
-
     var moviesData: List<Movie> = listOf()
         set(value) {
-//            val productDiffUtilCallback = ProductDiffUtilCallback(field, value)
-//            val productDiffResult: DiffUtil.DiffResult =
-//                DiffUtil.calculateDiff(productDiffUtilCallback, true)
             field = value
-//            productDiffResult.dispatchUpdatesTo(this)
             notifyDataSetChanged()
         }
 
@@ -70,7 +62,6 @@ class MoviesAdapter(
         // Получить элемент из вашего набора данных в этой позиции и заменить
         // содержимое представления в этой позици этим элементом
         viewHolder.bind(moviesData[position])
-        this.position = position
     }
 
     override fun getItemCount() = moviesData.size
