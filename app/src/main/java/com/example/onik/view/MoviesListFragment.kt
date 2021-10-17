@@ -69,16 +69,16 @@ class MoviesListFragment : Fragment() {
 //            viewModel.getMoviesListLiveData(collectionId)
 //                ?.observe(viewLifecycleOwner, { appState -> renderData(appState) })
 
-            viewModel.moviesLiveData.observe(viewLifecycleOwner, {
-                myAdapter.submitData(lifecycle, it)
-            })
+//            viewModel.moviesLiveData.observe(viewLifecycleOwner, {
+//                myAdapter.submitData(lifecycle, it)
+//            })
 
 //            viewModel.getOneCollectionCoroutines(collectionId, 1)
 
 
-//            lifecycleScope.launch{
-//                viewModel.moviesFlow.collectLatest(myAdapter::submitData)
-//            }
+            lifecycleScope.launch{
+                viewModel.moviesFlow.collectLatest(myAdapter::submitData)
+            }
 
         }
     }

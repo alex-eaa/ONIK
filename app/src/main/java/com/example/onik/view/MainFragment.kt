@@ -13,6 +13,7 @@ import com.example.onik.R
 import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
+import com.example.onik.viewmodel.MainViewModel
 import com.example.onik.viewmodel.MoviesCollectionViewModel
 
 
@@ -26,8 +27,8 @@ class MainFragment : Fragment(), View.OnClickListener {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MoviesCollectionViewModel by lazy {
-        ViewModelProvider(this).get(MoviesCollectionViewModel::class.java)
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     private val mapAdapters: Map<CollectionId, MoviesAdapter> by lazy {
@@ -66,11 +67,6 @@ class MainFragment : Fragment(), View.OnClickListener {
 
         with(viewModel) {
 
-            viewModel.getOneCollectionCoroutines(CollectionId.POPULAR, 1)
-            viewModel.getOneCollectionCoroutines(CollectionId.TOP_RATED, 1)
-            viewModel.getOneCollectionCoroutines(CollectionId.NOW_PLAYING, 1)
-            viewModel.getOneCollectionCoroutines(CollectionId.UPCOMING, 1)
-
             getMoviesListLiveData(CollectionId.POPULAR)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState, CollectionId.POPULAR) })
 
@@ -83,6 +79,10 @@ class MainFragment : Fragment(), View.OnClickListener {
             getMoviesListLiveData(CollectionId.UPCOMING)?.observe(viewLifecycleOwner,
                 { appState -> renderData(appState, CollectionId.UPCOMING) })
 
+            viewModel.getOneCollectionCoroutines(CollectionId.POPULAR, 1)
+            viewModel.getOneCollectionCoroutines(CollectionId.TOP_RATED, 1)
+            viewModel.getOneCollectionCoroutines(CollectionId.NOW_PLAYING, 1)
+            viewModel.getOneCollectionCoroutines(CollectionId.UPCOMING, 1)
         }
     }
 
@@ -123,10 +123,8 @@ class MainFragment : Fragment(), View.OnClickListener {
                     CollectionId.UPCOMING -> binding.loadingLayout4.hide()
                 }
 
-                Log.d("zzz", appState.error.message!!)
                 binding.container.showSnackbar(action = {
                     viewModel.apply {
-//                        viewModel.getAllCollections()
                         viewModel.getOneCollectionCoroutines(CollectionId.POPULAR, 1)
                         viewModel.getOneCollectionCoroutines(CollectionId.TOP_RATED, 1)
                         viewModel.getOneCollectionCoroutines(CollectionId.NOW_PLAYING, 1)
