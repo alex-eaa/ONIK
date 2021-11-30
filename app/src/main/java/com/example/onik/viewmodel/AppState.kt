@@ -2,7 +2,6 @@ package com.example.onik.viewmodel
 
 import com.example.onik.model.data.Cast
 import com.example.onik.model.data.ListCasts
-import com.example.onik.model.data.ListMovies
 import com.example.onik.model.data.Movie
 
 sealed class AppState {

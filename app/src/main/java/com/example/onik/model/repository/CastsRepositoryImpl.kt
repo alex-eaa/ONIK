@@ -1,7 +1,7 @@
 package com.example.onik.model.repository
 
-import com.example.onik.BuildConfig
 import com.example.onik.App
+import com.example.onik.BuildConfig
 import com.example.onik.model.data.ListCastsDTO
 import com.example.onik.model.repository.CastsAPI.Companion.getApiCasts
 import retrofit2.Callback

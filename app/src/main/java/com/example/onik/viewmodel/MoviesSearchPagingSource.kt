@@ -1,13 +1,10 @@
 package com.example.onik.viewmodel
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.onik.model.data.ListMovies
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.model.data.Movie
 import com.example.onik.model.data.convertListMoviesDtoToListMovies
-import com.example.onik.model.repository.RemoteDataSourceCollections
 import com.example.onik.model.repository.RemoteDataSourceSearch
 import retrofit2.HttpException
 import java.io.IOException

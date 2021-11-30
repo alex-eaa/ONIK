@@ -1,11 +1,10 @@
 package com.example.onik.model.repository
 
-import com.example.onik.BuildConfig
 import com.example.onik.App
+import com.example.onik.BuildConfig
 import com.example.onik.model.data.ListMoviesDTO
 import com.example.onik.model.repository.CollAPI.Companion.getCollRetrofit
 import com.example.onik.viewmodel.CollectionId
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 class CollRepositoryImpl : CollRepository {

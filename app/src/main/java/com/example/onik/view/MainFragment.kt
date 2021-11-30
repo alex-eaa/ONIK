@@ -1,7 +1,6 @@
 package com.example.onik.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import com.example.onik.databinding.MainFragmentBinding
 import com.example.onik.viewmodel.AppState
 import com.example.onik.viewmodel.CollectionId
 import com.example.onik.viewmodel.MainViewModel
-import com.example.onik.viewmodel.MoviesCollectionViewModel
 
 
 class MainFragment : Fragment(), View.OnClickListener {
@@ -94,6 +92,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                 CollectionId.TOP_RATED -> binding.loadingLayout2.show()
                 CollectionId.NOW_PLAYING -> binding.loadingLayout3.show()
                 CollectionId.UPCOMING -> binding.loadingLayout4.show()
+                else -> {}
             }
 
             is AppState.SuccessMovies -> when (collectionName) {
@@ -113,6 +112,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                     binding.loadingLayout4.hide()
                     mapAdapters[CollectionId.UPCOMING]?.moviesData = appState.movies
                 }
+                else -> {}
             }
 
             is AppState.Error -> {
@@ -121,6 +121,7 @@ class MainFragment : Fragment(), View.OnClickListener {
                     CollectionId.TOP_RATED -> binding.loadingLayout2.hide()
                     CollectionId.NOW_PLAYING -> binding.loadingLayout3.hide()
                     CollectionId.UPCOMING -> binding.loadingLayout4.hide()
+                    else -> {}
                 }
 
                 binding.container.showSnackbar(action = {

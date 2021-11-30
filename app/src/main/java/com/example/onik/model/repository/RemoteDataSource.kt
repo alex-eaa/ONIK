@@ -1,10 +1,9 @@
 package com.example.onik.model.repository
 
-import com.example.onik.BuildConfig
 import com.example.onik.App
+import com.example.onik.BuildConfig
 import com.example.onik.model.data.ListMoviesDTO
 import com.google.gson.GsonBuilder
-import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

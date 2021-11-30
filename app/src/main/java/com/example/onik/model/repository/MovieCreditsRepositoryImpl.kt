@@ -1,7 +1,7 @@
 package com.example.onik.model.repository
 
-import com.example.onik.BuildConfig
 import com.example.onik.App
+import com.example.onik.BuildConfig
 import com.example.onik.model.data.ListMovieCreditsDTO
 import com.example.onik.model.repository.MovieCreditsAPI.Companion.getApiMovieCredits
 import retrofit2.Callback

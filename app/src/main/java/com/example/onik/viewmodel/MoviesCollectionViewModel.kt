@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.example.onik.model.data.Movie
-import com.example.onik.model.repository.*
+import com.example.onik.model.repository.RemoteDataSourceCollections
 
 
 private const val TAG = "ViewModel"
